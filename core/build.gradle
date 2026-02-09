@@ -1,15 +1,45 @@
 plugins {
     id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version '4.0.2'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'com.example'
+group = 'com.coffee'
 version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
+sourceSets {
+    intTest {
+        java {
+            srcDir file('src/intTest/java')
+        }
+        resources {
+            srcDir 'src/intTest/resources'
+        }
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+idea {
+    module {
+        testSources.from(sourceSets.intTest.java.srcDirs, sourceSets.intTest.resources.srcDirs)
+    }
+}
+
 dependencies {
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.flywaydb:flyway-core'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -17,4 +47,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('intTest', Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.intTest.output.classesDirs
+    classpath = sourceSets.intTest.runtimeClasspath
+    shouldRunAfter test
 }

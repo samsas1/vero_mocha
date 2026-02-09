@@ -1,0 +1,17 @@
+spring:
+  application:
+    name:core
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  flyway:
+    locations: classpath:/db/migration
+    schemas: public
+    baselineOnMigrate: true
+    enabled: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: mypassword
+server:
+  port: 5000
