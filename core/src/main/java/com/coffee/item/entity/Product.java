@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Product represents a product, currently a drink, that can be ordered by customers.
+ */
 @Entity
 @Table(name = "product")
 public class Product {
