@@ -10,7 +10,7 @@ spring:
     enabled: true
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/mydatabase
+    url: jdbc:postgresql://localhost:5432/core
     username: myuser
     password: mypassword
 server:
