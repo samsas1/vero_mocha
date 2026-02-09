@@ -1,9 +1,10 @@
 package com.coffee.item;
 
-import com.coffee.admin.ProductCreationRequest;
-import com.coffee.admin.ToppingCreationRequest;
+import com.coffee.admin.ProductRequest;
+import com.coffee.admin.ToppingRequest;
 import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
+import static org.instancio.Select.field;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,9 +32,22 @@ public class ItemControllerIntTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private ToppingRequest toppingDTO;
+    private ProductRequest productDTO;
+
+    @BeforeEach
+    public void setup() {
+        toppingDTO = Instancio.of(ToppingRequest.class)
+                .set(field("price"), 2.55)
+                .create();
+        productDTO = Instancio.of(ProductRequest.class)
+                .set(field("price"), 2.55)
+                .create();
+    }
+
     @Test
     public void whenToppingInserted_thenItCanBeFetched() throws Exception {
-        ToppingCreationRequest toppingDTO = Instancio.create(ToppingCreationRequest.class);
+        toppingDTO = Instancio.create(ToppingRequest.class);
         String request = objectMapper.writeValueAsString(toppingDTO);
 
         String response = mockMvc.perform(post("/item/topping").content(request)
@@ -47,13 +62,13 @@ public class ItemControllerIntTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(toppingDTO.price()))
                 .andExpect(jsonPath("$.name").value(toppingDTO.name()))
-                .andExpect(jsonPath("$.status").value("ACTIVE"));
+                .andExpect(jsonPath("$.itemStatus").value("ACTIVE"));
 
     }
 
     @Test
     public void whenProductInserted_thenItCanBeFetched() throws Exception {
-        ProductCreationRequest productDTO = Instancio.create(ProductCreationRequest.class);
+        productDTO = Instancio.create(ProductRequest.class);
         String request = objectMapper.writeValueAsString(productDTO);
 
         String response = mockMvc.perform(post("/item/product").content(request)
@@ -68,7 +83,7 @@ public class ItemControllerIntTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(productDTO.price()))
                 .andExpect(jsonPath("$.name").value(productDTO.name()))
-                .andExpect(jsonPath("$.status").value("ACTIVE"));
+                .andExpect(jsonPath("$.itemStatus").value("ACTIVE"));
 
     }
 

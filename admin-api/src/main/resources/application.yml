@@ -1,0 +1,5 @@
+core-client:
+  base-url: ${API_BASE_URL:http://localhost:5000}
+  connect-timeout: 5000
+server:
+  port: 5001

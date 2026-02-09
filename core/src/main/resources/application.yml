@@ -13,5 +13,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/core
     username: myuser
     password: mypassword
+    hikari:
+      data-source-properties:
+        stringtype: unspecified
 server:
   port: 5000

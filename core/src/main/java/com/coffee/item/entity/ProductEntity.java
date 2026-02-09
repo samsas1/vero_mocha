@@ -1,6 +1,6 @@
 package com.coffee.item.entity;
 
-import com.coffee.admin.ProductCreationRequest;
+import com.coffee.admin.ProductRequest;
 import com.coffee.admin.ProductResponse;
 import jakarta.persistence.*;
 
@@ -32,9 +32,9 @@ public class ProductEntity {
     @Column(nullable = false)
     private Instant updatedAt;
 
-    public static ProductEntity fromExternal(ProductCreationRequest product) {
+    public static ProductEntity fromExternal(ProductRequest product) {
         ProductEntity entity = new ProductEntity();
-        entity.uid = product.uid();
+        entity.uid = UUID.randomUUID();
         entity.name = product.name();
         entity.price = product.price();
         entity.status = InternalItemStatus.ACTIVE;

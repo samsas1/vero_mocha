@@ -1,6 +1,6 @@
 package com.coffee.item.entity;
 
-import com.coffee.admin.ToppingCreationRequest;
+import com.coffee.admin.ToppingRequest;
 import com.coffee.admin.ToppingResponse;
 import jakarta.persistence.*;
 
@@ -32,9 +32,9 @@ public class ToppingEntity {
     @Column(nullable = false)
     private Instant updatedAt;
 
-    public static ToppingEntity fromExternal(ToppingCreationRequest topping) {
+    public static ToppingEntity fromExternal(ToppingRequest topping) {
         ToppingEntity entity = new ToppingEntity();
-        entity.uid = topping.uid();
+        entity.uid = UUID.randomUUID();
         entity.name = topping.name();
         entity.price = topping.price();
         entity.status = InternalItemStatus.ACTIVE;

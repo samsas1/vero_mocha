@@ -1,8 +1,8 @@
 package com.coffee.item;
 
-import com.coffee.admin.ProductCreationRequest;
+import com.coffee.admin.ProductRequest;
 import com.coffee.admin.ProductResponse;
-import com.coffee.admin.ToppingCreationRequest;
+import com.coffee.admin.ToppingRequest;
 import com.coffee.admin.ToppingResponse;
 import com.coffee.exception.ResourceNotFoundException;
 import com.coffee.item.entity.ProductEntity;
@@ -39,7 +39,7 @@ public class ItemManagementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Topping", "uid", uid));
     }
 
-    public UUID saveTopping(ToppingCreationRequest topping) {
+    public UUID saveTopping(ToppingRequest topping) {
         return toppingRepository.save(ToppingEntity.fromExternal(topping)).getUid();
     }
 
@@ -54,7 +54,7 @@ public class ItemManagementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "uid", uid));
     }
 
-    public UUID saveProduct(ProductCreationRequest topping) {
+    public UUID saveProduct(ProductRequest topping) {
         return productRepository.save(ProductEntity.fromExternal(topping)).getUid();
     }
 

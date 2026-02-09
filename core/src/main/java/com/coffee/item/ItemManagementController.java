@@ -1,10 +1,11 @@
 package com.coffee.item;
 
-import com.coffee.admin.ProductCreationRequest;
+import com.coffee.admin.ProductRequest;
 import com.coffee.admin.ProductResponse;
-import com.coffee.admin.ToppingCreationRequest;
+import com.coffee.admin.ToppingRequest;
 import com.coffee.admin.ToppingResponse;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Validated
 public class ItemManagementController {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ItemManagementController.class);
+    private static final Logger log = LoggerFactory.getLogger(ItemManagementController.class);
     private final ItemManagementService itemManagementService;
 
     public ItemManagementController(ItemManagementService itemManagementService) {
@@ -25,7 +26,7 @@ public class ItemManagementController {
     }
 
     @PostMapping("/topping")
-    public ResponseEntity<UUID> saveTopping(@RequestBody ToppingCreationRequest toppingDTO) {
+    public ResponseEntity<UUID> saveTopping(@RequestBody ToppingRequest toppingDTO) {
         log.info("Received request to save topping: {}", toppingDTO);
         return ResponseEntity.ok(itemManagementService.saveTopping(toppingDTO));
     }
@@ -43,7 +44,7 @@ public class ItemManagementController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<UUID> saveProduct(@RequestBody ProductCreationRequest productDto) {
+    public ResponseEntity<UUID> saveProduct(@RequestBody ProductRequest productDto) {
         log.info("Received request to save product: {}", productDto);
         return ResponseEntity.ok(itemManagementService.saveProduct(productDto));
     }
