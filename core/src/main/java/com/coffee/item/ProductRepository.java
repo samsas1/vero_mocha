@@ -1,5 +1,6 @@
 package com.coffee.item;
 
+import com.coffee.item.entity.InternalItemStatus;
 import com.coffee.item.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     Optional<ProductEntity> findByUid(UUID productUid);
 
     List<ProductEntity> findAllByOrderByCreatedAtDesc();
+
+    List<ProductEntity> findAllByStatusIs(InternalItemStatus status);
 }

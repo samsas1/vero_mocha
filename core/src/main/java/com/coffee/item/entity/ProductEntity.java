@@ -2,6 +2,7 @@ package com.coffee.item.entity;
 
 import com.coffee.admin.ProductRequest;
 import com.coffee.admin.ProductResponse;
+import com.coffee.publicapi.ExternalProductResponse;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -68,12 +69,22 @@ public class ProductEntity {
         return updatedAt;
     }
 
-    public ProductResponse toExternal() {
+    public ProductResponse toExternalAdmin() {
         return new ProductResponse(
                 uid,
                 name,
                 price,
                 status.toExternal(),
+                createdAt,
+                updatedAt
+        );
+    }
+
+    public ExternalProductResponse toExternalPublic() {
+        return new ExternalProductResponse(
+                uid,
+                name,
+                price,
                 createdAt,
                 updatedAt
         );

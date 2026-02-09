@@ -25,12 +25,14 @@ public class ProductRepositoryIntTest {
     void whenProductPersisted_thenItCanBeRetrieved() {
         UUID uid = UUID.randomUUID();
         ProductEntity product = Instancio.of(ProductEntity.class)
-                .set(field("sid"), null)
+                .set(field("sid"), null) // required for auto generation
                 .set(field("uid"), uid)
-                .set(field("price"), BigDecimal.ONE)
+                .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
         productRepository.save(product);
+
         ProductEntity fetchedProduct = productRepository.findByUid(uid).get();
+
         assertThat(fetchedProduct)
                 .isNotNull()
                 .extracting(

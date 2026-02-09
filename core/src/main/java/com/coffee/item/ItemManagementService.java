@@ -1,9 +1,6 @@
 package com.coffee.item;
 
-import com.coffee.admin.ProductRequest;
-import com.coffee.admin.ProductResponse;
-import com.coffee.admin.ToppingRequest;
-import com.coffee.admin.ToppingResponse;
+import com.coffee.admin.*;
 import com.coffee.exception.ResourceNotFoundException;
 import com.coffee.item.entity.ProductEntity;
 import com.coffee.item.entity.ToppingEntity;
@@ -29,13 +26,15 @@ public class ItemManagementService {
         this.productRepository = productRepository;
     }
 
-    public List<ToppingResponse> listToppings() {
-        return toppingRepository.findAllByOrderByCreatedAtDesc().stream().map(ToppingEntity::toExternal).toList();
+    public ToppingResponseList listToppings() {
+        List<ToppingResponse> toppings = toppingRepository.findAllByOrderByCreatedAtDesc()
+                .stream().map(ToppingEntity::toExternalAdmin).toList();
+        return new ToppingResponseList(toppings);
     }
 
     public ToppingResponse getTopping(UUID uid) {
         return toppingRepository.findByUid(uid)
-                .map(ToppingEntity::toExternal)
+                .map(ToppingEntity::toExternalAdmin)
                 .orElseThrow(() -> new ResourceNotFoundException("Topping", "uid", uid));
     }
 
@@ -43,14 +42,15 @@ public class ItemManagementService {
         return toppingRepository.save(ToppingEntity.fromExternal(topping)).getUid();
     }
 
-    public List<ProductResponse> listProducts() {
-        return productRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(ProductEntity::toExternal).toList();
+    public ProductResponseList listProducts() {
+        List<ProductResponse> productResponses = productRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(ProductEntity::toExternalAdmin).toList();
+        return new ProductResponseList(productResponses);
     }
 
     public ProductResponse getProduct(UUID uid) {
         return productRepository.findByUid(uid)
-                .map(ProductEntity::toExternal)
+                .map(ProductEntity::toExternalAdmin)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "uid", uid));
     }
 

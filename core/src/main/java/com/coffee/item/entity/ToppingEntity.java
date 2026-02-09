@@ -2,6 +2,7 @@ package com.coffee.item.entity;
 
 import com.coffee.admin.ToppingRequest;
 import com.coffee.admin.ToppingResponse;
+import com.coffee.publicapi.ExternalToppingResponse;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -68,12 +69,22 @@ public class ToppingEntity {
         return updatedAt;
     }
 
-    public ToppingResponse toExternal() {
+    public ToppingResponse toExternalAdmin() {
         return new ToppingResponse(
                 uid,
                 name,
                 price,
                 status.toExternal(),
+                createdAt,
+                updatedAt
+        );
+    }
+
+    public ExternalToppingResponse toExternalPublic() {
+        return new ExternalToppingResponse(
+                uid,
+                name,
+                price,
                 createdAt,
                 updatedAt
         );

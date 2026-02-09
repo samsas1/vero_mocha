@@ -25,12 +25,14 @@ public class ToppingRepositoryIntTest {
     void whenToppingPersisted_thenItCanBeRetrieved() {
         UUID uid = UUID.randomUUID();
         ToppingEntity topping = Instancio.of(ToppingEntity.class)
-                .set(field("sid"), null)
+                .set(field("sid"), null) // required for auto generation
                 .set(field("uid"), uid)
-                .set(field("price"), BigDecimal.ONE)
+                .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
         toppingRepository.save(topping);
+
         ToppingEntity fetchedTopping = toppingRepository.findByUid(uid).get();
+
         assertThat(fetchedTopping)
                 .isNotNull()
                 .extracting(

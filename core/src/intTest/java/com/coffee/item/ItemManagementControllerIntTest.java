@@ -24,14 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class ItemControllerIntTest {
+public class ItemManagementControllerIntTest {
 
+    private static final String TOPPING_ENDPOINT = "/item/topping";
+    private static final String PRODUCT_ENDPOINT = "/item/product";
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     private ToppingRequest toppingDTO;
     private ProductRequest productDTO;
 
@@ -50,7 +50,8 @@ public class ItemControllerIntTest {
         toppingDTO = Instancio.create(ToppingRequest.class);
         String request = objectMapper.writeValueAsString(toppingDTO);
 
-        String response = mockMvc.perform(post("/item/topping").content(request)
+        // Insert the topping and get the UUID
+        String response = mockMvc.perform(post(TOPPING_ENDPOINT).content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse()
@@ -58,12 +59,15 @@ public class ItemControllerIntTest {
 
         UUID uuid = objectMapper.readValue(response, UUID.class);
 
-        mockMvc.perform(get("/item/topping/" + uuid))
+        // Fetch the topping using the UUID and verify the response
+        mockMvc.perform(get(TOPPING_ENDPOINT + "/" + uuid))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(toppingDTO.price()))
                 .andExpect(jsonPath("$.name").value(toppingDTO.name()))
-                .andExpect(jsonPath("$.itemStatus").value("ACTIVE"));
-
+                .andExpect(jsonPath("$.itemStatus").value("ACTIVE"))
+                .andExpect(jsonPath("$.uid").value(uuid.toString()))
+                .andExpect(jsonPath("$.createdAt").exists())
+                .andExpect(jsonPath("$.updatedAt").exists());
     }
 
     @Test
@@ -71,7 +75,8 @@ public class ItemControllerIntTest {
         productDTO = Instancio.create(ProductRequest.class);
         String request = objectMapper.writeValueAsString(productDTO);
 
-        String response = mockMvc.perform(post("/item/product").content(request)
+        // Insert the product and get the UUID
+        String response = mockMvc.perform(post(PRODUCT_ENDPOINT).content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse()
@@ -79,12 +84,27 @@ public class ItemControllerIntTest {
 
         UUID uuid = objectMapper.readValue(response, UUID.class);
 
-        mockMvc.perform(get("/item/product/" + uuid))
+        // Fetch the product using the UUID and verify the response
+        mockMvc.perform(get(PRODUCT_ENDPOINT + "/" + uuid))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(productDTO.price()))
                 .andExpect(jsonPath("$.name").value(productDTO.name()))
-                .andExpect(jsonPath("$.itemStatus").value("ACTIVE"));
+                .andExpect(jsonPath("$.itemStatus").value("ACTIVE"))
+                .andExpect(jsonPath("$.uid").value(uuid.toString()))
+                .andExpect(jsonPath("$.createdAt").exists())
+                .andExpect(jsonPath("$.updatedAt").exists());
+    }
 
+    @Test
+    public void whenProductFetchedWithInvalidUid_thenNotFoundReturned() throws Exception {
+        mockMvc.perform(get(PRODUCT_ENDPOINT + "/" + UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenToppingFetchedWithInvalidUid_thenNotFoundReturned() throws Exception {
+        mockMvc.perform(get(TOPPING_ENDPOINT + "/" + UUID.randomUUID()))
+                .andExpect(status().isNotFound());
     }
 
     @Test

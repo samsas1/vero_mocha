@@ -1,16 +1,12 @@
 package com.coffee.item;
 
-import com.coffee.admin.ProductRequest;
-import com.coffee.admin.ProductResponse;
-import com.coffee.admin.ToppingRequest;
-import com.coffee.admin.ToppingResponse;
+import com.coffee.admin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,7 +28,7 @@ public class ItemManagementController {
     }
 
     @GetMapping("/topping")
-    public ResponseEntity<List<ToppingResponse>> listToppings() {
+    public ResponseEntity<ToppingResponseList> listToppings() {
         log.info("Received request to list toppings");
         return ResponseEntity.ok(itemManagementService.listToppings());
     }
@@ -50,7 +46,7 @@ public class ItemManagementController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<List<ProductResponse>> listProducts() {
+    public ResponseEntity<ProductResponseList> listProducts() {
         log.info("Received request to list products");
         return ResponseEntity.ok(itemManagementService.listProducts());
     }

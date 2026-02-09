@@ -1,5 +1,6 @@
 package com.coffee.item;
 
+import com.coffee.item.entity.InternalItemStatus;
 import com.coffee.item.entity.ToppingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,7 @@ public interface ToppingRepository extends JpaRepository<ToppingEntity, Integer>
     Optional<ToppingEntity> findByUid(UUID toppingUid);
 
     List<ToppingEntity> findAllByOrderByCreatedAtDesc();
+
+    List<ToppingEntity> findAllByStatusIs(InternalItemStatus status);
+
 }

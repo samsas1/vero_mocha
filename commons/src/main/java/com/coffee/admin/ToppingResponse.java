@@ -14,7 +14,7 @@ public record ToppingResponse(
         String name,
         @JsonProperty("price")
         BigDecimal price,
-        @JsonProperty("item_status")
+        @JsonProperty("itemStatus")
         ItemStatus itemStatus,
         @JsonProperty("createdAt")
         Instant createdAt,

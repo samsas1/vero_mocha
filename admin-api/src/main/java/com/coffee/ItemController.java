@@ -1,21 +1,16 @@
 package com.coffee;
 
-import com.coffee.admin.ProductRequest;
-import com.coffee.admin.ProductResponse;
-import com.coffee.admin.ToppingRequest;
-import com.coffee.admin.ToppingResponse;
+import com.coffee.admin.*;
 import com.coffee.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -55,13 +50,12 @@ public class ItemController {
     }
 
     @GetMapping("/topping")
-    public ResponseEntity<List<ToppingResponse>> listToppings() {
+    public ResponseEntity<ToppingResponseList> listToppings() {
         log.info("Listing toppings");
         return coreClient.get()
                 .uri("/item/topping")
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<>() {
-                });
+                .toEntity(ToppingResponseList.class);
     }
 
     @PostMapping("/product")
@@ -87,12 +81,11 @@ public class ItemController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<List<ProductResponse>> listProducts() {
+    public ResponseEntity<ProductResponseList> listProducts() {
         log.info("Listing products");
         return coreClient.get()
                 .uri("/item/product")
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<>() {
-                });
+                .toEntity(ProductResponseList.class);
     }
 }
