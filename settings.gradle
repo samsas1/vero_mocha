@@ -1,0 +1,5 @@
+rootProject.name = 'vero_mocha'
+include 'core'
+include 'admin-api'
+include 'public-api'
+include 'commons'
