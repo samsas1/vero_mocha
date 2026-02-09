@@ -1,0 +1,52 @@
+package com.coffee.item;
+
+import com.coffee.item.entity.Topping;
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.instancio.Select.field;
+
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class ToppingRepositoryIntTest {
+
+    @Autowired
+    ToppingRepository toppingRepository;
+
+    @Test
+    void whenToppingPersisted_thenItCanBeRetrieved() {
+        UUID uid = UUID.randomUUID();
+        Topping topping = Instancio.of(Topping.class)
+                .set(field("uid"), uid)
+                .set(field("price"), BigDecimal.ONE)
+                .create();
+        toppingRepository.save(topping);
+        Topping fetchedTopping = toppingRepository.findByUid(uid).get();
+        assertThat(fetchedTopping)
+                .isNotNull()
+                .extracting(
+                        Topping::getUid,
+                        Topping::getName,
+                        Topping::getPrice,
+                        Topping::getStatus,
+                        i -> i.getCreatedAt().truncatedTo(ChronoUnit.MILLIS),
+                        i -> i.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
+                )
+                .containsExactly(
+                        uid,
+                        topping.getName(),
+                        topping.getPrice(),
+                        topping.getStatus(),
+                        topping.getCreatedAt().truncatedTo(ChronoUnit.MILLIS),
+                        topping.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
+                );
+    }
+}

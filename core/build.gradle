@@ -14,15 +14,14 @@ repositories {
 
 sourceSets {
     intTest {
-        java {
-            srcDir file('src/intTest/java')
-        }
-        resources {
-            srcDir 'src/intTest/resources'
-        }
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
     }
+}
+
+configurations {
+    intTestImplementation.extendsFrom implementation, testImplementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly
 }
 
 idea {
@@ -42,7 +41,16 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.instancio:instancio-junit:2.6.0'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    intTestImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+
+    intTestRuntimeOnly 'com.h2database:h2'
+
+
 }
 
 test {
@@ -54,4 +62,6 @@ tasks.register('intTest', Test) {
     testClassesDirs = sourceSets.intTest.output.classesDirs
     classpath = sourceSets.intTest.runtimeClasspath
     shouldRunAfter test
+
 }
+
