@@ -1,6 +1,6 @@
 package com.coffee.item;
 
-import com.coffee.item.entity.Product;
+import com.coffee.item.entity.ProductEntity;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +24,20 @@ public class ProductRepositoryIntTest {
     @Test
     void whenProductPersisted_thenItCanBeRetrieved() {
         UUID uid = UUID.randomUUID();
-        Product product = Instancio.of(Product.class)
+        ProductEntity product = Instancio.of(ProductEntity.class)
+                .set(field("sid"), null)
                 .set(field("uid"), uid)
                 .set(field("price"), BigDecimal.ONE)
                 .create();
         productRepository.save(product);
-        Product fetchedProduct = productRepository.findByUid(uid).get();
+        ProductEntity fetchedProduct = productRepository.findByUid(uid).get();
         assertThat(fetchedProduct)
                 .isNotNull()
                 .extracting(
-                        Product::getUid,
-                        Product::getName,
-                        Product::getPrice,
-                        Product::getStatus,
+                        ProductEntity::getUid,
+                        ProductEntity::getName,
+                        ProductEntity::getPrice,
+                        ProductEntity::getStatus,
                         i -> i.getCreatedAt().truncatedTo(ChronoUnit.MILLIS),
                         i -> i.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
                 )
@@ -49,4 +50,16 @@ public class ProductRepositoryIntTest {
                         product.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
                 );
     }
+
+    @Test
+    void whenAttemptingToPersistProductsWithSameName_thenFails() {
+        //TODO
+    }
+
+
+    @Test
+    void whenAttemptingToPersistProductWithNegativePrice_thenFails() {
+        //TODO
+    }
+
 }

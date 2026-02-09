@@ -1,6 +1,6 @@
 package com.coffee.item;
 
-import com.coffee.item.entity.Topping;
+import com.coffee.item.entity.ToppingEntity;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +24,20 @@ public class ToppingRepositoryIntTest {
     @Test
     void whenToppingPersisted_thenItCanBeRetrieved() {
         UUID uid = UUID.randomUUID();
-        Topping topping = Instancio.of(Topping.class)
+        ToppingEntity topping = Instancio.of(ToppingEntity.class)
+                .set(field("sid"), null)
                 .set(field("uid"), uid)
                 .set(field("price"), BigDecimal.ONE)
                 .create();
         toppingRepository.save(topping);
-        Topping fetchedTopping = toppingRepository.findByUid(uid).get();
+        ToppingEntity fetchedTopping = toppingRepository.findByUid(uid).get();
         assertThat(fetchedTopping)
                 .isNotNull()
                 .extracting(
-                        Topping::getUid,
-                        Topping::getName,
-                        Topping::getPrice,
-                        Topping::getStatus,
+                        ToppingEntity::getUid,
+                        ToppingEntity::getName,
+                        ToppingEntity::getPrice,
+                        ToppingEntity::getStatus,
                         i -> i.getCreatedAt().truncatedTo(ChronoUnit.MILLIS),
                         i -> i.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
                 )
@@ -49,4 +50,16 @@ public class ToppingRepositoryIntTest {
                         topping.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
                 );
     }
+
+    @Test
+    void whenAttemptingToPersistToppingsWithSameName_thenFails() {
+        //TODO
+    }
+
+    @Test
+    void whenAttemptingToPersistToppingWithNegativePrice_thenFails() {
+        //TODO
+    }
+
+
 }

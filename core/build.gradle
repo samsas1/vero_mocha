@@ -36,6 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.flywaydb:flyway-core'
+    implementation project(':commons')
 
     runtimeOnly 'org.postgresql:postgresql'
 
@@ -46,6 +47,7 @@ dependencies {
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    intTestImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     intTestImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 
     intTestRuntimeOnly 'com.h2database:h2'

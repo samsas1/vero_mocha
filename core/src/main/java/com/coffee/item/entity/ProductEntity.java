@@ -1,5 +1,7 @@
 package com.coffee.item.entity;
 
+import com.coffee.admin.ProductCreationRequest;
+import com.coffee.admin.ProductResponse;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -11,9 +13,10 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "product")
-public class Product {
+public class ProductEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer sid;
     @Column(nullable = false)
     private UUID uid;
@@ -23,11 +26,23 @@ public class Product {
     private BigDecimal price;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ItemStatus status;
+    private InternalItemStatus status;
     @Column(nullable = false)
     private Instant createdAt;
     @Column(nullable = false)
     private Instant updatedAt;
+
+    public static ProductEntity fromExternal(ProductCreationRequest product) {
+        ProductEntity entity = new ProductEntity();
+        entity.uid = product.uid();
+        entity.name = product.name();
+        entity.price = product.price();
+        entity.status = InternalItemStatus.ACTIVE;
+        // TODO: use time provider for timestamps
+        entity.createdAt = Instant.now();
+        entity.updatedAt = Instant.now();
+        return entity;
+    }
 
     public UUID getUid() {
         return uid;
@@ -41,7 +56,7 @@ public class Product {
         return price;
     }
 
-    public ItemStatus getStatus() {
+    public InternalItemStatus getStatus() {
         return status;
     }
 
@@ -51,5 +66,16 @@ public class Product {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public ProductResponse toExternal() {
+        return new ProductResponse(
+                uid,
+                name,
+                price,
+                status.toExternal(),
+                createdAt,
+                updatedAt
+        );
     }
 }
