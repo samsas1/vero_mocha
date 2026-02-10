@@ -4,7 +4,7 @@ import com.coffee.order.FreeItemLargeOrderDiscountHandler;
 import com.coffee.order.entity.CartItemMap;
 import com.coffee.order.entity.CartProductItemWithQuantity;
 import com.coffee.order.entity.CartToppingItemWithQuantity;
-import com.coffee.publicapi.ExternalDiscountResult;
+import com.coffee.publicapi.ExternalDiscountResponse;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -162,11 +162,10 @@ public class FreeItemLargeOrderDiscountHandlerTest {
         CartItemMap cartItemMap = new CartItemMap(productsToToppings);
 
         assertThat(underTest.handle(cartItemMap).get())
-                .isEqualTo(new ExternalDiscountResult(
+                .isEqualTo(new ExternalDiscountResponse(
                                 FREE_ITEM_FOR_LARGE_ORDER,
                                 originalPrice,
-                                finalPrice,
-                                productItemCheapest.productItemUid()
+                                finalPrice
                         )
                 );
 
@@ -193,11 +192,10 @@ public class FreeItemLargeOrderDiscountHandlerTest {
         CartItemMap cartItemMap = new CartItemMap(productsToToppings);
 
         assertThat(underTest.handle(cartItemMap).get())
-                .isEqualTo(new ExternalDiscountResult(
+                .isEqualTo(new ExternalDiscountResponse(
                                 FREE_ITEM_FOR_LARGE_ORDER,
                                 originalPrice,
-                                finalPrice,
-                                productItemCheapest.productItemUid()
+                                finalPrice
                         )
                 );
     }

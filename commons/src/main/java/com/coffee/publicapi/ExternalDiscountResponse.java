@@ -1,8 +1,10 @@
 package com.coffee.publicapi;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 public record ExternalDiscountResponse(
-        List<ExternalDiscountResult> discounts
+        ExternalDiscountType discountType,
+        BigDecimal originalPrice,
+        BigDecimal finalPrice
 ) {
 }

@@ -1,7 +1,7 @@
 package com.coffee.order;
 
 import com.coffee.order.entity.CartItemMap;
-import com.coffee.publicapi.ExternalDiscountResult;
+import com.coffee.publicapi.ExternalDiscountResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +19,13 @@ public class FullCartDiscountHandler implements DiscountHandler {
     private final BigDecimal discountMultiplier = BigDecimal.valueOf(0.75);
     private final BigDecimal discountThreshold = BigDecimal.valueOf(12);
 
-    public Optional<ExternalDiscountResult> handle(CartItemMap cartItemMap) {
+    public Optional<ExternalDiscountResponse> handle(CartItemMap cartItemMap) {
         if (cartItemMap.productsToToppings().isEmpty()) {
             log.debug("No product items found in cart");
             return Optional.empty();
         }
-
-        BigDecimal originalPrice = getTotalOriginalPrice(cartItemMap);
+        // TODO extract original price into call to not recompute
+        BigDecimal originalPrice = cartItemMap.getTotalOriginalPrice();
 
         if (originalPrice.compareTo(discountThreshold) < 0) {
             log.debug("Discount threshold not met");
@@ -34,11 +34,10 @@ public class FullCartDiscountHandler implements DiscountHandler {
         // Floor final price to avoid customer dissatisfaction from rounding fractional cents up
         BigDecimal finalPrice = originalPrice.multiply(discountMultiplier).setScale(2, RoundingMode.FLOOR);
         return Optional.of(
-                new ExternalDiscountResult(
+                new ExternalDiscountResponse(
                         FULL_CART,
                         originalPrice,
-                        finalPrice,
-                        null
+                        finalPrice
                 )
         );
     }

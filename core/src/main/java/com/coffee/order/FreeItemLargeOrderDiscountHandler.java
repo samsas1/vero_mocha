@@ -3,7 +3,7 @@ package com.coffee.order;
 import com.coffee.order.entity.CartItemMap;
 import com.coffee.order.entity.CartProductItemWithQuantity;
 import com.coffee.order.entity.CartToppingItemWithQuantity;
-import com.coffee.publicapi.ExternalDiscountResult;
+import com.coffee.publicapi.ExternalDiscountResponse;
 import com.coffee.publicapi.ExternalDiscountType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class FreeItemLargeOrderDiscountHandler implements DiscountHandler {
     private final int largeOrderProductCountThreshold = 3;
 
 
-    public Optional<ExternalDiscountResult> handle(CartItemMap cartItemMap) {
+    public Optional<ExternalDiscountResponse> handle(CartItemMap cartItemMap) {
         if (!discountApplies(cartItemMap)) {
             log.debug("Discount does not apply to cart");
             return Optional.empty();
@@ -34,14 +34,14 @@ public class FreeItemLargeOrderDiscountHandler implements DiscountHandler {
         ProductAndToppingItemTotal cheapestProductItem = findCheapestItem(productAndToppingItemTotals);
         log.debug("Cheapest product item total object: {}", cheapestProductItem);
 
-        BigDecimal originalPrice = getTotalOriginalPrice(cartItemMap);
+        // TODO extract original price into call to not recompute
+        BigDecimal originalPrice = cartItemMap.getTotalOriginalPrice();
         BigDecimal finalPrice = originalPrice.subtract(cheapestProductItem.priceIncludingToppings());
 
-        return Optional.of(new ExternalDiscountResult(
+        return Optional.of(new ExternalDiscountResponse(
                 ExternalDiscountType.FREE_ITEM_FOR_LARGE_ORDER,
                 originalPrice,
-                finalPrice,
-                cheapestProductItem.productItemUid()
+                finalPrice
         ));
     }
 
