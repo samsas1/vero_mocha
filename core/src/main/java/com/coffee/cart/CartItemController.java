@@ -32,6 +32,6 @@ public class CartItemController {
 
     @GetMapping("/item")
     public ExternalCartItemResponse getCartItems(@RequestHeader("user") UUID userUid) {
-        return null;
+        return cartItemService.getCartItems(userUid);
     }
 }

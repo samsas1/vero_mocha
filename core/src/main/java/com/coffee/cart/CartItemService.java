@@ -2,8 +2,13 @@ package com.coffee.cart;
 
 
 import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
+import com.coffee.cart.entity.CartItemList;
+import com.coffee.cart.entity.CartProductItemEntity;
+import com.coffee.cart.entity.CartToppingItemEntity;
 import com.coffee.publicapi.ExternalCartItemRequest;
 import com.coffee.publicapi.ExternalCartItemResponse;
+import com.coffee.publicapi.ExternalCartProductItemResponse;
+import com.coffee.publicapi.ExternalCartToppingItemResponse;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +72,38 @@ public class CartItemService {
         return cartProductItemUid;
     }
 
-    public ExternalCartItemResponse getCartItems(UUID userUid) {
+    public CartItemList getCartItemList(UUID userUid) {
+        List<CartProductItemEntity> cartProductEntityItems = cartProductItemRepository
+                .getCartProductItemEntitiesByCart_UserUid(userUid);
+        List<CartToppingItemEntity> cartToppingItemEntities = cartToppingItemRepository
+                .getCartToppingItemEntitiesByCartProductItemIn(cartProductEntityItems);
 
-        cartProductItemRepository.getCartProductItemEntitiesByCart_UserUid(userUid);
-        return null;
+        return CartItemList.fromCartItemEntities(cartProductEntityItems, cartToppingItemEntities);
+    }
+
+    public ExternalCartItemResponse getCartItems(UUID userUid) {
+        CartItemList cartItemList = getCartItemList(userUid);
+        return map(cartItemList);
+    }
+
+    private ExternalCartItemResponse map(CartItemList cartItemList) {
+        return new ExternalCartItemResponse(
+                cartItemList.cartItems()
+                        .stream()
+                        .map(cartItem ->
+                                new ExternalCartProductItemResponse(
+                                        cartItem.cartProductItem().productItemUid(),
+                                        cartItem.cartProductItem().productUid(),
+                                        cartItem.cartProductItem().price(),
+                                        cartItem.cartProductItem().quantity(),
+                                        cartItem.cartToppingItemList().stream()
+                                                .map(cartToppingItem -> new ExternalCartToppingItemResponse(
+                                                        cartToppingItem.toppingItemUid(),
+                                                        cartToppingItem.toppingUid(),
+                                                        cartToppingItem.price(),
+                                                        cartToppingItem.quantity()
+                                                )).toList()
+                                )).toList()
+        );
     }
 }
