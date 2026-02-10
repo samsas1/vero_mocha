@@ -1,9 +1,9 @@
-package com.coffee.cart.order;
+package com.coffee.cart.cart;
 
+import com.coffee.cart.FullCartDiscountHandler;
 import com.coffee.cart.entity.CartItemList;
 import com.coffee.cart.entity.CartProductItem;
 import com.coffee.cart.entity.CartToppingItem;
-import com.coffee.order.FullCartDiscountHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +55,7 @@ public class FullCartDiscountHandlerTest {
 
     @Test
     void whenCartHasNoProductItems_thenEmptyOptionalReturned() {
-        assertThat(underTest.handle(new CartItemList(Map.of())))
+        assertThat(underTest.handle(new CartItemList(List.of())))
                 .isEmpty();
 
     }

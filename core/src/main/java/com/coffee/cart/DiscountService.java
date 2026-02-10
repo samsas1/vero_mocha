@@ -1,7 +1,5 @@
-package com.coffee.order;
+package com.coffee.cart;
 
-import com.coffee.cart.CartProductItemRepository;
-import com.coffee.cart.CartToppingItemRepository;
 import com.coffee.cart.entity.CartItemList;
 import com.coffee.cart.entity.CartProductItemEntity;
 import com.coffee.cart.entity.CartToppingItemEntity;
@@ -30,6 +28,8 @@ public class DiscountService {
 
     @Autowired
     private final List<DiscountHandler> discountHandlers;
+    @Autowired
+    private CartItemService cartItemService;
 
 
     public DiscountService(
@@ -48,7 +48,7 @@ public class DiscountService {
                 .getCartToppingItemEntitiesByCartProductItemIn(cartProductEntityItems);
 
 
-        CartItemList cartItemList = null;
+        CartItemList cartItemList = CartItemList.fromCartItemEntities(cartProductEntityItems, cartToppingItemEntities);
         BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
 
         // Get all applicable discounts
