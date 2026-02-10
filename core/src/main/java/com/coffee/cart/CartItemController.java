@@ -35,7 +35,7 @@ public class CartItemController {
         return cartItemService.getCartItems(userUid);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/item")
     public void clearCart(@RequestHeader("user") UUID userUid) {
         cartItemService.clearCart(userUid);
     }
