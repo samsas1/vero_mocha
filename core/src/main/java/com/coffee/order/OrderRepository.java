@@ -1,4 +1,7 @@
 package com.coffee.order;
 
-public interface OrderRepository {
+import com.coffee.order.entity.OrderEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 }

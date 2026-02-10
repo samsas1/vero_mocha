@@ -56,6 +56,11 @@ public class ToppingRepositoryIntTest {
     }
 
     @Test
+    void whenAttemptingToPersistFreeTopping_thenItIsPersisted() {
+        //TODO
+    }
+
+    @Test
     void whenAttemptingToPersistToppingWithNegativePrice_thenFails() {
         //TODO
     }

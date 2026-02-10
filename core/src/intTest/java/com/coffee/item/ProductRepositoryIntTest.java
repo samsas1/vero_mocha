@@ -55,6 +55,11 @@ public class ProductRepositoryIntTest {
         //TODO
     }
 
+    @Test
+    void whenAttemptingToPersistFreeProduct_thenItIsPersisted() {
+        //TODO
+    }
+
 
     @Test
     void whenAttemptingToPersistProductWithNegativePrice_thenFails() {
