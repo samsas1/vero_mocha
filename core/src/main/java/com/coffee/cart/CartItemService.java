@@ -1,7 +1,7 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.batch.CartToppingItemBatchRepository.CartTopping;
+import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartTopping;
 import com.coffee.publicapi.ExternalCartItemRequest;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;

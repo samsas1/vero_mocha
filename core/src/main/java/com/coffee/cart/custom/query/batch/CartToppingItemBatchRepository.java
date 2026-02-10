@@ -1,4 +1,4 @@
-package com.coffee.cart.batch;
+package com.coffee.cart.custom.query.batch;
 
 import java.time.Instant;
 import java.util.List;

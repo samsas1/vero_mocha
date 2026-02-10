@@ -1,7 +1,7 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.batch.CartToppingItemBatchRepository.CartTopping;
+import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartTopping;
 import com.coffee.cart.entity.CartEntity;
 import com.coffee.cart.entity.CartToppingItemEntity;
 import com.coffee.item.ProductRepository;
