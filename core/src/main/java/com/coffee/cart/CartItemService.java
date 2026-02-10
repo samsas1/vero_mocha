@@ -64,9 +64,4 @@ public class CartItemService {
         cartToppingItemRepository.saveCartProduct(cartToppingItems);
         return cartProductItemUid;
     }
-
-    public UUID updateProductToppings() {
-        //TODO handle existing topping updates
-        return null;
-    }
 }

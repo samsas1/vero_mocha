@@ -28,4 +28,9 @@ public class CartItemController {
     public UUID addToCart(@RequestHeader("user") UUID userUid, @RequestBody ExternalCartItemRequest cartItemRequest) {
         return cartItemService.addItemToCart(userUid, cartItemRequest);
     }
+
+    @GetMapping
+    public _ getCart(@RequestHeader("user") UUID userUid) {
+
+    }
 }

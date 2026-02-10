@@ -58,4 +58,7 @@ public class ItemManagementController {
     }
 
     //TODO update and delete endpoints for both product and topping
+    public UUID updateProductToppings() {
+        return null;
+    }
 }
