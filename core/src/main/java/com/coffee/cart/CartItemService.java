@@ -49,7 +49,6 @@ public class CartItemService {
 
         // TODO validate cart toppings are not repeated per cart item
         // I.E. [{topping1,quantity=2}, {topping1, quantity=3}]
-
         List<CartTopping> cartToppings = cartItemRequest.toppings()
                 .stream().map(
                         o -> new CartTopping(

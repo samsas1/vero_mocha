@@ -8,6 +8,7 @@ CREATE TABLE cart
 );
 
 -- For toy application purposes, would not be included in production
+-- Furthermore, in a real application there would be a user table, this is slightly denormalized
 INSERT INTO cart (uid, user_uid)
 VALUES (gen_random_uuid(),
         '7ad5bc4e-0de9-41dc-a5b6-745c1debba23');
