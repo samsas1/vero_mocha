@@ -1,17 +1,18 @@
 package com.coffee.order.entity;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 public record CartTotalsEntity(
         UUID cartUid,
         UUID productItemUid,
-        UUID toppingItemUid,
+        Optional<UUID> toppingItemUid,
         UUID productUid,
-        UUID toppingUid,
-        int productItemQuantity,
-        int toppingItemPerProductItemQuantity,
+        Optional<UUID> toppingUid,
+        Integer productItemQuantity,
+        Optional<Integer> toppingItemPerProductItemQuantity,
         BigDecimal productPrice,
-        BigDecimal toppingPrice
+        Optional<BigDecimal> toppingPrice
 ) {
 }

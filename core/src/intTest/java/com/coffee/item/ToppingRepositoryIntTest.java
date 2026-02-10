@@ -18,7 +18,7 @@ import static org.instancio.Select.field;
 public class ToppingRepositoryIntTest {
 
     @Autowired
-    ToppingRepository toppingRepository;
+    ToppingRepository underTest;
 
     @Test
     void whenToppingPersisted_thenItCanBeRetrieved() {
@@ -26,9 +26,9 @@ public class ToppingRepositoryIntTest {
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
-        toppingRepository.save(topping);
+        underTest.save(topping);
 
-        ToppingEntity fetchedTopping = toppingRepository.findByUid(topping.getUid()).get();
+        ToppingEntity fetchedTopping = underTest.findByUid(topping.getUid()).get();
 
         assertThat(fetchedTopping)
                 .isNotNull()

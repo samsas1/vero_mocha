@@ -24,8 +24,8 @@ public class CartToppingItemBatchRepositoryImpl implements CartToppingItemBatchR
 
     @Override
     @Transactional
-    public void saveCartProduct(List<CartTopping> cartToppings) {
-        List<Object[]> batchArgs = cartToppings.stream()
+    public void saveCartProduct(List<CartToppingItem> cartToppingItems) {
+        List<Object[]> batchArgs = cartToppingItems.stream()
                 .map(p -> new Object[]{
                         p.uid(),
                         p.cartProductItemUid(),

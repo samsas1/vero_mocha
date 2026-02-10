@@ -1,7 +1,7 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartTopping;
+import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
 import com.coffee.cart.entity.CartEntity;
 import com.coffee.cart.entity.CartToppingItemEntity;
 import com.coffee.item.ProductRepository;
@@ -44,7 +44,7 @@ public class CartToppingItemRepositoryIntTest {
     CartProductItemRepository cartProductItemRepository;
 
     @Autowired
-    CartToppingItemRepository cartToppingItemRepository;
+    CartToppingItemRepository underTest;
 
 
     private CartEntity cart;
@@ -57,7 +57,7 @@ public class CartToppingItemRepositoryIntTest {
     private UUID cartToppingItemUid;
     private int quantityOfCartToppingItem;
     private int quantityOfAnotherCartToppingItem;
-    private CartTopping cartTopping;
+    private CartToppingItem cartToppingItem;
 
     @BeforeEach
     void setUp() {
@@ -106,7 +106,7 @@ public class CartToppingItemRepositoryIntTest {
         cartToppingItemUid = UUID.randomUUID();
         quantityOfCartToppingItem = Instancio.create(int.class);
         quantityOfAnotherCartToppingItem = Instancio.create(int.class);
-        cartTopping = new CartTopping(
+        cartToppingItem = new CartToppingItem(
                 cartToppingItemUid,
                 cartProductItemUid,
                 topping.getUid(),
@@ -118,9 +118,9 @@ public class CartToppingItemRepositoryIntTest {
 
     @Test
     void whenCartToppingItemIsPersisted_thenItCanBeRetrieved() {
-        cartToppingItemRepository.saveCartProduct(List.of(cartTopping));
+        underTest.saveCartProduct(List.of(cartToppingItem));
 
-        CartToppingItemEntity cartToppingItemEntity = cartToppingItemRepository.findByUid(cartToppingItemUid).orElseThrow();
+        CartToppingItemEntity cartToppingItemEntity = underTest.findByUid(cartToppingItemUid).orElseThrow();
 
         assertThat(cartToppingItemEntity)
                 .isNotNull()
@@ -143,7 +143,7 @@ public class CartToppingItemRepositoryIntTest {
 
     @Test
     void whenMultipleCartToppingItemsWithTheSameProductItemButDifferentToppings_thenAllCanBePersistedAndRetrieved() {
-        CartTopping anotherCartTopping = new CartTopping(
+        CartToppingItem anotherCartToppingItem = new CartToppingItem(
                 UUID.randomUUID(),
                 cartProductItemUid,
                 anotherTopping.getUid(),
@@ -151,9 +151,9 @@ public class CartToppingItemRepositoryIntTest {
                 instant
         );
 
-        cartToppingItemRepository.saveCartProduct(List.of(cartTopping, anotherCartTopping));
+        underTest.saveCartProduct(List.of(cartToppingItem, anotherCartToppingItem));
 
-        List<CartToppingItemEntity> cartToppingItemEntities = cartToppingItemRepository.findAll();
+        List<CartToppingItemEntity> cartToppingItemEntities = underTest.findAll();
 
         assertThat(cartToppingItemEntities)
                 .extracting(
@@ -172,7 +172,7 @@ public class CartToppingItemRepositoryIntTest {
                                 instant
                         ),
                         tuple(
-                                anotherCartTopping.uid(),
+                                anotherCartToppingItem.uid(),
                                 cartProductItemUid,
                                 anotherTopping,
                                 quantityOfAnotherCartToppingItem,

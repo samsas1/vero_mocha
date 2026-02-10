@@ -36,7 +36,7 @@ public class CartProductItemRepositoryIntTest {
     ProductRepository productRepository;
 
     @Autowired
-    CartProductItemRepository cartProductItemRepository;
+    CartProductItemRepository underTest;
 
     private CartEntity cart;
     private ProductEntity product;
@@ -76,7 +76,7 @@ public class CartProductItemRepositoryIntTest {
     @Test
     void whenCartProductItemPersisted_thenItCanBeRetrieved() {
         UUID uid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
-        CartProductItemEntity cartProductItemEntity = cartProductItemRepository.findByUid(uid).orElseThrow();
+        CartProductItemEntity cartProductItemEntity = underTest.findByUid(uid).orElseThrow();
 
         assertThat(cartProductItemEntity)
                 .isNotNull()
@@ -103,7 +103,7 @@ public class CartProductItemRepositoryIntTest {
         // Second cart product item for the same cart and same product
         UUID secondUid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
 
-        List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
+        List<CartProductItemEntity> cartProductItems = underTest.findAll();
 
         assertThat(cartProductItems)
                 .hasSize(2)
@@ -129,7 +129,7 @@ public class CartProductItemRepositoryIntTest {
         UUID secondUid = saveCartProductItem(cart, anotherProduct, quantityOfAnotherCartProductItem, instant);
 
 
-        List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
+        List<CartProductItemEntity> cartProductItems = underTest.findAll();
 
         assertThat(cartProductItems)
                 .hasSize(2)
@@ -157,7 +157,7 @@ public class CartProductItemRepositoryIntTest {
         UUID secondUid = saveCartProductItem(cart, product, secondQuantityOfProduct, instant);
 
 
-        List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
+        List<CartProductItemEntity> cartProductItems = underTest.findAll();
 
         assertThat(cartProductItems)
                 .hasSize(2)
@@ -203,7 +203,7 @@ public class CartProductItemRepositoryIntTest {
 
     private UUID saveCartProductItem(CartEntity cart, ProductEntity product, int quantity, Instant createdAt) {
         UUID uid = UUID.randomUUID();
-        cartProductItemRepository.saveCartProduct(
+        underTest.saveCartProduct(
                 uid,
                 cart.getUserUid(),
                 product.getUid(),

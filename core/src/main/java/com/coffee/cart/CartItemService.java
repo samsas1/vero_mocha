@@ -1,7 +1,7 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartTopping;
+import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
 import com.coffee.publicapi.ExternalCartItemRequest;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -49,9 +49,9 @@ public class CartItemService {
 
         // TODO validate cart toppings are not repeated per cart item
         // I.E. [{topping1,quantity=2}, {topping1, quantity=3}]
-        List<CartTopping> cartToppings = cartItemRequest.toppings()
+        List<CartToppingItem> cartToppingItems = cartItemRequest.toppings()
                 .stream().map(
-                        o -> new CartTopping(
+                        o -> new CartToppingItem(
                                 UUID.randomUUID(),
                                 cartProductItemUid,
                                 o.toppingUid(),
@@ -61,7 +61,7 @@ public class CartItemService {
                 )
                 .toList();
 
-        cartToppingItemRepository.saveCartProduct(cartToppings);
+        cartToppingItemRepository.saveCartProduct(cartToppingItems);
         return cartProductItemUid;
     }
 

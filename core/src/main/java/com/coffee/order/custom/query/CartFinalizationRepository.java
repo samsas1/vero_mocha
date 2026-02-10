@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -21,8 +22,8 @@ public class CartFinalizationRepository {
                     t.uid AS topping_uid,
                     cpi.quantity AS product_item_quantity,
                     cti.quantity AS topping_item_per_product_item_quantity,
-                    p.price AS product_price,
-                    t.price AS topping_price
+                    p.price   AS product_price,
+                    t.price   AS topping_price
                 FROM cart c
                     JOIN public.cart_product_item cpi on c.sid = cpi.cart_sid
                     JOIN product p ON cpi.product_sid = p.sid
@@ -42,14 +43,16 @@ public class CartFinalizationRepository {
                 (rs, rowNum) -> new CartTotalsEntity(
                         UUID.fromString(rs.getString("cart_uid")),
                         UUID.fromString(rs.getString("product_item_uid")),
-                        UUID.fromString(rs.getString("topping_item_uid")),
+                        Optional.ofNullable(rs.getString("topping_item_uid")).map(UUID::fromString),
                         UUID.fromString(rs.getString("product_uid")),
-                        UUID.fromString(rs.getString("topping_uid")),
+                        Optional.ofNullable(rs.getString("topping_uid")).map(UUID::fromString),
                         rs.getInt("product_item_quantity"),
-                        rs.getInt("topping_item_per_product_item_quantity"),
+                        Optional.ofNullable(rs.getObject("topping_item_per_product_item_quantity", Integer.class)),
                         rs.getBigDecimal("product_price"),
-                        rs.getBigDecimal("topping_price")
+                        Optional.ofNullable(rs.getBigDecimal("topping_price"))
                 )
         );
     }
+
+
 }

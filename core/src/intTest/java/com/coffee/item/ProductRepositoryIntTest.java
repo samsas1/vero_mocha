@@ -18,7 +18,7 @@ import static org.instancio.Select.field;
 public class ProductRepositoryIntTest {
 
     @Autowired
-    ProductRepository productRepository;
+    ProductRepository underTest;
 
     @Test
     void whenProductPersisted_thenItCanBeRetrieved() {
@@ -26,9 +26,9 @@ public class ProductRepositoryIntTest {
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
-        productRepository.save(product);
+        underTest.save(product);
 
-        ProductEntity fetchedProduct = productRepository.findByUid(product.getUid()).get();
+        ProductEntity fetchedProduct = underTest.findByUid(product.getUid()).get();
 
         assertThat(fetchedProduct)
                 .isNotNull()
