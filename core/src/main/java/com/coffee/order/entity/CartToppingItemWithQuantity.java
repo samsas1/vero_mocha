@@ -7,9 +7,14 @@ import java.math.BigDecimal;
 public record CartToppingItemWithQuantity(
         BigDecimal price,
         Integer quantity) {
+    
     public static CartToppingItemWithQuantity fromCartTotalsEntity(CartItemTableEntryEntity entity) {
         return new CartToppingItemWithQuantity(
                 entity.toppingPrice(),
                 entity.toppingItemPerProductItemQuantity());
+    }
+
+    public BigDecimal getPriceForQuantity() {
+        return this.price().multiply(BigDecimal.valueOf(this.quantity()));
     }
 }

@@ -18,5 +18,8 @@ public record CartProductItemWithQuantity(
                 entity.productItemQuantity());
     }
 
+    public BigDecimal getPriceForQuantity() {
+        return this.price().multiply(BigDecimal.valueOf(this.quantity()));
+    }
 
 }

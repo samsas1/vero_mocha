@@ -52,6 +52,4 @@ public class DiscountService {
                 );
         return new CartItemMap(productsToToppings);
     }
-
-
 }

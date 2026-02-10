@@ -7,7 +7,6 @@ public record ExternalDiscountResult(
         ExternalDiscountType discountType,
         BigDecimal originalPrice,
         BigDecimal finalPrice,
-        UUID discountedProductUid,
-        UUID discountedToppingUid
+        UUID discountedProductUid
 ) {
 }
