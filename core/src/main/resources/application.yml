@@ -16,5 +16,12 @@ spring:
     hikari:
       data-source-properties:
         stringtype: unspecified
+  jpa:
+    properties:
+      hibernate:
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          batch_size: 50
 server:
   port: 5000

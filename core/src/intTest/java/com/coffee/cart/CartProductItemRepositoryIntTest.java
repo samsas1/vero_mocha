@@ -41,8 +41,8 @@ public class CartProductItemRepositoryIntTest {
     private CartEntity cart;
     private ProductEntity product;
     private ProductEntity anotherProduct;
-    private int quantityOfProduct;
-    private int quantityOfAnotherProduct;
+    private int quantityOfCartProductItem;
+    private int quantityOfAnotherCartProductItem;
     private Instant instant;
 
     @BeforeEach
@@ -63,15 +63,15 @@ public class CartProductItemRepositoryIntTest {
         productRepository.save(product);
         productRepository.save(anotherProduct);
 
-        quantityOfProduct = Instancio.create(int.class);
-        quantityOfAnotherProduct = Instancio.create(int.class);
+        quantityOfCartProductItem = Instancio.create(int.class);
+        quantityOfAnotherCartProductItem = Instancio.create(int.class);
         // Truncated to millis to avoid precision loss when comparing with db value
         instant = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     }
 
     @Test
     void whenCartProductItemPersisted_thenItCanBeRetrieved() {
-        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+        UUID uid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
         CartProductItemEntity cartProductItemEntity = cartProductItemRepository.findByUid(uid).orElseThrow();
 
         assertThat(cartProductItemEntity)
@@ -87,7 +87,7 @@ public class CartProductItemRepositoryIntTest {
                         uid,
                         cart,
                         product,
-                        quantityOfProduct,
+                        quantityOfCartProductItem,
                         instant
                 );
     }
@@ -95,9 +95,9 @@ public class CartProductItemRepositoryIntTest {
     @Test
     void whenMultipleCartProductItemsWithTheSameProductForTheSameCart_thenAllCanBeRetrieved() {
         // First cart product item
-        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+        UUID uid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
         // Second cart product item for the same cart and same product
-        UUID secondUid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+        UUID secondUid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
 
         List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
 
@@ -111,18 +111,18 @@ public class CartProductItemRepositoryIntTest {
                         CartProductItemEntity::getCreatedAt
                 )
                 .containsExactlyInAnyOrder(
-                        tuple(uid, cart, product, quantityOfProduct, instant),
-                        tuple(secondUid, cart, product, quantityOfProduct, instant)
+                        tuple(uid, cart, product, quantityOfCartProductItem, instant),
+                        tuple(secondUid, cart, product, quantityOfCartProductItem, instant)
                 );
     }
 
     @Test
     void whenMultipleCartProductItemsWithDifferingProductsForTheSameCart_thenAllCanBeRetrieved() {
         // First cart product item
-        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+        UUID uid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
 
         // Second cart product item for the same cart but different product
-        UUID secondUid = saveCartProductItem(cart, anotherProduct, quantityOfAnotherProduct, instant);
+        UUID secondUid = saveCartProductItem(cart, anotherProduct, quantityOfAnotherCartProductItem, instant);
 
 
         List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
@@ -137,8 +137,8 @@ public class CartProductItemRepositoryIntTest {
                         CartProductItemEntity::getCreatedAt
                 )
                 .containsExactlyInAnyOrder(
-                        tuple(uid, cart, product, quantityOfProduct, instant),
-                        tuple(secondUid, cart, anotherProduct, quantityOfAnotherProduct, instant)
+                        tuple(uid, cart, product, quantityOfCartProductItem, instant),
+                        tuple(secondUid, cart, anotherProduct, quantityOfAnotherCartProductItem, instant)
                 );
     }
 
@@ -147,7 +147,7 @@ public class CartProductItemRepositoryIntTest {
         int secondQuantityOfProduct = Instancio.create(int.class);
 
         // First cart product item
-        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+        UUID uid = saveCartProductItem(cart, product, quantityOfCartProductItem, instant);
 
         // Second cart product item for the same cart but different product
         UUID secondUid = saveCartProductItem(cart, product, secondQuantityOfProduct, instant);
@@ -165,7 +165,7 @@ public class CartProductItemRepositoryIntTest {
                         CartProductItemEntity::getCreatedAt
                 )
                 .containsExactlyInAnyOrder(
-                        tuple(uid, cart, product, quantityOfProduct, instant),
+                        tuple(uid, cart, product, quantityOfCartProductItem, instant),
                         tuple(secondUid, cart, product, secondQuantityOfProduct, instant)
                 );
     }
@@ -176,7 +176,7 @@ public class CartProductItemRepositoryIntTest {
                 .set(field("sid"), null) // required for auto generation
                 .create();
 
-        assertThatThrownBy(() -> saveCartProductItem(nonExistingCart, product, quantityOfProduct, instant))
+        assertThatThrownBy(() -> saveCartProductItem(nonExistingCart, product, quantityOfCartProductItem, instant))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
@@ -187,7 +187,7 @@ public class CartProductItemRepositoryIntTest {
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
 
-        assertThatThrownBy(() -> saveCartProductItem(cart, nonExistingProduct, quantityOfProduct, instant))
+        assertThatThrownBy(() -> saveCartProductItem(cart, nonExistingProduct, quantityOfCartProductItem, instant))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 

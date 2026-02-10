@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cart_product_item")
+@Table(name = "cart_topping_item")
 public class CartToppingItemEntity {
 
     @Id
