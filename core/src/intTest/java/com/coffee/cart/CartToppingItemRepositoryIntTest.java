@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.instancio.Select.field;
 
 @SpringBootTest
@@ -49,30 +50,45 @@ public class CartToppingItemRepositoryIntTest {
     private CartEntity cart;
     private ProductEntity product;
     private ToppingEntity topping;
+    private ToppingEntity anotherTopping;
     private UUID cartProductItemUid;
     private int quantityOfCartProductItem;
     private Instant instant;
     private UUID cartToppingItemUid;
     private int quantityOfCartToppingItem;
+    private int quantityOfAnotherCartToppingItem;
+    private CartTopping cartTopping;
 
     @BeforeEach
     void setUp() {
+        // Set up cart
         cart = Instancio.of(CartEntity.class)
                 .set(field("sid"), null) // required for auto generation
                 .create();
+        cartRepository.save(cart);
+
+        // Set up product
         product = Instancio.of(ProductEntity.class)
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
+        productRepository.save(product);
+
+        // Set up toppings
         topping = Instancio.of(ToppingEntity.class)
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
-
-        cartRepository.save(cart);
-        productRepository.save(product);
         toppingRepository.save(topping);
 
+        anotherTopping = Instancio.of(ToppingEntity.class)
+                .set(field("sid"), null) // required for auto generation
+                .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
+                .create();
+        toppingRepository.save(anotherTopping);
+
+
+        // Set up product item
         cartProductItemUid = UUID.randomUUID();
         quantityOfCartProductItem = Instancio.create(int.class);
         // Truncated to millis to avoid precision loss when comparing with db value
@@ -86,20 +102,22 @@ public class CartToppingItemRepositoryIntTest {
                 instant
         );
 
+        // Cart topping properties
         cartToppingItemUid = UUID.randomUUID();
         quantityOfCartToppingItem = Instancio.create(int.class);
-
-    }
-
-    @Test
-    void whenCartToppingItemIsPersisted_thenItCanBeRetrieved() {
-        CartTopping cartTopping = new CartTopping(
+        quantityOfAnotherCartToppingItem = Instancio.create(int.class);
+        cartTopping = new CartTopping(
                 cartToppingItemUid,
                 cartProductItemUid,
                 topping.getUid(),
                 quantityOfCartToppingItem,
                 instant
         );
+
+    }
+
+    @Test
+    void whenCartToppingItemIsPersisted_thenItCanBeRetrieved() {
         cartToppingItemRepository.saveCartProduct(List.of(cartTopping));
 
         CartToppingItemEntity cartToppingItemEntity = cartToppingItemRepository.findByUid(cartToppingItemUid).orElseThrow();
@@ -125,7 +143,42 @@ public class CartToppingItemRepositoryIntTest {
 
     @Test
     void whenMultipleCartToppingItemsWithTheSameProductItemButDifferentToppings_thenAllCanBePersistedAndRetrieved() {
-        // TODO
+        CartTopping anotherCartTopping = new CartTopping(
+                UUID.randomUUID(),
+                cartProductItemUid,
+                anotherTopping.getUid(),
+                quantityOfAnotherCartToppingItem,
+                instant
+        );
+
+        cartToppingItemRepository.saveCartProduct(List.of(cartTopping, anotherCartTopping));
+
+        List<CartToppingItemEntity> cartToppingItemEntities = cartToppingItemRepository.findAll();
+
+        assertThat(cartToppingItemEntities)
+                .extracting(
+                        CartToppingItemEntity::getUid,
+                        o -> o.getCartProductItem().getUid(),
+                        CartToppingItemEntity::getTopping,
+                        CartToppingItemEntity::getQuantity,
+                        CartToppingItemEntity::getCreatedAt
+                )
+                .containsExactlyInAnyOrder(
+                        tuple(
+                                cartToppingItemUid,
+                                cartProductItemUid,
+                                topping,
+                                quantityOfCartToppingItem,
+                                instant
+                        ),
+                        tuple(
+                                anotherCartTopping.uid(),
+                                cartProductItemUid,
+                                anotherTopping,
+                                quantityOfAnotherCartToppingItem,
+                                instant
+                        )
+                );
     }
 
     @Test

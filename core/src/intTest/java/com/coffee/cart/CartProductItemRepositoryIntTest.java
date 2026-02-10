@@ -47,22 +47,26 @@ public class CartProductItemRepositoryIntTest {
 
     @BeforeEach
     void setUp() {
+        // Set up cart
         cart = Instancio.of(CartEntity.class)
                 .set(field("sid"), null) // required for auto generation
                 .create();
+        cartRepository.save(cart);
+
+        // Set up products
         product = Instancio.of(ProductEntity.class)
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
+        productRepository.save(product);
+
         anotherProduct = Instancio.of(ProductEntity.class)
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.valueOf(2)) // required for positive value db constraint
                 .create();
-
-        cartRepository.save(cart);
-        productRepository.save(product);
         productRepository.save(anotherProduct);
 
+        // Product item properties
         quantityOfCartProductItem = Instancio.create(int.class);
         quantityOfAnotherCartProductItem = Instancio.create(int.class);
         // Truncated to millis to avoid precision loss when comparing with db value
