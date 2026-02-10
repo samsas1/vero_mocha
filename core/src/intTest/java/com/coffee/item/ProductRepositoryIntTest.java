@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.instancio.Select.field;
@@ -23,15 +22,13 @@ public class ProductRepositoryIntTest {
 
     @Test
     void whenProductPersisted_thenItCanBeRetrieved() {
-        UUID uid = UUID.randomUUID();
         ProductEntity product = Instancio.of(ProductEntity.class)
                 .set(field("sid"), null) // required for auto generation
-                .set(field("uid"), uid)
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
         productRepository.save(product);
 
-        ProductEntity fetchedProduct = productRepository.findByUid(uid).get();
+        ProductEntity fetchedProduct = productRepository.findByUid(product.getUid()).get();
 
         assertThat(fetchedProduct)
                 .isNotNull()
@@ -44,7 +41,7 @@ public class ProductRepositoryIntTest {
                         i -> i.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
                 )
                 .containsExactly(
-                        uid,
+                        product.getUid(),
                         product.getName(),
                         product.getPrice(),
                         product.getStatus(),

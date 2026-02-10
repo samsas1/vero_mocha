@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.instancio.Select.field;
@@ -23,15 +22,13 @@ public class ToppingRepositoryIntTest {
 
     @Test
     void whenToppingPersisted_thenItCanBeRetrieved() {
-        UUID uid = UUID.randomUUID();
         ToppingEntity topping = Instancio.of(ToppingEntity.class)
                 .set(field("sid"), null) // required for auto generation
-                .set(field("uid"), uid)
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
         toppingRepository.save(topping);
 
-        ToppingEntity fetchedTopping = toppingRepository.findByUid(uid).get();
+        ToppingEntity fetchedTopping = toppingRepository.findByUid(topping.getUid()).get();
 
         assertThat(fetchedTopping)
                 .isNotNull()
@@ -44,7 +41,7 @@ public class ToppingRepositoryIntTest {
                         i -> i.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)
                 )
                 .containsExactly(
-                        uid,
+                        topping.getUid(),
                         topping.getName(),
                         topping.getPrice(),
                         topping.getStatus(),
