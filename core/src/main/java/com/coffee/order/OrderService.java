@@ -82,8 +82,8 @@ public class OrderService {
                 .getOrderToppingItemEntitiesByCustomerOrderProductItemIn(orderProductEntityItems);
         Map<UUID, List<CustomerOrderToppingItemEntity>> productItemUUIDToTopping = orderToppingItemEntities
                 .stream()
-                .collect(groupingBy(o ->
-                                o.getCustomerOrderProductItem().getUid()
+                .collect(
+                        groupingBy(o -> o.getCustomerOrderProductItem().getUid()
                         )
                 );
 
