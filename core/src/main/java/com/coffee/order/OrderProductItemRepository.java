@@ -1,7 +1,7 @@
 package com.coffee.order;
 
 import com.coffee.order.custom.query.batch.OrderProductItemBatchRepository;
-import com.coffee.order.entity.CustomerOrderProductItemEntity;
+import com.coffee.order.entity.database.CustomerOrderProductItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

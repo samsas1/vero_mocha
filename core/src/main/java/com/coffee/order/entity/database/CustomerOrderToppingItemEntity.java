@@ -1,4 +1,4 @@
-package com.coffee.order.entity;
+package com.coffee.order.entity.database;
 
 import com.coffee.item.entity.ToppingEntity;
 import jakarta.persistence.*;

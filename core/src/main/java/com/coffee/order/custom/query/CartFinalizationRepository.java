@@ -1,6 +1,6 @@
 package com.coffee.order.custom.query;
 
-import com.coffee.order.entity.CartTotalsEntity;
+import com.coffee.order.entity.database.CartItemTableEntryEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -21,9 +21,9 @@ public class CartFinalizationRepository {
                     p.uid AS product_uid,
                     t.uid AS topping_uid,
                     cpi.quantity AS product_item_quantity,
-                    cti.quantity AS topping_item_per_product_item_quantity,
+                    COALESCE(cti.quantity, 0) AS topping_item_per_product_item_quantity,
                     p.price   AS product_price,
-                    t.price   AS topping_price
+                    COALESCE(t.price, 0)   AS topping_price
                 FROM cart c
                     JOIN public.cart_product_item cpi on c.sid = cpi.cart_sid
                     JOIN product p ON cpi.product_sid = p.sid
@@ -35,21 +35,22 @@ public class CartFinalizationRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
     @Transactional
-    public List<CartTotalsEntity> listCartTotals(UUID userUid) {
+    public List<CartItemTableEntryEntity> listCartItemTable(UUID userUid) {
         return jdbcTemplate.query(
                 FETCH_CART_TOTALS,
                 new Object[]{userUid},
-                (rs, rowNum) -> new CartTotalsEntity(
+                (rs, rowNum) -> new CartItemTableEntryEntity(
                         UUID.fromString(rs.getString("cart_uid")),
                         UUID.fromString(rs.getString("product_item_uid")),
                         Optional.ofNullable(rs.getString("topping_item_uid")).map(UUID::fromString),
                         UUID.fromString(rs.getString("product_uid")),
                         Optional.ofNullable(rs.getString("topping_uid")).map(UUID::fromString),
                         rs.getInt("product_item_quantity"),
-                        Optional.ofNullable(rs.getObject("topping_item_per_product_item_quantity", Integer.class)),
+                        rs.getInt("topping_item_per_product_item_quantity"),
                         rs.getBigDecimal("product_price"),
-                        Optional.ofNullable(rs.getBigDecimal("topping_price"))
+                        rs.getBigDecimal("topping_price")
                 )
         );
     }

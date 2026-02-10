@@ -10,7 +10,7 @@ import com.coffee.item.ToppingRepository;
 import com.coffee.item.entity.ProductEntity;
 import com.coffee.item.entity.ToppingEntity;
 import com.coffee.order.custom.query.CartFinalizationRepository;
-import com.coffee.order.entity.CartTotalsEntity;
+import com.coffee.order.entity.database.CartItemTableEntryEntity;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -120,7 +120,7 @@ public class CartFinalizationRepositoryIntTest {
 
     @Test
     void whenCartFinalizationFetchedForEmptyCart_thenResultIsEmpty() {
-        assertThat(underTest.listCartTotals(userUid)).isEmpty();
+        assertThat(underTest.listCartItemTable(userUid)).isEmpty();
     }
 
 
@@ -128,17 +128,17 @@ public class CartFinalizationRepositoryIntTest {
     void whenCartFinalizationFetchedForOneProductAndNoToppings_thenResultOnlyContainsProduct() {
         UUID cartProductItemUid = setUpProductItem(cart, quantityOfCartProductItem, instant, product);
 
-        assertThat(underTest.listCartTotals(userUid))
+        assertThat(underTest.listCartItemTable(userUid))
                 .extracting(
-                        CartTotalsEntity::cartUid,
-                        CartTotalsEntity::productItemUid,
-                        CartTotalsEntity::toppingItemUid,
-                        CartTotalsEntity::productUid,
-                        CartTotalsEntity::toppingUid,
-                        CartTotalsEntity::productItemQuantity,
-                        CartTotalsEntity::toppingItemPerProductItemQuantity,
-                        CartTotalsEntity::productPrice,
-                        CartTotalsEntity::toppingPrice
+                        CartItemTableEntryEntity::cartUid,
+                        CartItemTableEntryEntity::productItemUid,
+                        CartItemTableEntryEntity::toppingItemUid,
+                        CartItemTableEntryEntity::productUid,
+                        CartItemTableEntryEntity::toppingUid,
+                        CartItemTableEntryEntity::productItemQuantity,
+                        CartItemTableEntryEntity::toppingItemPerProductItemQuantity,
+                        CartItemTableEntryEntity::productPrice,
+                        CartItemTableEntryEntity::toppingPrice
                 )
                 .containsExactly(
                         tuple(
@@ -148,9 +148,9 @@ public class CartFinalizationRepositoryIntTest {
                                 product.getUid(),
                                 Optional.empty(),
                                 quantityOfCartProductItem,
-                                Optional.empty(),
+                                BigDecimal.ZERO,
                                 product.getPrice(),
-                                Optional.empty()
+                                BigDecimal.ZERO
                         )
                 );
 
@@ -185,17 +185,17 @@ public class CartFinalizationRepositoryIntTest {
                 instant
         );
 
-        assertThat(underTest.listCartTotals(userUid))
+        assertThat(underTest.listCartItemTable(userUid))
                 .extracting(
-                        CartTotalsEntity::cartUid,
-                        CartTotalsEntity::productItemUid,
-                        CartTotalsEntity::toppingItemUid,
-                        CartTotalsEntity::productUid,
-                        CartTotalsEntity::toppingUid,
-                        CartTotalsEntity::productItemQuantity,
-                        CartTotalsEntity::toppingItemPerProductItemQuantity,
-                        CartTotalsEntity::productPrice,
-                        CartTotalsEntity::toppingPrice
+                        CartItemTableEntryEntity::cartUid,
+                        CartItemTableEntryEntity::productItemUid,
+                        CartItemTableEntryEntity::toppingItemUid,
+                        CartItemTableEntryEntity::productUid,
+                        CartItemTableEntryEntity::toppingUid,
+                        CartItemTableEntryEntity::productItemQuantity,
+                        CartItemTableEntryEntity::toppingItemPerProductItemQuantity,
+                        CartItemTableEntryEntity::productPrice,
+                        CartItemTableEntryEntity::toppingPrice
                 )
                 .containsExactly(
                         tuple(cart.getUid(),
@@ -204,9 +204,9 @@ public class CartFinalizationRepositoryIntTest {
                                 product.getUid(),
                                 Optional.of(topping.getUid()),
                                 quantityOfCartProductItem,
-                                Optional.of(quantityOfCartToppingItem),
+                                quantityOfCartToppingItem,
                                 product.getPrice(),
-                                Optional.of(topping.getPrice())
+                                topping.getPrice()
                         ),
                         tuple(
                                 cart.getUid(),
@@ -215,9 +215,9 @@ public class CartFinalizationRepositoryIntTest {
                                 product.getUid(),
                                 Optional.of(anotherTopping.getUid()),
                                 quantityOfCartProductItem,
-                                Optional.of(quantityOfAnotherCartToppingItem),
+                                quantityOfAnotherCartToppingItem,
                                 product.getPrice(),
-                                Optional.of(anotherTopping.getPrice())
+                                anotherTopping.getPrice()
 
                         )
                 );

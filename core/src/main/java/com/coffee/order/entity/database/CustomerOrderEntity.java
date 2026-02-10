@@ -1,5 +1,6 @@
-package com.coffee.order.entity;
+package com.coffee.order.entity.database;
 
+import com.coffee.order.entity.InternalOrderStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
