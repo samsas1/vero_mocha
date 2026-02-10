@@ -32,3 +32,7 @@ CREATE TABLE cart_topping_item
     created_at            timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Ensure that multiple repeats of toppings are calculated via quantity, not multiple rows
+ALTER TABLE cart_topping_item
+    ADD CONSTRAINT unique_cart_product_item_topping_cart_topping_item UNIQUE (cart_product_item_sid, topping_sid);
+

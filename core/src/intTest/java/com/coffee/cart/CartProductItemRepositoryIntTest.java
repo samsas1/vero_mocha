@@ -94,7 +94,6 @@ public class CartProductItemRepositoryIntTest {
 
     @Test
     void whenMultipleCartProductItemsWithTheSameProductForTheSameCart_thenAllCanBeRetrieved() {
-        ;
         // First cart product item
         UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
         // Second cart product item for the same cart and same product
@@ -189,6 +188,12 @@ public class CartProductItemRepositoryIntTest {
                 .create();
 
         assertThatThrownBy(() -> saveCartProductItem(cart, nonExistingProduct, quantityOfProduct, instant))
+                .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void whenCartProductItemQuantityBelowOne_thenPersistenceFails() {
+        assertThatThrownBy(() -> saveCartProductItem(cart, product, 0, instant))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
