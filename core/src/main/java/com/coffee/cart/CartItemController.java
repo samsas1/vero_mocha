@@ -34,4 +34,6 @@ public class CartItemController {
     public ExternalCartItemResponse getCartItems(@RequestHeader("user") UUID userUid) {
         return cartItemService.getCartItems(userUid);
     }
+
+    // TODO update cart item
 }

@@ -33,27 +33,55 @@ public class CustomerOrderEntity {
         return uid;
     }
 
+    public void setUid(UUID uid) {
+        this.uid = uid;
+    }
+
     public UUID getUserUid() {
         return userUid;
+    }
+
+    public void setUserUid(UUID userUid) {
+        this.userUid = userUid;
     }
 
     public InternalOrderStatus getOrderStatus() {
         return orderStatus;
     }
 
+    public void setOrderStatus(InternalOrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     public BigDecimal getOriginalPrice() {
         return originalPrice;
+    }
+
+    public void setOriginalPrice(BigDecimal originalPrice) {
+        this.originalPrice = originalPrice;
     }
 
     public BigDecimal getFinalPrice() {
         return finalPrice;
     }
 
+    public void setFinalPrice(BigDecimal finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
