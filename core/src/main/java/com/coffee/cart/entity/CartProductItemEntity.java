@@ -20,6 +20,8 @@ public class CartProductItemEntity {
     @ManyToOne(optional = false)
     private ProductEntity product;
     @Column(nullable = false)
+    private int quantity;
+    @Column(nullable = false)
     private Instant createdAt;
 
     public UUID getUid() {
@@ -32,6 +34,10 @@ public class CartProductItemEntity {
 
     public ProductEntity getProduct() {
         return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public Instant getCreatedAt() {

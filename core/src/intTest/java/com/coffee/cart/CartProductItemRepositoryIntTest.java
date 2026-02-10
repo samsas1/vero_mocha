@@ -11,13 +11,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.instancio.Select.field;
 
 @SpringBootTest
@@ -36,6 +40,10 @@ public class CartProductItemRepositoryIntTest {
 
     private CartEntity cart;
     private ProductEntity product;
+    private ProductEntity anotherProduct;
+    private int quantityOfProduct;
+    private int quantityOfAnotherProduct;
+    private Instant instant;
 
     @BeforeEach
     void setUp() {
@@ -46,23 +54,24 @@ public class CartProductItemRepositoryIntTest {
                 .set(field("sid"), null) // required for auto generation
                 .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
                 .create();
+        anotherProduct = Instancio.of(ProductEntity.class)
+                .set(field("sid"), null) // required for auto generation
+                .set(field("price"), BigDecimal.valueOf(2)) // required for positive value db constraint
+                .create();
+
         cartRepository.save(cart);
         productRepository.save(product);
+        productRepository.save(anotherProduct);
+
+        quantityOfProduct = Instancio.create(int.class);
+        quantityOfAnotherProduct = Instancio.create(int.class);
+        // Truncated to millis to avoid precision loss when comparing with db value
+        instant = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     }
 
     @Test
     void whenCartProductItemPersisted_thenItCanBeRetrieved() {
-        // Truncated to millis to avoid precision loss when comparing with db value
-        Instant instant = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-        UUID uid = UUID.randomUUID();
-        cartProductItemRepository.saveCartProduct(
-                uid,
-                cart.getUserUid(),
-                product.getUid(),
-                1,
-                instant
-        );
-
+        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
         CartProductItemEntity cartProductItemEntity = cartProductItemRepository.findByUid(uid).orElseThrow();
 
         assertThat(cartProductItemEntity)
@@ -71,23 +80,127 @@ public class CartProductItemRepositoryIntTest {
                         CartProductItemEntity::getUid,
                         CartProductItemEntity::getCart,
                         CartProductItemEntity::getProduct,
+                        CartProductItemEntity::getQuantity,
                         CartProductItemEntity::getCreatedAt
                 )
                 .containsExactly(
                         uid,
                         cart,
                         product,
+                        quantityOfProduct,
                         instant
                 );
     }
 
     @Test
-    void whenMultipleCartProductItemsForTheSameCart_thenAllCanBeRetrieved() {
-        // TODO
+    void whenMultipleCartProductItemsWithTheSameProductForTheSameCart_thenAllCanBeRetrieved() {
+        ;
+        // First cart product item
+        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+        // Second cart product item for the same cart and same product
+        UUID secondUid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+
+        List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
+
+        assertThat(cartProductItems)
+                .hasSize(2)
+                .extracting(
+                        CartProductItemEntity::getUid,
+                        CartProductItemEntity::getCart,
+                        CartProductItemEntity::getProduct,
+                        CartProductItemEntity::getQuantity,
+                        CartProductItemEntity::getCreatedAt
+                )
+                .containsExactlyInAnyOrder(
+                        tuple(uid, cart, product, quantityOfProduct, instant),
+                        tuple(secondUid, cart, product, quantityOfProduct, instant)
+                );
+    }
+
+    @Test
+    void whenMultipleCartProductItemsWithDifferingProductsForTheSameCart_thenAllCanBeRetrieved() {
+        // First cart product item
+        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+
+        // Second cart product item for the same cart but different product
+        UUID secondUid = saveCartProductItem(cart, anotherProduct, quantityOfAnotherProduct, instant);
+
+
+        List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
+
+        assertThat(cartProductItems)
+                .hasSize(2)
+                .extracting(
+                        CartProductItemEntity::getUid,
+                        CartProductItemEntity::getCart,
+                        CartProductItemEntity::getProduct,
+                        CartProductItemEntity::getQuantity,
+                        CartProductItemEntity::getCreatedAt
+                )
+                .containsExactlyInAnyOrder(
+                        tuple(uid, cart, product, quantityOfProduct, instant),
+                        tuple(secondUid, cart, anotherProduct, quantityOfAnotherProduct, instant)
+                );
     }
 
     @Test
     void whenMultipleCartProductItemsForTheSameProduct_thenAllCanBePersistedAndRetrieved() {
-        // TODO
+        int secondQuantityOfProduct = Instancio.create(int.class);
+
+        // First cart product item
+        UUID uid = saveCartProductItem(cart, product, quantityOfProduct, instant);
+
+        // Second cart product item for the same cart but different product
+        UUID secondUid = saveCartProductItem(cart, product, secondQuantityOfProduct, instant);
+
+
+        List<CartProductItemEntity> cartProductItems = cartProductItemRepository.findAll();
+
+        assertThat(cartProductItems)
+                .hasSize(2)
+                .extracting(
+                        CartProductItemEntity::getUid,
+                        CartProductItemEntity::getCart,
+                        CartProductItemEntity::getProduct,
+                        CartProductItemEntity::getQuantity,
+                        CartProductItemEntity::getCreatedAt
+                )
+                .containsExactlyInAnyOrder(
+                        tuple(uid, cart, product, quantityOfProduct, instant),
+                        tuple(secondUid, cart, product, secondQuantityOfProduct, instant)
+                );
+    }
+
+    @Test
+    void whenCartProductItemForNonExistingCart_thenPersistenceFails() {
+        CartEntity nonExistingCart = Instancio.of(CartEntity.class)
+                .set(field("sid"), null) // required for auto generation
+                .create();
+
+        assertThatThrownBy(() -> saveCartProductItem(nonExistingCart, product, quantityOfProduct, instant))
+                .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void whenCartProductItemForNonExistingProduct_thenPersistenceFails() {
+        ProductEntity nonExistingProduct = Instancio.of(ProductEntity.class)
+                .set(field("sid"), null) // required for auto generation
+                .set(field("price"), BigDecimal.ONE) // required for positive value db constraint
+                .create();
+
+        assertThatThrownBy(() -> saveCartProductItem(cart, nonExistingProduct, quantityOfProduct, instant))
+                .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    private UUID saveCartProductItem(CartEntity cart, ProductEntity product, int quantity, Instant createdAt) {
+        UUID uid = UUID.randomUUID();
+        cartProductItemRepository.saveCartProduct(
+                uid,
+                cart.getUserUid(),
+                product.getUid(),
+                quantity,
+                createdAt
+        );
+        return uid;
     }
 }
