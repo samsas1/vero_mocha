@@ -35,5 +35,10 @@ public class CartItemController {
         return cartItemService.getCartItems(userUid);
     }
 
+    @DeleteMapping
+    public void clearCart(@RequestHeader("user") UUID userUid) {
+        cartItemService.clearCart(userUid);
+    }
+
     // TODO update cart item
 }

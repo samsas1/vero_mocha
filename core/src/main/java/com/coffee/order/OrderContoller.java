@@ -4,8 +4,11 @@ import com.coffee.publicapi.ExternalOrderPlacementResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/order")
@@ -20,7 +23,7 @@ public class OrderContoller {
     }
 
     @PostMapping
-    public ExternalOrderPlacementResponse placeOrder() {
-
+    public ExternalOrderPlacementResponse placeOrder(@RequestHeader("user") UUID userUid) {
+        return orderService.placeOrder(userUid);
     }
 }
