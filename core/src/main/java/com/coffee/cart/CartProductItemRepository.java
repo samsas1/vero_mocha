@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,4 +45,5 @@ public interface CartProductItemRepository extends JpaRepository<CartProductItem
 
     Optional<CartProductItemEntity> findByUid(UUID uid);
 
+    List<CartProductItemEntity> getCartProductItemEntitiesByCart_UserUid(UUID userUid);
 }

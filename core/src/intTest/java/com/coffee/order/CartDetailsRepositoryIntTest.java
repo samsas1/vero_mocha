@@ -3,13 +3,13 @@ package com.coffee.order;
 import com.coffee.cart.CartProductItemRepository;
 import com.coffee.cart.CartRepository;
 import com.coffee.cart.CartToppingItemRepository;
+import com.coffee.cart.custom.query.CartDetailsRepository;
 import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
 import com.coffee.cart.entity.CartEntity;
 import com.coffee.item.ProductRepository;
 import com.coffee.item.ToppingRepository;
 import com.coffee.item.entity.ProductEntity;
 import com.coffee.item.entity.ToppingEntity;
-import com.coffee.order.custom.query.CartFinalizationRepository;
 import com.coffee.order.entity.database.CartItemTableEntryEntity;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ import static org.instancio.Select.field;
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
-public class CartFinalizationRepositoryIntTest {
+public class CartDetailsRepositoryIntTest {
 
     @Autowired
     CartRepository cartRepository;
@@ -51,7 +51,7 @@ public class CartFinalizationRepositoryIntTest {
     CartToppingItemRepository cartToppingItemRepository;
 
     @Autowired
-    CartFinalizationRepository underTest;
+    CartDetailsRepository underTest;
 
 
     private UUID userUid;

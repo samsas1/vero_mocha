@@ -1,12 +1,13 @@
 package com.coffee.order;
 
-import com.coffee.order.entity.CartItemMap;
-import com.coffee.order.entity.CartProductItemWithQuantity;
-import com.coffee.order.entity.CartToppingItemWithQuantity;
+import com.coffee.cart.entity.CartItemList;
+import com.coffee.cart.entity.CartProductItem;
+import com.coffee.cart.entity.CartToppingItem;
 import com.coffee.publicapi.ExternalDiscountResponse;
 import com.coffee.publicapi.ExternalDiscountType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class FreeItemLargeOrderDiscountHandler implements DiscountHandler {
 
     private static final Logger log = LoggerFactory.getLogger(FreeItemLargeOrderDiscountHandler.class);
@@ -22,20 +24,20 @@ public class FreeItemLargeOrderDiscountHandler implements DiscountHandler {
     private final int largeOrderProductCountThreshold = 3;
 
 
-    public Optional<ExternalDiscountResponse> handle(CartItemMap cartItemMap) {
-        if (!discountApplies(cartItemMap)) {
+    public Optional<ExternalDiscountResponse> handle(CartItemList cartItemList) {
+        if (!discountApplies(cartItemList)) {
             log.debug("Discount does not apply to cart");
             return Optional.empty();
         }
 
-        List<ProductAndToppingItemTotal> productAndToppingItemTotals = getProductItemPriceIncludingToppings(cartItemMap);
+        List<ProductAndToppingItemTotal> productAndToppingItemTotals = getProductItemPriceIncludingToppings(cartItemList);
         log.debug("ProductAndToppingTotals: {}", productAndToppingItemTotals);
 
         ProductAndToppingItemTotal cheapestProductItem = findCheapestItem(productAndToppingItemTotals);
         log.debug("Cheapest product item total object: {}", cheapestProductItem);
 
         // TODO extract original price into call to not recompute
-        BigDecimal originalPrice = cartItemMap.getTotalOriginalPrice();
+        BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
         BigDecimal finalPrice = originalPrice.subtract(cheapestProductItem.priceIncludingToppings());
 
         return Optional.of(new ExternalDiscountResponse(
@@ -52,31 +54,31 @@ public class FreeItemLargeOrderDiscountHandler implements DiscountHandler {
                 .orElseThrow();
     }
 
-    private boolean discountApplies(CartItemMap cartItemMap) {
-        return !cartItemMap.productsToToppings().isEmpty() &&
-                cartItemMap.productsToToppings().size() >= largeOrderProductCountThreshold;
+    private boolean discountApplies(CartItemList cartItemList) {
+        return !cartItemList.cartItems().isEmpty() &&
+                cartItemList.cartItems().size() >= largeOrderProductCountThreshold;
     }
 
-    private List<ProductAndToppingItemTotal> getProductItemPriceIncludingToppings(CartItemMap cartItemMap) {
-        return cartItemMap
-                .productsToToppings().entrySet()
+    private List<ProductAndToppingItemTotal> getProductItemPriceIncludingToppings(CartItemList cartItemList) {
+        return cartItemList
+                .cartItems()
                 .stream()
-                .map(entry -> {
+                .map(cartItem -> {
                     // Get product item object
-                    CartProductItemWithQuantity productItemWithQuantity = entry.getKey();
+                    CartProductItem cartProductItem = cartItem.cartProductItem();
                     // Calculate total price for the quantity of product
-                    BigDecimal totalPriceForProduct = productItemWithQuantity.getPriceForQuantity();
+                    BigDecimal totalPriceForProduct = cartProductItem.getPriceForQuantity();
                     // Get topping item objects associated with product
-                    List<CartToppingItemWithQuantity> cartToppingItemsWithQuantity = entry.getValue();
+                    List<CartToppingItem> cartToppingItemsWithQuantity = cartItem.cartToppingItemList();
                     //Calculate total price for the quantity of topping
                     BigDecimal totalPriceForProductToppings = cartToppingItemsWithQuantity.stream()
                             // Get price for distinct topping item and its quantity
-                            .map(CartToppingItemWithQuantity::getPriceForQuantity)
+                            .map(CartToppingItem::getPriceForQuantity)
                             //Sum across topping items
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                     BigDecimal totalPrice = totalPriceForProduct.add(totalPriceForProductToppings);
-                    return new ProductAndToppingItemTotal(productItemWithQuantity.productItemUid(), totalPrice);
+                    return new ProductAndToppingItemTotal(cartProductItem.productItemUid(), totalPrice);
 
                 })
                 .toList();

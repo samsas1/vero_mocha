@@ -1,0 +1,79 @@
+package com.coffee.cart.entity;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+
+public record CartItemList(
+        List<CartItem> cartItems
+) {
+
+    // TODO extract the mapping to a class to properly test
+    public static CartItemList fromCartItemEntities(
+            List<CartProductItemEntity> cartProductItemEntities,
+            List<CartToppingItemEntity> cartToppingItemEntities) {
+        // Generate a map of product item uuid to pertinent topping item information
+        Map<UUID, List<CartToppingItem>> productItemsToToppings = cartToppingItemEntities
+                .stream()
+                .collect(Collectors.groupingBy(
+                        topping -> topping.getCartProductItem().getUid(),
+                        Collectors.mapping(
+                                topping -> new CartToppingItem(
+                                        topping.getUid(),
+                                        topping.getTopping().getUid(),
+                                        topping.getTopping().getPrice(),
+                                        topping.getQuantity()
+                                ),
+                                Collectors.toList()
+                        )
+                ));
+
+        // Use the map above and iterate over product items to combine the product items
+        // and topping items into cart item objects
+        List<CartItem> cartItems = cartProductItemEntities
+                .stream()
+                .map(o -> new CartProductItem(
+                        o.getUid(),
+                        o.getProduct().getUid(),
+                        o.getProduct().getPrice(),
+                        o.getQuantity()
+                ))
+                .map(
+                        o -> new CartItem(
+                                o,
+                                productItemsToToppings.getOrDefault(o.productItemUid(), List.of())
+                        )
+                )
+                .toList();
+        return new CartItemList(cartItems);
+    }
+
+    public BigDecimal getTotalOriginalPrice() {
+        return this.getTotalProductsPrice().add(this.getTotalToppingsPrice());
+    }
+
+    public BigDecimal getTotalProductsPrice() {
+        return this.cartItems()
+                .stream()
+                // Get products
+                .map(CartItem::cartProductItem)
+                // Get price for the quantity of products
+                .map(CartProductItem::getPriceForQuantity)
+                // Sum for all products
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotalToppingsPrice() {
+        return this.cartItems()
+                .stream()
+                // Flatten map into list of toppings
+                .flatMap(cartItem -> cartItem.cartToppingItemList().stream()
+                        // Get price for the quantity of topping
+                        .map(CartToppingItem::getPriceForQuantity))
+                // Sum for all toppings
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+}

@@ -1,4 +1,4 @@
-package com.coffee.order.custom.query;
+package com.coffee.cart.custom.query;
 
 import com.coffee.order.entity.database.CartItemTableEntryEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class CartFinalizationRepository {
+public class CartDetailsRepository {
 
     private static final String FETCH_CART_TOTALS = """
                 SELECT

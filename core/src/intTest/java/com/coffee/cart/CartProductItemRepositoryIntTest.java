@@ -212,4 +212,9 @@ public class CartProductItemRepositoryIntTest {
         );
         return uid;
     }
+
+    @Test
+    void tt() {
+        underTest.getCartProductItemEntitiesByCart_UserUid(UUID.randomUUID());
+    }
 }

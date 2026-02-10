@@ -2,6 +2,7 @@ package com.coffee.cart;
 
 import com.coffee.item.ItemManagementController;
 import com.coffee.publicapi.ExternalCartItemRequest;
+import com.coffee.publicapi.ExternalCartItemResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ public class CartItemController {
         this.cartItemService = cartItemService;
     }
 
-    @PostMapping
+    @PostMapping("/item")
     public UUID addToCart(@RequestHeader("user") UUID userUid, @RequestBody ExternalCartItemRequest cartItemRequest) {
         return cartItemService.addItemToCart(userUid, cartItemRequest);
     }
 
-    @GetMapping
-    public _ getCart(@RequestHeader("user") UUID userUid) {
-
+    @GetMapping("/item")
+    public ExternalCartItemResponse getCartItems(@RequestHeader("user") UUID userUid) {
+        return null;
     }
 }
