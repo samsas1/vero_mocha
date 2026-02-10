@@ -1,4 +1,11 @@
 package com.coffee.publicapi;
 
-public record ExternalOrderPlacementResponse() {
+import java.math.BigDecimal;
+import java.util.UUID;
+
+public record ExternalOrderPlacementResponse(
+        UUID orderUid,
+        BigDecimal originalPrice,
+        BigDecimal finalPrice
+) {
 }

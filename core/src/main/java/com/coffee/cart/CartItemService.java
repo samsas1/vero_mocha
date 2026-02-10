@@ -72,6 +72,10 @@ public class CartItemService {
         return cartProductItemUid;
     }
 
+    public void clearCart(UUID userUid) {
+        cartProductItemRepository.deleteAllByCart_UserUid(userUid);
+    }
+
     public CartItemList getCartItemList(UUID userUid) {
         List<CartProductItemEntity> cartProductEntityItems = cartProductItemRepository
                 .getCartProductItemEntitiesByCart_UserUid(userUid);
