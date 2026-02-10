@@ -1,9 +1,7 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.custom.query.CartDetailsRepository;
 import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
-import com.coffee.order.entity.database.CartItemTableEntryEntity;
 import com.coffee.publicapi.ExternalCartItemRequest;
 import com.coffee.publicapi.ExternalCartItemResponse;
 import jakarta.transaction.Transactional;
@@ -28,10 +26,8 @@ public class CartItemService {
     @Autowired
     private CartToppingItemRepository cartToppingItemRepository;
 
-    @Autowired
-    private CartDetailsRepository cartDetailsRepository;
-
-    public CartItemService(CartProductItemRepository cartProductItemRepository, CartToppingItemRepository cartToppingItemRepository) {
+    public CartItemService(CartProductItemRepository cartProductItemRepository,
+                           CartToppingItemRepository cartToppingItemRepository) {
         this.cartProductItemRepository = cartProductItemRepository;
         this.cartToppingItemRepository = cartToppingItemRepository;
     }
@@ -74,7 +70,6 @@ public class CartItemService {
     public ExternalCartItemResponse getCartItems(UUID userUid) {
 
         cartProductItemRepository.getCartProductItemEntitiesByCart_UserUid(userUid);
-        List<CartItemTableEntryEntity> cartItemTableEntryEntities = cartDetailsRepository.listCartItemTable(userUid);
         return null;
     }
 }
