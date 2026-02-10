@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 
-public interface OrderProductItemRepository extends
-        JpaRepository<CustomerOrderProductItemEntity, Integer> {
+public interface OrderProductItemRepository extends JpaRepository<CustomerOrderProductItemEntity, Integer> {
 
     @Modifying
     @Query(nativeQuery = true, value = """
@@ -43,4 +43,6 @@ public interface OrderProductItemRepository extends
                                 FROM cart_product_item_fields
             """)
     void writeOrderProductItemsFromCart(UUID userUid, UUID orderUid, Instant createdAt, Instant updatedAt);
+
+    List<CustomerOrderProductItemEntity> getCustomerOrderProductItemEntitiesByCustomerOrder_UserUid(UUID userUid);
 }

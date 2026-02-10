@@ -27,4 +27,32 @@ public class CustomerOrderProductItemEntity {
     private Instant createdAt;
     @Column(nullable = false)
     private Instant updatedAt;
+
+    public UUID getUid() {
+        return uid;
+    }
+
+    public CustomerOrderEntity getCustomerOrder() {
+        return customerOrder;
+    }
+
+    public ProductEntity getProduct() {
+        return product;
+    }
+
+    public BigDecimal getOriginalPricePerProduct() {
+        return originalPricePerProduct;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

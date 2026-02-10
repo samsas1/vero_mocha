@@ -1,11 +1,13 @@
 package com.coffee.order;
 
+import com.coffee.order.entity.database.CustomerOrderProductItemEntity;
 import com.coffee.order.entity.database.CustomerOrderToppingItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public interface OrderToppingItemRepository extends
@@ -44,4 +46,6 @@ public interface OrderToppingItemRepository extends
                                 FROM cart_topping_item_fields
             """)
     void writeOrderToppingItemsFromCart(UUID userUid, Instant createdAt, Instant updatedAt);
+
+    List<CustomerOrderToppingItemEntity> getOrderToppingItemEntitiesByCustomerOrderProductItemIn(List<CustomerOrderProductItemEntity> productItemEntities);
 }
