@@ -8,6 +8,19 @@ public enum DiscountType {
     FULL_CART,
     FREE_ITEM_FOR_LARGE_ORDER;
 
+    public static DiscountType fromExternal(ExternalDiscountType discountType) {
+        switch (discountType) {
+            case NO_DISCOUNT:
+                return NO_DISCOUNT;
+            case FULL_CART:
+                return FULL_CART;
+            case FREE_ITEM_FOR_LARGE_ORDER:
+                return FREE_ITEM_FOR_LARGE_ORDER;
+            default:
+                throw new IllegalArgumentException("Unknown discount type: " + this);
+        }
+    }
+
     public ExternalDiscountType toExternal() {
         switch (this) {
             case NO_DISCOUNT:

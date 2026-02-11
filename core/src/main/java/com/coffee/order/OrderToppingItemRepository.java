@@ -37,7 +37,7 @@ public interface OrderToppingItemRepository extends
                                                                          updated_at
                                                                          ) 
                                 SELECT topping_item_uid,
-                                       (SELECT sid FROM customer_order_product_item WHERE uid = product_item_uid)
+                                       (SELECT sid FROM customer_order_product_item WHERE uid = product_item_uid),
                                        topping_sid,
                                        topping_price,
                                        topping_item_quantity,

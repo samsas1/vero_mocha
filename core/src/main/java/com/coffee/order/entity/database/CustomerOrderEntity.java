@@ -1,5 +1,6 @@
 package com.coffee.order.entity.database;
 
+import com.coffee.order.entity.DiscountType;
 import com.coffee.order.entity.InternalOrderStatus;
 import jakarta.persistence.*;
 
@@ -20,6 +21,8 @@ public class CustomerOrderEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private InternalOrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType;
     @Column(nullable = false)
     private BigDecimal originalPrice;
     @Column(nullable = false)
@@ -51,6 +54,14 @@ public class CustomerOrderEntity {
 
     public void setOrderStatus(InternalOrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public DiscountType getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(DiscountType discountType) {
+        this.discountType = discountType;
     }
 
     public BigDecimal getOriginalPrice() {

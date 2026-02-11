@@ -2,7 +2,7 @@ package com.coffee.order;
 
 import com.coffee.cart.CartItemService;
 import com.coffee.cart.DiscountService;
-import com.coffee.order.entity.InternalOrderStatus;
+import com.coffee.order.entity.DiscountType;
 import com.coffee.order.entity.database.CustomerOrderEntity;
 import com.coffee.order.entity.database.CustomerOrderProductItemEntity;
 import com.coffee.order.entity.database.CustomerOrderToppingItemEntity;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.coffee.order.entity.InternalOrderStatus.PLACED;
 import static java.util.stream.Collectors.groupingBy;
 
 @Service
@@ -54,7 +55,8 @@ public class OrderService {
         CustomerOrderEntity orderEntity = new CustomerOrderEntity();
         orderEntity.setUid(orderUid);
         orderEntity.setUserUid(userUid);
-        orderEntity.setOrderStatus(InternalOrderStatus.PLACED);
+        orderEntity.setOrderStatus(PLACED);
+        orderEntity.setDiscountType(DiscountType.fromExternal(discountResponse.discountType()));
         orderEntity.setOriginalPrice(discountResponse.originalPrice());
         orderEntity.setFinalPrice(discountResponse.finalPrice());
         orderEntity.setCreatedAt(now);
@@ -62,8 +64,6 @@ public class OrderService {
 
         orderRepository.save(orderEntity);
 
-        // Would be good to have an intermediate object here, not use external
-        ExternalCartItemResponse externalCartItemResponse = cartItemService.getCartItems(userUid);
         orderProductItemRepository.writeOrderProductItemsFromCart(userUid, orderUid, now, now);
         orderToppingItemRepository.writeOrderToppingItemsFromCart(userUid, now, now);
         // wipe cart
@@ -80,10 +80,12 @@ public class OrderService {
                 .getCustomerOrderProductItemEntitiesByCustomerOrder_UserUid(userUid);
         List<CustomerOrderToppingItemEntity> orderToppingItemEntities = orderToppingItemRepository
                 .getOrderToppingItemEntitiesByCustomerOrderProductItemIn(orderProductEntityItems);
+        
         Map<UUID, List<CustomerOrderToppingItemEntity>> productItemUUIDToTopping = orderToppingItemEntities
                 .stream()
                 .collect(
-                        groupingBy(o -> o.getCustomerOrderProductItem().getUid()
+                        groupingBy(o ->
+                                o.getCustomerOrderProductItem().getUid()
                         )
                 );
 

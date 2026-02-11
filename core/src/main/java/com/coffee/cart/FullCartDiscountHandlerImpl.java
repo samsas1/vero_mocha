@@ -13,9 +13,9 @@ import java.util.Optional;
 import static com.coffee.publicapi.ExternalDiscountType.FULL_CART;
 
 @Component
-public class FullCartDiscountHandler implements DiscountHandler {
+public class FullCartDiscountHandlerImpl implements DiscountHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(FullCartDiscountHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(FullCartDiscountHandlerImpl.class);
 
     // TODO add to config
     private final BigDecimal discountMultiplier = BigDecimal.valueOf(0.75);

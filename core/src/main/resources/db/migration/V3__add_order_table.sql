@@ -11,7 +11,7 @@ CREATE TABLE customer_order
     original_price NUMERIC       NOT NULL CHECK (original_price >= 0),
     -- Assuming taxes are calculated in original price and shipping is free
     -- Would need to relax this constraint otherwise
-    final_price    NUMERIC       NOT NULL CHECK (final_price >= original_price),
+    final_price    NUMERIC       NOT NULL CHECK (final_price <= original_price),
     created_at     timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at     timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

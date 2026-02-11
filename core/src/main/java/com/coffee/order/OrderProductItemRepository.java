@@ -34,7 +34,7 @@ public interface OrderProductItemRepository extends JpaRepository<CustomerOrderP
                                                                          updated_at
                                                                          ) 
                                 SELECT product_item_uid,
-                                       (SELECT sid FROM customer_order WHERE uid = :orderUid)
+                                       (SELECT sid FROM customer_order WHERE uid = :orderUid),
                                        product_sid,
                                        product_price,
                                        product_item_quantity,

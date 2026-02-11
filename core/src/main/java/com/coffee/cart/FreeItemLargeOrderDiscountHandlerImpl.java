@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class FreeItemLargeOrderDiscountHandler implements DiscountHandler {
+public class FreeItemLargeOrderDiscountHandlerImpl implements DiscountHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(FreeItemLargeOrderDiscountHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(FreeItemLargeOrderDiscountHandlerImpl.class);
 
     // TODO add to config so this value can be in the constructor and tested properly
     private final int largeOrderProductCountThreshold = 3;

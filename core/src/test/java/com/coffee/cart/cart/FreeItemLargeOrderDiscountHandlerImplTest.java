@@ -1,6 +1,6 @@
 package com.coffee.cart.cart;
 
-import com.coffee.cart.FreeItemLargeOrderDiscountHandler;
+import com.coffee.cart.FreeItemLargeOrderDiscountHandlerImpl;
 import com.coffee.cart.entity.CartItem;
 import com.coffee.cart.entity.CartItemList;
 import com.coffee.cart.entity.CartProductItem;
@@ -17,7 +17,7 @@ import static com.coffee.publicapi.ExternalDiscountType.FREE_ITEM_FOR_LARGE_ORDE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.instancio.Select.field;
 
-public class FreeItemLargeOrderDiscountHandlerTest {
+public class FreeItemLargeOrderDiscountHandlerImplTest {
 
 
     private final int largeOrderProductCountThreshold = 3;
@@ -47,11 +47,11 @@ public class FreeItemLargeOrderDiscountHandlerTest {
     private List<CartItem> cartItems;
 
 
-    private FreeItemLargeOrderDiscountHandler underTest;
+    private FreeItemLargeOrderDiscountHandlerImpl underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new FreeItemLargeOrderDiscountHandler();
+        underTest = new FreeItemLargeOrderDiscountHandlerImpl();
 
         // Components for cheapest product and topping
         // Total product price = 1 x 1.1 = 1.1

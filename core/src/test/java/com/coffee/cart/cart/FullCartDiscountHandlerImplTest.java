@@ -1,6 +1,6 @@
 package com.coffee.cart.cart;
 
-import com.coffee.cart.FullCartDiscountHandler;
+import com.coffee.cart.FullCartDiscountHandlerImpl;
 import com.coffee.cart.entity.CartItemList;
 import com.coffee.cart.entity.CartProductItem;
 import com.coffee.cart.entity.CartToppingItem;
@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FullCartDiscountHandlerTest {
+public class FullCartDiscountHandlerImplTest {
     private final BigDecimal discountMultiplier = BigDecimal.valueOf(0.75);
     private final BigDecimal discountThreshold = BigDecimal.valueOf(12);
 
@@ -46,7 +46,7 @@ public class FullCartDiscountHandlerTest {
 
     private Map<CartProductItem, List<CartToppingItem>> productsToToppings;
 
-    private FullCartDiscountHandler underTest;
+    private FullCartDiscountHandlerImpl underTest;
 
     @BeforeEach
     void setUp() {
