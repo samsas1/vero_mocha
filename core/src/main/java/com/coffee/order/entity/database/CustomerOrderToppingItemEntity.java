@@ -37,6 +37,10 @@ public class CustomerOrderToppingItemEntity {
         return customerOrderProductItem;
     }
 
+    public UUID getProductItemUid() {
+        return customerOrderProductItem.getUid();
+    }
+
     public ToppingEntity getTopping() {
         return topping;
     }
