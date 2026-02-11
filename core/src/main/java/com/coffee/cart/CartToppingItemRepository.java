@@ -1,8 +1,8 @@
 package com.coffee.cart;
 
 import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository;
-import com.coffee.cart.entity.CartProductItemEntity;
-import com.coffee.cart.entity.CartToppingItemEntity;
+import com.coffee.cart.entity.database.CartProductItemEntity;
+import com.coffee.cart.entity.database.CartToppingItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

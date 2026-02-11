@@ -1,6 +1,6 @@
 package com.coffee.order.entity.database;
 
-import com.coffee.item.entity.ToppingEntity;
+import com.coffee.item.entity.database.ToppingEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

@@ -18,10 +18,11 @@ public class CustomerOrderEntity {
     private UUID uid;
     @Column(nullable = false)
     private UUID userUid;
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private InternalOrderStatus orderStatus;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DiscountType discountType;
     @Column(nullable = false)
     private BigDecimal originalPrice;

@@ -1,7 +1,7 @@
 package com.coffee.item;
 
 import com.coffee.item.entity.InternalItemStatus;
-import com.coffee.item.entity.ProductEntity;
+import com.coffee.item.entity.database.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

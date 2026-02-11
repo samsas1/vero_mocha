@@ -1,4 +1,4 @@
-package com.coffee.cart.entity;
+package com.coffee.cart.entity.database;
 
 import jakarta.persistence.*;
 

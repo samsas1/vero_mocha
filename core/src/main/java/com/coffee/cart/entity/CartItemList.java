@@ -1,5 +1,8 @@
 package com.coffee.cart.entity;
 
+import com.coffee.cart.entity.database.CartProductItemEntity;
+import com.coffee.cart.entity.database.CartToppingItemEntity;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;

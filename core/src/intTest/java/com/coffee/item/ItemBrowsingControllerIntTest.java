@@ -1,7 +1,7 @@
 package com.coffee.item;
 
-import com.coffee.item.entity.ProductEntity;
-import com.coffee.item.entity.ToppingEntity;
+import com.coffee.item.entity.database.ProductEntity;
+import com.coffee.item.entity.database.ToppingEntity;
 import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

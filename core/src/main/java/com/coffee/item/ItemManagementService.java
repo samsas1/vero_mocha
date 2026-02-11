@@ -2,8 +2,8 @@ package com.coffee.item;
 
 import com.coffee.admin.*;
 import com.coffee.exception.ResourceNotFoundException;
-import com.coffee.item.entity.ProductEntity;
-import com.coffee.item.entity.ToppingEntity;
+import com.coffee.item.entity.database.ProductEntity;
+import com.coffee.item.entity.database.ToppingEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

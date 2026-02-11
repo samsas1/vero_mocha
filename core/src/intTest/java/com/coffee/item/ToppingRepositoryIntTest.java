@@ -1,6 +1,6 @@
 package com.coffee.item;
 
-import com.coffee.item.entity.ToppingEntity;
+import com.coffee.item.entity.database.ToppingEntity;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

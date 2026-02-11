@@ -10,8 +10,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public interface OrderToppingItemRepository extends
-        JpaRepository<CustomerOrderToppingItemEntity, Integer> {
+public interface OrderToppingItemRepository extends JpaRepository<CustomerOrderToppingItemEntity, Integer> {
 
     @Modifying
     @Query(nativeQuery = true, value = """

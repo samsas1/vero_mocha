@@ -1,7 +1,8 @@
-package com.coffee.item.entity;
+package com.coffee.item.entity.database;
 
 import com.coffee.admin.ToppingRequest;
 import com.coffee.admin.ToppingResponse;
+import com.coffee.item.entity.InternalItemStatus;
 import com.coffee.publicapi.ExternalToppingResponse;
 import jakarta.persistence.*;
 

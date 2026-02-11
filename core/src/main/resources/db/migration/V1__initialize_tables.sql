@@ -1,6 +1,6 @@
 CREATE TYPE item_status AS ENUM ('ACTIVE', 'INACTIVE');
 
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS  product
 (
     sid   SERIAL PRIMARY KEY,
     uid   UUID UNIQUE NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE product
     updated_at timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE topping
+CREATE TABLE IF NOT EXISTS  topping
 (
     sid   SERIAL PRIMARY KEY,
     uid   UUID UNIQUE NOT NULL,

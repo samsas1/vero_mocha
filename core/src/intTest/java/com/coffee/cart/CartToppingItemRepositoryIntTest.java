@@ -2,12 +2,12 @@ package com.coffee.cart;
 
 
 import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
-import com.coffee.cart.entity.CartEntity;
-import com.coffee.cart.entity.CartToppingItemEntity;
+import com.coffee.cart.entity.database.CartEntity;
+import com.coffee.cart.entity.database.CartToppingItemEntity;
 import com.coffee.item.ProductRepository;
 import com.coffee.item.ToppingRepository;
-import com.coffee.item.entity.ProductEntity;
-import com.coffee.item.entity.ToppingEntity;
+import com.coffee.item.entity.database.ProductEntity;
+import com.coffee.item.entity.database.ToppingEntity;
 import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,5 +1,6 @@
 package com.coffee;
 
+import com.coffee.publicapi.ExternalOrderPlacementResponse;
 import com.coffee.publicapi.ExternalOrderResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +29,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> placeOrder(@RequestHeader(USER_HEADER) UUID userUid) {
+    public ResponseEntity<ExternalOrderPlacementResponse> placeOrder(@RequestHeader(USER_HEADER) UUID userUid) {
         log.info("Placing order for user: {}", userUid);
         return coreClient.post()
                 .uri("/order")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
-                .toEntity(UUID.class);
+                .toEntity(ExternalOrderPlacementResponse.class);
     }
 
     @GetMapping

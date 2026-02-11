@@ -1,7 +1,7 @@
 CREATE TYPE order_status AS ENUM ('PLACED', 'FULFILLED', 'CANCELLED');
 CREATE TYPE discount_type AS ENUM ('NO_DISCOUNT','FULL_CART', 'FREE_ITEM_FOR_LARGE_ORDER');
 
-CREATE TABLE customer_order
+CREATE TABLE IF NOT EXISTS customer_order
 (
     sid            SERIAL PRIMARY KEY,
     uid            UUID UNIQUE   NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE customer_order
     updated_at     timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE customer_order_product_item
+CREATE TABLE IF NOT EXISTS customer_order_product_item
 (
     sid                        SERIAL PRIMARY KEY,
     uid                        UUID UNIQUE NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE customer_order_product_item
     updated_at                 timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE customer_order_topping_item
+CREATE TABLE IF NOT EXISTS customer_order_topping_item
 (
     sid                             SERIAL PRIMARY KEY,
     uid                             UUID UNIQUE NOT NULL,

@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +15,8 @@ public class CartToppingItemBatchRepositoryImpl implements CartToppingItemBatchR
     private static final String BATCH_INSERT = """
                         INSERT INTO cart_topping_item (uid, cart_product_item_sid, topping_sid, quantity, created_at) 
                         VALUES (?,
-                        SELECT sid FROM cart_product_item WHERE ? = uid,
-                        SELECT sid FROM topping WHERE ? = uid,
+                        (SELECT sid FROM cart_product_item WHERE ? = uid),
+                        (SELECT sid FROM topping WHERE ? = uid),
                          ?,
                          ?)
             """;
@@ -31,7 +32,7 @@ public class CartToppingItemBatchRepositoryImpl implements CartToppingItemBatchR
                         p.cartProductItemUid(),
                         p.toppingUid(),
                         p.quantity(),
-                        p.createdAt(),
+                        Timestamp.from(p.createdAt()),
                 })
                 .collect(Collectors.toList());
         jdbcTemplate.batchUpdate(BATCH_INSERT, batchArgs);

@@ -1,7 +1,8 @@
-package com.coffee.item.entity;
+package com.coffee.item.entity.database;
 
 import com.coffee.admin.ProductRequest;
 import com.coffee.admin.ProductResponse;
+import com.coffee.item.entity.InternalItemStatus;
 import com.coffee.publicapi.ExternalProductResponse;
 import jakarta.persistence.*;
 

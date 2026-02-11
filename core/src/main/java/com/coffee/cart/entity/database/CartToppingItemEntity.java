@@ -1,24 +1,24 @@
-package com.coffee.cart.entity;
+package com.coffee.cart.entity.database;
 
-import com.coffee.item.entity.ProductEntity;
+import com.coffee.item.entity.database.ToppingEntity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cart_product_item")
-public class CartProductItemEntity {
+@Table(name = "cart_topping_item")
+public class CartToppingItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer sid;
     @Column(nullable = false)
     private UUID uid;
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    private CartProductItemEntity cartProductItem;
     @ManyToOne(optional = false)
-    private CartEntity cart;
-    @ManyToOne(optional = false)
-    private ProductEntity product;
+    private ToppingEntity topping;
     @Column(nullable = false)
     private int quantity;
     @Column(nullable = false)
@@ -28,12 +28,12 @@ public class CartProductItemEntity {
         return uid;
     }
 
-    public CartEntity getCart() {
-        return cart;
+    public CartProductItemEntity getCartProductItem() {
+        return cartProductItem;
     }
 
-    public ProductEntity getProduct() {
-        return product;
+    public ToppingEntity getTopping() {
+        return topping;
     }
 
     public int getQuantity() {

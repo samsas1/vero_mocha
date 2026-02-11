@@ -1,4 +1,4 @@
-CREATE TABLE cart
+CREATE TABLE IF NOT EXISTS cart
 (
     sid        SERIAL PRIMARY KEY,
     uid        UUID UNIQUE NOT NULL,
@@ -13,17 +13,17 @@ INSERT INTO cart (uid, user_uid)
 VALUES (gen_random_uuid(),
         '7ad5bc4e-0de9-41dc-a5b6-745c1debba23');
 
-CREATE TABLE cart_product_item
+CREATE TABLE IF NOT EXISTS cart_product_item
 (
     sid         SERIAL PRIMARY KEY,
     uid         UUID UNIQUE NOT NULL,
-    cart_sid    INT         NOT NULL REFERENCES cart (sid),
+    cart_sid    INT         NOT NULL REFERENCES cart (sid) ON DELETE CASCADE,
     product_sid INT         NOT NULL REFERENCES product (sid),
     quantity    integer     NOT NULL CHECK (quantity > 0),
     created_at  timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE cart_topping_item
+CREATE TABLE IF NOT EXISTS cart_topping_item
 (
     sid                   SERIAL PRIMARY KEY,
     uid                   UUID UNIQUE NOT NULL,
@@ -36,4 +36,3 @@ CREATE TABLE cart_topping_item
 -- Ensure that multiple repeats of toppings are calculated via quantity, not multiple rows
 ALTER TABLE cart_topping_item
     ADD CONSTRAINT unique_cart_product_item_topping_cart_topping_item UNIQUE (cart_product_item_sid, topping_sid);
-

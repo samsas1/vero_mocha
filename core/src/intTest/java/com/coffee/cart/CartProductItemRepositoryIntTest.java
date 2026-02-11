@@ -1,9 +1,9 @@
 package com.coffee.cart;
 
-import com.coffee.cart.entity.CartEntity;
-import com.coffee.cart.entity.CartProductItemEntity;
+import com.coffee.cart.entity.database.CartEntity;
+import com.coffee.cart.entity.database.CartProductItemEntity;
 import com.coffee.item.ProductRepository;
-import com.coffee.item.entity.ProductEntity;
+import com.coffee.item.entity.database.ProductEntity;
 import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -211,10 +211,5 @@ public class CartProductItemRepositoryIntTest {
                 createdAt
         );
         return uid;
-    }
-
-    @Test
-    void tt() {
-        underTest.getCartProductItemEntitiesByCart_UserUid(UUID.randomUUID());
     }
 }

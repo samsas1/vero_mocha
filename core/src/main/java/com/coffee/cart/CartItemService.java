@@ -3,8 +3,8 @@ package com.coffee.cart;
 
 import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
 import com.coffee.cart.entity.CartItemList;
-import com.coffee.cart.entity.CartProductItemEntity;
-import com.coffee.cart.entity.CartToppingItemEntity;
+import com.coffee.cart.entity.database.CartProductItemEntity;
+import com.coffee.cart.entity.database.CartToppingItemEntity;
 import com.coffee.publicapi.ExternalCartItemRequest;
 import com.coffee.publicapi.ExternalCartItemResponse;
 import com.coffee.publicapi.ExternalCartProductItemResponse;
@@ -73,7 +73,7 @@ public class CartItemService {
     }
 
     public void clearCart(UUID userUid) {
-        cartProductItemRepository.deleteAllByCart_UserUid(userUid);
+        cartProductItemRepository.deleteCartItems(userUid);
     }
 
     public CartItemList getCartItemList(UUID userUid) {

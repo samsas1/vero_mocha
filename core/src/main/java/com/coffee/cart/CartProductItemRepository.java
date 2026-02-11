@@ -1,6 +1,6 @@
 package com.coffee.cart;
 
-import com.coffee.cart.entity.CartProductItemEntity;
+import com.coffee.cart.entity.database.CartProductItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -47,5 +47,16 @@ public interface CartProductItemRepository extends JpaRepository<CartProductItem
 
     List<CartProductItemEntity> getCartProductItemEntitiesByCart_UserUid(UUID userUid);
 
-    void deleteAllByCart_UserUid(UUID userUid);
+    /**
+     * Deletes cart items for a given user.
+     * The query deletes product items, but the deletion is cascaded to the topping items via the foreign key constraint with cascade delete.
+     *
+     * @param userUid
+     */
+    @Modifying
+    @Query(nativeQuery = true, value = """
+            DELETE FROM cart_product_item
+            WHERE cart_sid = (SELECT sid FROM cart WHERE user_uid = :userUid)
+            """)
+    void deleteCartItems(UUID userUid);
 }
