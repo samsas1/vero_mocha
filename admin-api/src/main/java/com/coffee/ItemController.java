@@ -28,13 +28,13 @@ public class ItemController {
     }
 
     @PostMapping("/topping")
-    public ResponseEntity<UUID> saveTopping(@RequestBody ToppingRequest toppingRequest) {
+    public ResponseEntity<ToppingResponse> saveTopping(@RequestBody ToppingRequest toppingRequest) {
         log.info("Saving topping: {}", toppingRequest);
         return coreClient.post()
                 .uri("/item/topping")
                 .body(toppingRequest)
                 .retrieve()
-                .toEntity(UUID.class);
+                .toEntity(ToppingResponse.class);
     }
 
     @GetMapping("/topping/{uid}")
@@ -42,6 +42,20 @@ public class ItemController {
         log.info("Getting topping with uid: {}", uid);
         return coreClient.get()
                 .uri("/item/topping/{uid}", uid)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
+                    throw new ResourceNotFoundException("Topping", "uid", uid);
+                })
+                .toEntity(ToppingResponse.class);
+    }
+
+    @PutMapping("/topping/{uid}")
+    public ResponseEntity<ToppingResponse> updateTopping(@PathVariable UUID uid,
+                                                         @RequestBody ToppingRequest request) {
+        log.info("Updating topping with uid: {} with request: {}", uid, request);
+        return coreClient.put()
+                .uri("/item/topping/{uid}", uid)
+                .body(request)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
                     throw new ResourceNotFoundException("Topping", "uid", uid);
@@ -59,13 +73,13 @@ public class ItemController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<UUID> saveProduct(@RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> saveProduct(@RequestBody ProductRequest request) {
         log.info("Saving product: {}", request);
         return coreClient.post()
                 .uri("/item/product")
                 .body(request)
                 .retrieve()
-                .toEntity(UUID.class);
+                .toEntity(ProductResponse.class);
     }
 
     @GetMapping("/product/{uid}")
@@ -87,5 +101,19 @@ public class ItemController {
                 .uri("/item/product")
                 .retrieve()
                 .toEntity(ProductResponseList.class);
+    }
+
+    @PutMapping("/product/{uid}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable UUID uid,
+                                                         @RequestBody ProductRequest request) {
+        log.info("Updating product with uid: {} with request: {}", uid, request);
+        return coreClient.put()
+                .uri("/item/product/{uid}", uid)
+                .body(request)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
+                    throw new ResourceNotFoundException("Product", "uid", uid);
+                })
+                .toEntity(ProductResponse.class);
     }
 }

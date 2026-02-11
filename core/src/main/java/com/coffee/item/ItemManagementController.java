@@ -22,7 +22,7 @@ public class ItemManagementController {
     }
 
     @PostMapping("/topping")
-    public ResponseEntity<UUID> saveTopping(@RequestBody ToppingRequest toppingDTO) {
+    public ResponseEntity<ToppingResponse> saveTopping(@RequestBody ToppingRequest toppingDTO) {
         log.info("Received request to save topping: {}", toppingDTO);
         return ResponseEntity.ok(itemManagementService.saveTopping(toppingDTO));
     }
@@ -37,6 +37,13 @@ public class ItemManagementController {
     public ResponseEntity<ToppingResponse> getTopping(@PathVariable UUID uid) {
         log.info("Received request to get topping with uid: {}", uid);
         return ResponseEntity.ok(itemManagementService.getTopping(uid));
+    }
+
+    @PutMapping("/topping/{uid}")
+    public ResponseEntity<ToppingResponse> updateTopping(@PathVariable("uid") UUID toppingUid,
+                                                         @RequestBody ToppingRequest toppingDTO) {
+        log.info("Received request to update topping with uid: {} and request: {}", toppingUid, toppingDTO);
+        return ResponseEntity.ok(itemManagementService.updateTopping(toppingUid, toppingDTO));
     }
 
     @PostMapping("/product")
@@ -57,8 +64,10 @@ public class ItemManagementController {
         return ResponseEntity.ok(itemManagementService.getProduct(uid));
     }
 
-    //TODO update and delete endpoints for both product and topping
-    public UUID updateProductToppings() {
-        return null;
+    @PutMapping("/product/{uid}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable("uid") UUID productUid,
+                                                         @RequestBody ProductRequest productDTO) {
+        log.info("Received request to update product with uid: {} and request: {}", productUid, productDTO);
+        return ResponseEntity.ok(itemManagementService.updateProduct(productUid, productDTO));
     }
 }

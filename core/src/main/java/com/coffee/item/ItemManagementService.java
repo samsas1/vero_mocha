@@ -8,8 +8,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import static com.coffee.item.entity.InternalItemStatus.fromExternal;
 
 @Service
 @Transactional
@@ -28,18 +32,31 @@ public class ItemManagementService {
 
     public ToppingResponseList listToppings() {
         List<ToppingResponse> toppings = toppingRepository.findAllByOrderByCreatedAtDesc()
-                .stream().map(ToppingEntity::toExternalAdmin).toList();
+                .stream().map(this::map).toList();
         return new ToppingResponseList(toppings);
     }
 
     public ToppingResponse getTopping(UUID uid) {
         return toppingRepository.findByUid(uid)
-                .map(ToppingEntity::toExternalAdmin)
+                .map(this::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Topping", "uid", uid));
     }
 
-    public UUID saveTopping(ToppingRequest topping) {
-        return toppingRepository.save(ToppingEntity.fromExternal(topping)).getUid();
+    public ToppingResponse saveTopping(ToppingRequest topping) {
+        return map(toppingRepository.save(ToppingEntity.fromExternal(topping)));
+    }
+
+
+    public ToppingResponse updateTopping(UUID toppingUid, ToppingRequest toppingRequest) {
+        Instant instant = Instant.now();
+        ToppingEntity topping = toppingRepository.findByUid(toppingUid)
+                .orElseThrow(() -> new ResourceNotFoundException("Topping", "uid", toppingUid));
+        topping.setName(toppingRequest.name());
+        topping.setPrice(toppingRequest.price());
+        Optional.ofNullable(toppingRequest.itemStatus())
+                .ifPresent(status -> topping.setStatus(fromExternal(status)));
+        topping.setUpdatedAt(instant);
+        return map(topping);
     }
 
     public ProductResponseList listProducts() {
@@ -56,6 +73,27 @@ public class ItemManagementService {
 
     public UUID saveProduct(ProductRequest topping) {
         return productRepository.save(ProductEntity.fromExternal(topping)).getUid();
+    }
+
+    public ProductResponse updateProduct(UUID productUid, ProductRequest productRequest) {
+        Instant instant = Instant.now();
+        ProductEntity product = productRepository.findByUid(productUid)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "uid", productUid));
+        product.setName(productRequest.name());
+        product.setPrice(productRequest.price());
+        Optional.ofNullable(productRequest.itemStatus())
+                .ifPresent(status -> product.setStatus(fromExternal(status)));
+        product.setUpdatedAt(instant);
+        return map(product);
+    }
+
+
+    private ToppingResponse map(ToppingEntity topping) {
+        return topping.toExternalAdmin();
+    }
+
+    private ProductResponse map(ProductEntity product) {
+        return product.toExternalAdmin();
     }
 
 

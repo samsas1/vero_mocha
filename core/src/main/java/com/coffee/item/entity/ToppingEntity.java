@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
+
+import static com.coffee.item.entity.InternalItemStatus.ACTIVE;
 
 /**
  * Topping entity representing a topping that can be added to a product.
@@ -38,7 +41,9 @@ public class ToppingEntity {
         entity.uid = UUID.randomUUID();
         entity.name = topping.name();
         entity.price = topping.price();
-        entity.status = InternalItemStatus.ACTIVE;
+        entity.status = Optional.ofNullable(topping.itemStatus())
+                .map(InternalItemStatus::fromExternal)
+                .orElse(ACTIVE);
         // TODO: use time provider for timestamps
         entity.createdAt = Instant.now();
         entity.updatedAt = Instant.now();
@@ -49,24 +54,48 @@ public class ToppingEntity {
         return uid;
     }
 
+    public void setUid(UUID uid) {
+        this.uid = uid;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     public InternalItemStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(InternalItemStatus status) {
+        this.status = status;
     }
 
     public Instant getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public ToppingResponse toExternalAdmin() {

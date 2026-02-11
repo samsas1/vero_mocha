@@ -1,9 +1,16 @@
 package com.coffee.admin;
 
+import com.coffee.enumerators.ItemStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public record ProductRequest(
+        @JsonProperty("name")
         String name,
-        BigDecimal price
+        @JsonProperty("price")
+        BigDecimal price,
+        @JsonProperty("itemStatus")
+        ItemStatus itemStatus
 ) {
 }
