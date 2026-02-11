@@ -24,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class ItemBrowsingControllerIntTest {
 
-    private static final String TOPPING_ENDPOINT = "/menu/topping";
-    private static final String PRODUCT_ENDPOINT = "/menu/product";
+    private static final String TOPPING_ENDPOINT = "/menu/toppings";
+    private static final String PRODUCT_ENDPOINT = "/menu/products";
 
     @Autowired
     private MockMvc mockMvc;

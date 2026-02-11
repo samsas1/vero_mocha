@@ -22,13 +22,13 @@ public class ItemBrowsingController {
         this.itemBrowsingService = itemBrowsingService;
     }
 
-    @GetMapping("/topping")
+    @GetMapping("/toppings")
     public ResponseEntity<ExternalToppingResponseList> listActiveToppings() {
         log.info("Received request to list active toppings");
         return ResponseEntity.ok(itemBrowsingService.listActiveToppings());
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public ResponseEntity<ExternalProductResponseList> listActiveProducts() {
         log.info("Received request to list active products");
         return ResponseEntity.ok(itemBrowsingService.listActiveProducts());

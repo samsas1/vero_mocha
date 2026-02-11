@@ -31,21 +31,21 @@ public class ItemBrowsingController {
         this.coreClient = coreClient;
     }
 
-    @GetMapping("/topping")
+    @GetMapping("/toppings")
     public ResponseEntity<ExternalToppingResponseList> listActiveToppings(@RequestHeader("user") UUID userUid) {
         log.info("Received request to list active toppings from user: {}", userUid);
         return coreClient.get()
-                .uri("/menu/topping")
+                .uri("/menu/toppings")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
                 .toEntity(ExternalToppingResponseList.class);
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public ResponseEntity<ExternalProductResponseList> getCartItems(@RequestHeader("user") UUID userUid) {
         log.info("Received request to list active products from user: {}", userUid);
         return coreClient.get()
-                .uri("/menu/product")
+                .uri("/menu/products")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
                 .toEntity(ExternalProductResponseList.class);

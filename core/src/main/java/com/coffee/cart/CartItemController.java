@@ -26,17 +26,17 @@ public class CartItemController {
         this.cartItemService = cartItemService;
     }
 
-    @PostMapping("/item")
+    @PostMapping("/items")
     public ResponseEntity<UUID> addToCart(@RequestHeader("user") UUID userUid, @RequestBody ExternalCartItemRequest cartItemRequest) {
         return ResponseEntity.ok(cartItemService.addItemToCart(userUid, cartItemRequest));
     }
 
-    @GetMapping("/item")
+    @GetMapping("/items")
     public ResponseEntity<ExternalCartItemResponse> getCartItems(@RequestHeader("user") UUID userUid) {
         return ResponseEntity.ok(cartItemService.getCartItems(userUid));
     }
 
-    @DeleteMapping("/item")
+    @DeleteMapping("/items")
     public ResponseEntity<Void> clearCart(@RequestHeader("user") UUID userUid) {
         cartItemService.clearCart(userUid);
         return ResponseEntity.ok().build();

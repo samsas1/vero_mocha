@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClient;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 @Validated
 public class OrderController {
 
@@ -32,7 +32,7 @@ public class OrderController {
     public ResponseEntity<ExternalOrderPlacementResponse> placeOrder(@RequestHeader(USER_HEADER) UUID userUid) {
         log.info("Placing order for user: {}", userUid);
         return coreClient.post()
-                .uri("/order")
+                .uri("/orders")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
                 .toEntity(ExternalOrderPlacementResponse.class);
@@ -42,7 +42,7 @@ public class OrderController {
     public ResponseEntity<ExternalOrderResponse> listOrders(@RequestHeader(USER_HEADER) UUID userUid) {
         log.info("Getting orders for user: {}", userUid);
         return coreClient.get()
-                .uri("/order")
+                .uri("/orders")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
                 .toEntity(ExternalOrderResponse.class);
