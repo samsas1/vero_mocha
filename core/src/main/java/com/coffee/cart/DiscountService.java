@@ -41,7 +41,7 @@ public class DiscountService {
                 .map(o -> o.handle(cartItemList))
                 .flatMap(Optional::stream);
 
-        // Return smallest discount or return NO discount response
+        // Return smallest discount or return NO_DISCOUNT response
         return applicableDiscounts
                 .min(Comparator.comparing(ExternalDiscountResponse::finalPrice))
                 .orElse(new ExternalDiscountResponse(

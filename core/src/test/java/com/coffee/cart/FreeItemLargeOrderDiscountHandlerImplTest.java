@@ -117,7 +117,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
     }
 
     @Test
-    void whenProductItemsDoNotReachThreshold_thenEmptyOptionalReturned() {
+    void whenProductItemsDoNotReachThresholdButToppingsDo_thenEmptyOptionalReturned() {
         // Only cheapest entry
         cartItems = List.of(
                 new CartItem(productItemCheapest,
