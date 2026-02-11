@@ -1,6 +1,5 @@
-package com.coffee.cart.cart;
+package com.coffee.cart;
 
-import com.coffee.cart.FullCartDiscountHandlerImpl;
 import com.coffee.cart.entity.CartItemList;
 import com.coffee.cart.entity.CartProductItem;
 import com.coffee.cart.entity.CartToppingItem;

@@ -59,6 +59,15 @@ public class ItemManagementService {
         return map(topping);
     }
 
+    public void deleteTopping(UUID toppingUid) {
+        ToppingEntity topping = toppingRepository.findByUid(toppingUid)
+                .orElseThrow(() -> new ResourceNotFoundException("Topping", "uid", toppingUid));
+        if (toppingRepository.existsLinkedToCartOrOrder(toppingUid)) {
+            throw new IllegalStateException("Cannot delete topping linked to cart or order");
+        }
+        toppingRepository.delete(topping);
+    }
+
     public ProductResponseList listProducts() {
         List<ProductResponse> productResponses = productRepository.findAllByOrderByCreatedAtDesc().stream()
                 .map(ProductEntity::toExternalAdmin).toList();
@@ -71,8 +80,8 @@ public class ItemManagementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "uid", uid));
     }
 
-    public UUID saveProduct(ProductRequest topping) {
-        return productRepository.save(ProductEntity.fromExternal(topping)).getUid();
+    public ProductResponse saveProduct(ProductRequest topping) {
+        return map(productRepository.save(ProductEntity.fromExternal(topping)));
     }
 
     public ProductResponse updateProduct(UUID productUid, ProductRequest productRequest) {
@@ -85,6 +94,15 @@ public class ItemManagementService {
                 .ifPresent(status -> product.setStatus(fromExternal(status)));
         product.setUpdatedAt(instant);
         return map(product);
+    }
+
+    public void deleteProduct(UUID productUid) {
+        ProductEntity product = productRepository.findByUid(productUid)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "uid", productUid));
+        if (productRepository.existsLinkedToCartOrOrder(productUid)) {
+            throw new IllegalStateException("Cannot delete product linked to cart or order");
+        }
+        productRepository.delete(product);
     }
 
 

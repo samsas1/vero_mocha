@@ -65,5 +65,46 @@ public class ToppingRepositoryIntTest {
         //TODO
     }
 
+    @Test
+    void whenToppingIsUpdated_thenUpdateIsPersisted() {
+        //TODO
+    }
+
+    @Test
+    void whenToppingIsUpdated_thenOtherToppingIsUnaffected() {
+        //TODO
+    }
+
+    @Test
+    void whenToppingIsDeleted_thenItIsRemoved() {
+        //TODO
+    }
+
+    @Test
+    void whenToppingIsDeleted_thenOtherToppingIsStillPresent() {
+        //TODO
+    }
+
+    // existsLinkedToCartOrOrder tests
+    @Test
+    void whenCartToppingItemLinkedToToppingAndLinkChecked_thenReturnsTrue() {
+        //TODO
+    }
+
+    @Test
+    void whenCustomerOrderToppingItemLinkedToToppingAndLinkChecked_thenReturnsTrue() {
+        //TODO
+    }
+
+    @Test
+    void whenNoCartOrOrderToppingItemLinkedToToppingAndLinkChecked_thenReturnsFalse() {
+        //TODO
+    }
+
+    @Test
+    void whenCartAndOrderProductItemLinkedToDifferentProductAndLinkChecked_thenReturnsFalse() {
+        //TODO
+    }
+
 
 }

@@ -36,7 +36,7 @@ public class ItemManagementControllerIntTest {
     private ProductRequest productDTO;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         toppingDTO = Instancio.of(ToppingRequest.class)
                 .set(field("price"), 2.55)
                 .create();
@@ -46,7 +46,7 @@ public class ItemManagementControllerIntTest {
     }
 
     @Test
-    public void whenToppingInserted_thenItCanBeFetched() throws Exception {
+    void whenToppingInserted_thenItCanBeFetched() throws Exception {
         toppingDTO = Instancio.create(ToppingRequest.class);
         String request = objectMapper.writeValueAsString(toppingDTO);
 
@@ -71,7 +71,7 @@ public class ItemManagementControllerIntTest {
     }
 
     @Test
-    public void whenProductInserted_thenItCanBeFetched() throws Exception {
+    void whenProductInserted_thenItCanBeFetched() throws Exception {
         productDTO = Instancio.create(ProductRequest.class);
         String request = objectMapper.writeValueAsString(productDTO);
 
@@ -96,25 +96,76 @@ public class ItemManagementControllerIntTest {
     }
 
     @Test
-    public void whenProductFetchedWithInvalidUid_thenNotFoundReturned() throws Exception {
+    void whenProductFetchedWithInvalidUid_thenNotFoundReturned() throws Exception {
         mockMvc.perform(get(PRODUCT_ENDPOINT + "/" + UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenToppingFetchedWithInvalidUid_thenNotFoundReturned() throws Exception {
+    void whenToppingFetchedWithInvalidUid_thenNotFoundReturned() throws Exception {
         mockMvc.perform(get(TOPPING_ENDPOINT + "/" + UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenProductsListed_thenTheyAreReturnedByMostRecent() {
+    void whenProductsListed_thenTheyAreReturnedByMostRecent() {
         // TODO
     }
 
     @Test
-    public void whenToppingsListed_thenTheyAreReturnedByMostRecent() {
+    void whenToppingsListed_thenTheyAreReturnedByMostRecent() {
         // TODO
     }
+
+    @Test
+    void whenProductUpdated_thenUpdatedItemIsReturned() {
+        // TODO
+    }
+
+    @Test
+    void whenProductUpdatedWithNoStatusSpecified_thenStatusRemainsUnchanged() {
+        // TODO
+    }
+
+    @Test
+    void whenToppingUpdatedWithNoStatusSpecified_thenStatusRemainsUnchanged() {
+        // TODO
+    }
+
+    @Test
+    void whenToppingUpdated_thenUpdatedItemIsReturned() {
+        // TODO
+    }
+
+    @Test
+    void whenToppingUpdatedWithInvalidUid_thenNotFoundReturned() {
+        // TODO
+    }
+
+    @Test
+    void whenProductUpdatedWithInvalidUid_thenNotFoundReturned() {
+        // TODO
+    }
+
+    @Test
+    void whenProductIsDeleted_thenFetchingReturnsNotFound() {
+        // TODO
+    }
+
+    @Test
+    void whenToppingIsDeleted_thenFetchingReturnsNotFound() {
+        // TODO
+    }
+
+    @Test
+    void whenToppingLinkedToCartAndOrder_thenDeleteThrowsIllegalStateException() {
+        // TODO
+    }
+
+    @Test
+    void whenProductLinkedToCartAndOrder_thenDeleteThrowsIllegalStateException() {
+        // TODO
+    }
+
 
 }

@@ -72,6 +72,18 @@ public class ItemController {
                 .toEntity(ToppingResponseList.class);
     }
 
+    @DeleteMapping("/topping/{uid}")
+    public ResponseEntity<Void> deleteTopping(@PathVariable UUID uid) {
+        log.info("Deleting topping with uid: {}", uid);
+        return coreClient.delete()
+                .uri("/item/topping/{uid}", uid)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
+                    throw new ResourceNotFoundException("Topping", "uid", uid);
+                })
+                .toBodilessEntity();
+    }
+
     @PostMapping("/product")
     public ResponseEntity<ProductResponse> saveProduct(@RequestBody ProductRequest request) {
         log.info("Saving product: {}", request);
@@ -115,5 +127,17 @@ public class ItemController {
                     throw new ResourceNotFoundException("Product", "uid", uid);
                 })
                 .toEntity(ProductResponse.class);
+    }
+
+    @DeleteMapping("/product/{uid}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID uid) {
+        log.info("Deleting product with uid: {}", uid);
+        return coreClient.delete()
+                .uri("/item/product/{uid}", uid)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
+                    throw new ResourceNotFoundException("Product", "uid", uid);
+                })
+                .toBodilessEntity();
     }
 }

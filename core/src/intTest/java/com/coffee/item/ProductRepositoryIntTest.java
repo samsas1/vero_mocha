@@ -66,4 +66,44 @@ public class ProductRepositoryIntTest {
         //TODO
     }
 
+    @Test
+    void whenProductIsUpdated_thenUpdateIsPersisted() {
+        //TODO
+    }
+
+    @Test
+    void whenProductIsUpdated_thenOtherProductIsUnaffected() {
+        //TODO
+    }
+
+    @Test
+    void whenProductIsDeleted_thenItIsRemoved() {
+        //TODO
+    }
+
+    @Test
+    void whenProductIsDeleted_thenOtherProductIsStillPresent() {
+        //TODO
+    }
+
+    // existsLinkedToCartOrOrder tests
+    @Test
+    void whenCartProductItemLinkedToProductAndLinkChecked_thenReturnsTrue() {
+        //TODO
+    }
+
+    @Test
+    void whenOrderProductItemLinkedToProductAndLinkChecked_thenReturnsTrue() {
+        //TODO
+    }
+
+    @Test
+    void whenNoCartOrOrderProductItemLinkedToProductAndLinkChecked_thenReturnsFalse() {
+        //TODO
+    }
+
+    @Test
+    void whenCartAndOrderProductItemLinkedToDifferentProductAndLinkChecked_thenReturnsFalse() {
+        //TODO
+    }
 }

@@ -1,4 +1,4 @@
-package com.coffee.cart.cart;
+package com.coffee.cart;
 
 public class DiscountServiceTest {
 
