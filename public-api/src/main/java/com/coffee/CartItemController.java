@@ -27,33 +27,33 @@ public class CartItemController {
         this.coreClient = coreClient;
     }
 
-    @PostMapping("/item")
+    @PostMapping("/items")
     public ResponseEntity<UUID> addToCart(@RequestHeader("user") UUID userUid,
                                           @RequestBody ExternalCartItemRequest cartItemRequest) {
         log.info("Adding item to cart: {} for user: {}", cartItemRequest, userUid);
         return coreClient.post()
-                .uri("/cart/item")
+                .uri("/cart/items")
                 .header(USER_HEADER, userUid.toString())
                 .body(cartItemRequest)
                 .retrieve()
                 .toEntity(UUID.class);
     }
 
-    @GetMapping("/item")
+    @GetMapping("/items")
     public ResponseEntity<ExternalCartItemResponse> getCartItems(@RequestHeader("user") UUID userUid) {
         log.info("Getting cart items for user: {}", userUid);
         return coreClient.get()
-                .uri("/cart/item")
+                .uri("/cart/items")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
                 .toEntity(ExternalCartItemResponse.class);
     }
 
-    @DeleteMapping("/item")
+    @DeleteMapping("/items")
     public ResponseEntity<Void> clearCart(@RequestHeader("user") UUID userUid) {
         log.info("Clearing cart for user: {}", userUid);
         return coreClient.get()
-                .uri("/cart/item")
+                .uri("/cart/items")
                 .header(USER_HEADER, userUid.toString())
                 .retrieve()
                 .toBodilessEntity();
