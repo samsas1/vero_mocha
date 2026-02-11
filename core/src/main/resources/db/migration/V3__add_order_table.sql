@@ -5,7 +5,7 @@ CREATE TABLE customer_order
 (
     sid            SERIAL PRIMARY KEY,
     uid            UUID UNIQUE   NOT NULL,
-    user_uid       UUID UNIQUE   NOT NULL,
+    user_uid       UUID          NOT NULL,
     order_status   order_status  NOT NULL DEFAULT 'PLACED',
     discount_type  discount_type NOT NULL DEFAULT 'NO_DISCOUNT',
     original_price NUMERIC       NOT NULL CHECK (original_price >= 0),

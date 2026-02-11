@@ -75,7 +75,7 @@ public class ItemController {
                 .uri("/item/product/{uid}", uid)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
-                    throw new ResourceNotFoundException("Topping", "uid", uid);
+                    throw new ResourceNotFoundException("Product", "uid", uid);
                 })
                 .toEntity(ProductResponse.class);
     }

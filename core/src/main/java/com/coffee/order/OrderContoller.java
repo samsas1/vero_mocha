@@ -1,7 +1,7 @@
 package com.coffee.order;
 
-import com.coffee.publicapi.ExternalOrderItemResponse;
 import com.coffee.publicapi.ExternalOrderPlacementResponse;
+import com.coffee.publicapi.ExternalOrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class OrderContoller {
     }
 
     @GetMapping
-    public ExternalOrderItemResponse listOrders(@RequestHeader("user") UUID userUid) {
+    public ExternalOrderResponse listOrders(@RequestHeader("user") UUID userUid) {
         return orderService.listOrders(userUid);
     }
 

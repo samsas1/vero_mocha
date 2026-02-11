@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.coffee.order.entity.InternalOrderStatus.PLACED;
 import static java.util.stream.Collectors.groupingBy;
@@ -75,39 +76,50 @@ public class OrderService {
         );
     }
 
-    public ExternalOrderItemResponse listOrders(UUID userUid) {
+    public ExternalOrderResponse listOrders(UUID userUid) {
         List<CustomerOrderProductItemEntity> orderProductEntityItems = orderProductItemRepository
                 .getCustomerOrderProductItemEntitiesByCustomerOrder_UserUid(userUid);
         List<CustomerOrderToppingItemEntity> orderToppingItemEntities = orderToppingItemRepository
                 .getOrderToppingItemEntitiesByCustomerOrderProductItemIn(orderProductEntityItems);
-        
+
+        // map product item UID -> list of topping entities for that product item
         Map<UUID, List<CustomerOrderToppingItemEntity>> productItemUUIDToTopping = orderToppingItemEntities
                 .stream()
                 .collect(
-                        groupingBy(o ->
-                                o.getCustomerOrderProductItem().getUid()
-                        )
+                        groupingBy(o -> o.getCustomerOrderProductItem().getUid())
                 );
 
-        return new ExternalOrderItemResponse(
-                orderProductEntityItems.stream()
-                        .map(productItem -> new ExternalOrderProductItemResponse(
-                                productItem.getUid(),
-                                productItem.getProduct().getUid(),
-                                productItem.getProduct().getPrice(),
-                                productItem.getQuantity(),
-                                productItemUUIDToTopping.getOrDefault(productItem.getUid(), List.of())
-                                        .stream()
-                                        .map(toppingItem ->
-                                                new ExternalOrderToppingItemResponse(
+        // group product items by the parent order UID and map each product item to ExternalOrderProductItemResponse
+        Map<UUID, List<ExternalOrderProductItemResponse>> orderUidToProducts = orderProductEntityItems.stream()
+                .collect(Collectors.groupingBy(
+                        p -> p.getCustomerOrder().getUid(),
+                        Collectors.mapping(
+                                productItem -> new ExternalOrderProductItemResponse(
+                                        productItem.getUid(),
+                                        productItem.getProduct().getUid(),
+                                        productItem.getProduct().getPrice(),
+                                        productItem.getQuantity(),
+                                        productItem.getCreatedAt(),
+                                        // build toppings list for this product item
+                                        productItemUUIDToTopping.getOrDefault(productItem.getUid(), List.of())
+                                                .stream()
+                                                .map(toppingItem -> new ExternalOrderToppingItemResponse(
                                                         toppingItem.getUid(),
                                                         toppingItem.getTopping().getUid(),
                                                         toppingItem.getOriginalPricePerTopping(),
                                                         toppingItem.getQuantity()
                                                 ))
-                                        .toList()
-                        ))
-                        .toList()
-        );
+                                                .toList()
+                                ),
+                                Collectors.toList()
+                        )
+                ));
+
+        // convert grouped entries into ExternalOrderItemResponse instances
+        List<ExternalOrderItemResponse> orderItems = orderUidToProducts.entrySet().stream()
+                .map(e -> new ExternalOrderItemResponse(e.getKey(), e.getValue()))
+                .toList();
+
+        return new ExternalOrderResponse(orderItems);
     }
 }

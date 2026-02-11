@@ -17,7 +17,7 @@ public enum DiscountType {
             case FREE_ITEM_FOR_LARGE_ORDER:
                 return FREE_ITEM_FOR_LARGE_ORDER;
             default:
-                throw new IllegalArgumentException("Unknown discount type: " + this);
+                throw new IllegalArgumentException("Unknown discount type: " + discountType);
         }
     }
 
