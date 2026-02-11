@@ -18,9 +18,6 @@ import static org.instancio.Select.field;
 
 public class FreeItemLargeOrderDiscountHandlerImplTest {
 
-
-    private final int largeOrderProductCountThreshold = 3;
-
     // Cheapest product item
     private CartProductItem productItemCheapest;
     private CartToppingItem toppingItemCheapest1;
@@ -111,15 +108,12 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
                 .set(field("quantity"), 7)
                 .create();
         totalProductItemNoToppingPrice = BigDecimal.valueOf(7);
-
     }
-
 
     @Test
     void whenNoProductItems_thenEmptyOptionalReturned() {
         assertThat(underTest.handle(new CartItemList(List.of())))
                 .isEmpty();
-
     }
 
     @Test
@@ -152,7 +146,8 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         CartItemList cartItemList = new CartItemList(cartItems);
 
         assertThat(underTest.handle(cartItemList).get())
-                .isEqualTo(new ExternalDiscountResponse(
+                .isEqualTo(
+                        new ExternalDiscountResponse(
                                 FREE_ITEM_FOR_LARGE_ORDER,
                                 originalPrice,
                                 finalPrice
@@ -193,7 +188,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
     }
 
     @Test
-    void whenProductItemThresholdReachedAndThereAreMultipleCheapestItems_thenPriceReducedByCheapestItemAndItemReturnedDeterministically() {
+    void whenProductItemThresholdReachedAndThereAreMultipleCheapestItems_thenPriceReducedByCheapestItem() {
         //TODO
     }
 

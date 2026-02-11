@@ -17,7 +17,7 @@ public class FullCartDiscountHandlerImpl implements DiscountHandler {
 
     private static final Logger log = LoggerFactory.getLogger(FullCartDiscountHandlerImpl.class);
 
-    // TODO add to config
+    // TODO add to config and have the amount configured in the constructor
     private final BigDecimal discountMultiplier = BigDecimal.valueOf(0.75);
     private final BigDecimal discountThreshold = BigDecimal.valueOf(12);
 

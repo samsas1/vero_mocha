@@ -22,23 +22,13 @@ public class DiscountService {
     private final CartItemService cartItemService;
 
     @Autowired
-    private final CartProductItemRepository cartProductItemRepository;
-
-    @Autowired
-    private final CartToppingItemRepository cartToppingItemRepository;
-
-    @Autowired
     private final List<DiscountHandler> discountHandlers;
 
 
     public DiscountService(
             CartItemService cartItemService,
-            CartProductItemRepository cartProductItemRepository,
-            CartToppingItemRepository cartToppingItemRepository,
             List<DiscountHandler> discountHandlers) {
         this.cartItemService = cartItemService;
-        this.cartProductItemRepository = cartProductItemRepository;
-        this.cartToppingItemRepository = cartToppingItemRepository;
         this.discountHandlers = discountHandlers;
     }
 
@@ -60,4 +50,6 @@ public class DiscountService {
                         originalPrice)
                 );
     }
+
+
 }

@@ -38,6 +38,7 @@ public class CartItemService {
     }
 
     public UUID addItemToCart(UUID userUid, ExternalCartItemRequest cartItemRequest) {
+        // TODO validate product and toppings exist for cart item request
         log.debug("Adding item request: {} to cart for user {}", cartItemRequest, userUid);
         UUID cartProductItemUid = UUID.randomUUID();
         Instant createdAt = Instant.now();
