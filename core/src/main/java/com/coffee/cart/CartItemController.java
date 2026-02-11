@@ -6,6 +6,7 @@ import com.coffee.publicapi.ExternalCartItemResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,18 +27,19 @@ public class CartItemController {
     }
 
     @PostMapping("/item")
-    public UUID addToCart(@RequestHeader("user") UUID userUid, @RequestBody ExternalCartItemRequest cartItemRequest) {
-        return cartItemService.addItemToCart(userUid, cartItemRequest);
+    public ResponseEntity<UUID> addToCart(@RequestHeader("user") UUID userUid, @RequestBody ExternalCartItemRequest cartItemRequest) {
+        return ResponseEntity.ok(cartItemService.addItemToCart(userUid, cartItemRequest));
     }
 
     @GetMapping("/item")
-    public ExternalCartItemResponse getCartItems(@RequestHeader("user") UUID userUid) {
-        return cartItemService.getCartItems(userUid);
+    public ResponseEntity<ExternalCartItemResponse> getCartItems(@RequestHeader("user") UUID userUid) {
+        return ResponseEntity.ok(cartItemService.getCartItems(userUid));
     }
 
     @DeleteMapping("/item")
-    public void clearCart(@RequestHeader("user") UUID userUid) {
+    public ResponseEntity<Void> clearCart(@RequestHeader("user") UUID userUid) {
         cartItemService.clearCart(userUid);
+        return ResponseEntity.ok().build();
     }
 
     // TODO update cart item

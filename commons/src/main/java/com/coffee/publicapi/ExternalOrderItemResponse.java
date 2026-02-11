@@ -1,10 +1,14 @@
 package com.coffee.publicapi;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.UUID;
 
 public record ExternalOrderItemResponse(
-        UUID uid,
-        List<ExternalOrderProductItemResponse> orders
+        @JsonProperty("orderUid")
+        UUID orderUid,
+        @JsonProperty("items")
+        List<ExternalOrderProductItemResponse> items
 ) {
 }

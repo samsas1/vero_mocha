@@ -3,6 +3,7 @@ package com.coffee.order;
 import com.coffee.publicapi.ExternalOrderPlacementResponse;
 import com.coffee.publicapi.ExternalOrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +22,13 @@ public class OrderContoller {
     }
 
     @PostMapping
-    public ExternalOrderPlacementResponse placeOrder(@RequestHeader("user") UUID userUid) {
-        return orderService.placeOrder(userUid);
+    public ResponseEntity<ExternalOrderPlacementResponse> placeOrder(@RequestHeader("user") UUID userUid) {
+        return ResponseEntity.ok(orderService.placeOrder(userUid));
     }
 
     @GetMapping
-    public ExternalOrderResponse listOrders(@RequestHeader("user") UUID userUid) {
-        return orderService.listOrders(userUid);
+    public ResponseEntity<ExternalOrderResponse> listOrders(@RequestHeader("user") UUID userUid) {
+        return ResponseEntity.ok(orderService.listOrders(userUid));
     }
 
     // TODO getOrder
