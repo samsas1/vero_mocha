@@ -38,6 +38,7 @@ public class CartItemController {
 
     @DeleteMapping("/items")
     public ResponseEntity<Void> clearCart(@RequestHeader("user") UUID userUid) {
+        log.info("Clearing cart for user: {}", userUid);
         cartItemService.clearCart(userUid);
         return ResponseEntity.ok().build();
     }
