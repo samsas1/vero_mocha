@@ -1,15 +1,102 @@
+networks:
+  app-network:
+    driver: bridge
+
 services:
-  db:
+  postgres:
     image: postgres:16
     container_name: postgres
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: core
+    networks:
+      - app-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U myuser -d core" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+  core:
+    build:
+      context: .
+      dockerfile: core/Dockerfile
+      args:
+        PORT: ${CORE_PORT:-5000}
+    image: core
+    pull_policy: never
+    networks:
+      - app-network
+    ports:
+      - "${CORE_PORT:-5000}:${CORE_PORT:-5000}"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      CORE_DB_URL: jdbc:postgresql://postgres:5432/core
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${CORE_PORT:-5000}/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  admin-api:
+    build:
+      context: .
+      dockerfile: admin-api/Dockerfile
+      args:
+        PORT: ${ADMIN_API_PORT:-5001}
+    image: admin-api
+    pull_policy: never
+    networks:
+      - app-network
+    ports:
+      - "${ADMIN_API_PORT:-5001}:${ADMIN_API_PORT:-5001}"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      CORE_BASE_URL: http://core:5000
+    depends_on:
+      core:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${ADMIN_API_PORT:-5001}/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  public-api:
+    build:
+      context: .
+      dockerfile: public-api/Dockerfile
+      args:
+        PORT: ${PUBLIC_API_PORT:-5002}
+    image: public-api
+    pull_policy: never
+    networks:
+      - app-network
+    ports:
+      - "${PUBLIC_API_PORT:-5002}:${PUBLIC_API_PORT:-5002}"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      CORE_BASE_URL: http://core:5000
+    depends_on:
+      core:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${PUBLIC_API_PORT:-5002}/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 volumes:
   postgres_data:
+

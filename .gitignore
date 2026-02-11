@@ -38,3 +38,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Environment Files ###
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+.env.development

@@ -1,5 +1,13 @@
 core-client:
-  base-url: ${API_BASE_URL:http://localhost:5000}
+  base-url: ${CORE_BASE_URL:http://localhost:5000}
   connect-timeout: 5000
 server:
-  port: 5001
+  port: ${ADMIN_API_PORT:5001}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always

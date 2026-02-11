@@ -10,7 +10,7 @@ spring:
     enabled: true
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/core
+    url: ${CORE_DB_URL:jdbc:postgresql://localhost:5432/core}
     username: myuser
     password: mypassword
     hikari:
@@ -24,4 +24,12 @@ spring:
         jdbc:
           batch_size: 50
 server:
-  port: 5000
+  port: ${CORE_PORT:5000}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
