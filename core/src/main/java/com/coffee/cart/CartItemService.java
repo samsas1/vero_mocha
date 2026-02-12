@@ -91,6 +91,10 @@ public class CartItemService {
         return map(cartItemList);
     }
 
+    public boolean isCartEmpty(UUID userUid) {
+        return cartProductItemRepository.isCartEmpty(userUid);
+    }
+
     private ExternalCartItemResponse map(CartItemList cartItemList) {
         return new ExternalCartItemResponse(
                 cartItemList.cartItems()

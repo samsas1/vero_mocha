@@ -11,6 +11,14 @@ public record ExternalOrderPlacementResponse(
         @JsonProperty("originalPrice")
         BigDecimal originalPrice,
         @JsonProperty("finalPrice")
-        BigDecimal finalPrice
+        BigDecimal finalPrice,
+        @JsonProperty("placed")
+        Boolean placed,
+        @JsonProperty("message")
+        String message
 ) {
+    public static ExternalOrderPlacementResponse empty() {
+        return new ExternalOrderPlacementResponse(null, null, null, null, null);
+    }
+
 }

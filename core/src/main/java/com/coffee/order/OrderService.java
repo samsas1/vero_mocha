@@ -25,9 +25,11 @@ import static java.util.stream.Collectors.groupingBy;
 @Transactional
 public class OrderService {
 
+    private static final String SUCCESSFUL_ORDER_PLACEMENT_MESSAGE = "Order placed successfully!";
+    private static final String EMPTY_CART_MESSAGE = "No order created. Cart is empty.";
+
     @Autowired
     private final OrderRepository orderRepository;
-
     @Autowired
     private final OrderProductItemRepository orderProductItemRepository;
     @Autowired
@@ -35,21 +37,26 @@ public class OrderService {
     @Autowired
     private final DiscountService discountService;
     @Autowired
-    private CartItemService cartItemService;
+    private final CartItemService cartItemService;
 
     public OrderService(
             OrderRepository orderRepository,
             OrderProductItemRepository orderProductItemRepository,
             OrderToppingItemRepository orderToppingItemRepository,
-            DiscountService discountService) {
+            DiscountService discountService,
+            CartItemService cartItemService) {
         this.orderRepository = orderRepository;
         this.orderProductItemRepository = orderProductItemRepository;
         this.orderToppingItemRepository = orderToppingItemRepository;
         this.discountService = discountService;
+        this.cartItemService = cartItemService;
     }
 
 
     public ExternalOrderPlacementResponse placeOrder(UUID userUid) {
+        if (cartItemService.isCartEmpty(userUid)) {
+            return ExternalOrderPlacementResponse.empty();
+        }
         UUID orderUid = UUID.randomUUID();
         Instant now = Instant.now();
         ExternalDiscountResponse discountResponse = discountService.checkCartDiscount(userUid);
@@ -71,10 +78,13 @@ public class OrderService {
 
         // Wipe cart as items are now ordered
         cartItemService.clearCart(userUid);
+
         return new ExternalOrderPlacementResponse(
                 orderUid,
                 discountResponse.originalPrice(),
-                discountResponse.finalPrice()
+                discountResponse.finalPrice(),
+                true,
+                SUCCESSFUL_ORDER_PLACEMENT_MESSAGE
         );
     }
 

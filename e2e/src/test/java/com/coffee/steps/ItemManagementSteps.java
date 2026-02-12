@@ -5,7 +5,7 @@ import com.coffee.admin.ProductResponse;
 import com.coffee.admin.ToppingRequest;
 import com.coffee.admin.ToppingResponse;
 import com.coffee.config.CucumberConfiguration;
-import com.coffee.enumerators.ItemStatus;
+import com.coffee.enumerators.ExternalItemStatus;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class ItemManagementSteps {
 
     @When("An active product named {string} with price {double} is created")
     public void createProduct(String name, double price) {
-        ProductRequest productRequest = new ProductRequest(name, BigDecimal.valueOf(price), ItemStatus.ACTIVE);
+        ProductRequest productRequest = new ProductRequest(name, BigDecimal.valueOf(price), ExternalItemStatus.ACTIVE);
 
         ProductResponse createdProduct = restClient.post()
                 .uri(PRODUCT_BASE_PATH)
@@ -64,7 +64,7 @@ public class ItemManagementSteps {
         assertThat(fetchedProduct).isNotNull();
         assertThat(fetchedProduct.name()).isEqualTo(name);
         assertThat(fetchedProduct.price()).isEqualByComparingTo(BigDecimal.valueOf(price));
-        assertThat(fetchedProduct.itemStatus()).isEqualTo(ItemStatus.ACTIVE);
+        assertThat(fetchedProduct.itemStatus()).isEqualTo(ExternalItemStatus.ACTIVE);
         assertThat(fetchedProduct.uid()).isNotNull();
         assertThat(fetchedProduct.createdAt()).isNotNull();
         assertThat(fetchedProduct.updatedAt()).isNotNull();
@@ -72,7 +72,7 @@ public class ItemManagementSteps {
 
     @When("An active topping named {string} with price {double} is created")
     public void createTopping(String name, double price) {
-        ToppingRequest toppingRequest = new ToppingRequest(name, BigDecimal.valueOf(price), ItemStatus.ACTIVE);
+        ToppingRequest toppingRequest = new ToppingRequest(name, BigDecimal.valueOf(price), ExternalItemStatus.ACTIVE);
 
         ToppingResponse createdTopping = restClient.post()
                 .uri(TOPPING_BASE_PATH)
@@ -94,7 +94,7 @@ public class ItemManagementSteps {
         assertThat(fetchedTopping).isNotNull();
         assertThat(fetchedTopping.name()).isEqualTo(name);
         assertThat(fetchedTopping.price()).isEqualByComparingTo(BigDecimal.valueOf(price));
-        assertThat(fetchedTopping.itemStatus()).isEqualTo(ItemStatus.ACTIVE);
+        assertThat(fetchedTopping.itemStatus()).isEqualTo(ExternalItemStatus.ACTIVE);
         assertThat(fetchedTopping.uid()).isNotNull();
         assertThat(fetchedTopping.createdAt()).isNotNull();
         assertThat(fetchedTopping.updatedAt()).isNotNull();

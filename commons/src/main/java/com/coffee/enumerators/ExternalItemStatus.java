@@ -3,7 +3,7 @@ package com.coffee.enumerators;
 /**
  * External representation of InternalItemStatus.
  */
-public enum ItemStatus {
+public enum ExternalItemStatus {
 
     ACTIVE,
     INACTIVE;

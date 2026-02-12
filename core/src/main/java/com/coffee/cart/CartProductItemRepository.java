@@ -59,4 +59,11 @@ public interface CartProductItemRepository extends JpaRepository<CartProductItem
             WHERE cart_sid = (SELECT sid FROM cart WHERE user_uid = :userUid)
             """)
     void deleteCartItems(UUID userUid);
+
+    @Query(nativeQuery = true, value = """
+            SELECT CASE WHEN COUNT(*) = 0 THEN TRUE ELSE FALSE END
+            FROM cart_product_item
+            WHERE cart_sid = (SELECT sid FROM cart WHERE user_uid = :userUid)
+            """)
+    boolean isCartEmpty(UUID userUid);
 }

@@ -1,6 +1,6 @@
 package com.coffee.item.entity;
 
-import com.coffee.enumerators.ItemStatus;
+import com.coffee.enumerators.ExternalItemStatus;
 
 /**
  * InternalItemStatus is an enum that represents the availability of an item.
@@ -11,7 +11,7 @@ public enum InternalItemStatus {
     ACTIVE,
     INACTIVE;
 
-    public static InternalItemStatus fromExternal(ItemStatus externalStatus) {
+    public static InternalItemStatus fromExternal(ExternalItemStatus externalStatus) {
         switch (externalStatus) {
             case ACTIVE:
                 return ACTIVE;
@@ -22,12 +22,12 @@ public enum InternalItemStatus {
         }
     }
 
-    public ItemStatus toExternal() {
+    public ExternalItemStatus toExternal() {
         switch (this) {
             case ACTIVE:
-                return ItemStatus.ACTIVE;
+                return ExternalItemStatus.ACTIVE;
             case INACTIVE:
-                return ItemStatus.INACTIVE;
+                return ExternalItemStatus.INACTIVE;
             default:
                 throw new IllegalArgumentException("Unknown internal status: " + this);
         }
