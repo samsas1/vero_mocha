@@ -13,6 +13,9 @@ import java.util.UUID;
 @Repository
 public class ReportingRepository {
 
+    /**
+     * Get the total quantity of each product ordered across all customer orders.
+     */
     private static final String SELECT_PRODUCT_ORDER_COUNTS = """
                     SELECT
                         p.uid AS product_uid,
@@ -23,6 +26,11 @@ public class ReportingRepository {
                     GROUP BY p.uid, p.name
             """;
 
+    /**
+     * Get the total quantity of each topping ordered for each product across all customer orders.
+     * If no toppings were ordered for a product, the total quantity should be returned as 0 and identifiers as null.
+     * Else, it returns n rows per product where n is the number of toppings with orders linked to that product.
+     */
     private static final String SELECT_TOPPING_ORDER_COUNTS_PER_PRODUCTS = """
                     WITH topping_order_counts AS (
                         SELECT
