@@ -75,6 +75,8 @@ public class ReportingService {
                 toppingOrderCountToProduct
                         .getOrDefault(productOrderCount.productUid(), List.of())
                         .stream()
+                        // Filter out null topping UIDs as they represent products with no toppings
+                        .filter(topping -> topping.toppingUid() != null)
                         .map(topping -> map(productOrderCount, topping))
                         .toList());
     }

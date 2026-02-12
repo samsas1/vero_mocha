@@ -30,7 +30,7 @@ public class ReportingServiceTest {
     }
 
     @Test
-    void whenNoProductOrderCounts_thenReturnEmptyResponse() {
+    void whenNoProducts_thenReturnEmptyResponse() {
         when(reportingRepository.listProductOrderCounts())
                 .thenReturn(List.of());
         when(reportingRepository.listToppingOrderCountsPerProducts())
@@ -42,8 +42,11 @@ public class ReportingServiceTest {
     }
 
     @Test
-    void whenProductItemExistsButNoToppingItemsAreLinked_thenReturnCorrectlyMappedProductResponse() {
+    void whenProductExistsWithProductItemButNoToppingItemsAreLinked_thenFilterOutTopping() {
         ProductOrderCount productOrderCount = Instancio.create(ProductOrderCount.class);
+        ToppingOrderCountPerProduct toppingOrderCountPerProduct = Instancio.of(ToppingOrderCountPerProduct.class)
+                .set(field("productUid"), null)
+                .create();
         when(reportingRepository.listProductOrderCounts())
                 .thenReturn(List.of(productOrderCount));
         when(reportingRepository.listToppingOrderCountsPerProducts())
@@ -51,20 +54,8 @@ public class ReportingServiceTest {
 
         ProductToppingCountsResponse response = underTest.generateMostUsedToppingPerProductReport();
 
-        assertThat(response.productToppingCounts())
-                .hasSize(1)
-                .extracting(
-                        ProductToppingCountResponse::productUid,
-                        ProductToppingCountResponse::productName,
-                        ProductToppingCountResponse::totalOrdered
-                )
-                .containsExactly(
-                        tuple(
-                                productOrderCount.productUid(),
-                                productOrderCount.productName(),
-                                productOrderCount.totalProductOrderQuantity()
-                        )
-                );
+        assertThat(response.productToppingCounts().getFirst().toppingCounts())
+                .isEmpty();
     }
 
     @Test

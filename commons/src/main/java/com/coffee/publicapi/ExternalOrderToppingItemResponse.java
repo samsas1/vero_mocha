@@ -10,6 +10,8 @@ public record ExternalOrderToppingItemResponse(
         UUID orderToppingItemUid,
         @JsonProperty("toppingUid")
         UUID toppingUid,
+        @JsonProperty("toppingName")
+        String toppingName,
         @JsonProperty("price")
         BigDecimal price,
         @JsonProperty("quantity")

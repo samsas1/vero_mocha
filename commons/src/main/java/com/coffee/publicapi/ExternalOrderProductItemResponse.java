@@ -12,6 +12,8 @@ public record ExternalOrderProductItemResponse(
         UUID orderProductItemUid,
         @JsonProperty("productUid")
         UUID productUid,
+        @JsonProperty("productName")
+        String productName,
         @JsonProperty("price")
         BigDecimal price,
         @JsonProperty("quantity")

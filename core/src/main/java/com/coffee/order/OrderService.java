@@ -134,7 +134,7 @@ public class OrderService {
                                     orderWithPrices.orderUid(),
                                     products,
                                     orderWithPrices.originalPrice(),
-                                    orderWithPrices.finalPrice
+                                    orderWithPrices.finalPrice()
                             );
                         }
                 )
@@ -155,6 +155,7 @@ public class OrderService {
         return new ExternalOrderToppingItemResponse(
                 entity.getUid(),
                 entity.getTopping().getUid(),
+                entity.getTopping().getName(),
                 entity.getOriginalPricePerTopping(),
                 entity.getQuantity()
         );
@@ -165,6 +166,7 @@ public class OrderService {
         return new ExternalOrderProductItemResponse(
                 entity.getUid(),
                 entity.getProduct().getUid(),
+                entity.getProduct().getName(),
                 entity.getOriginalPricePerProduct(),
                 entity.getQuantity(),
                 entity.getCreatedAt(),
