@@ -2,6 +2,7 @@ package com.coffee;
 
 import com.coffee.publicapi.ExternalCartItemRequest;
 import com.coffee.publicapi.ExternalCartItemResponse;
+import com.coffee.publicapi.ExternalDiscountResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,16 @@ public class CartItemController {
 
     public CartItemController(RestClient coreClient) {
         this.coreClient = coreClient;
+    }
+
+    @GetMapping("/discount")
+    public ResponseEntity<ExternalDiscountResponse> getDiscount(@RequestHeader("user") UUID userUid) {
+        log.info("Fetching cart discount for user: {}", userUid);
+        return coreClient.get()
+                .uri("/cart/discount")
+                .header(USER_HEADER, userUid.toString())
+                .retrieve()
+                .toEntity(ExternalDiscountResponse.class);
     }
 
     @PostMapping("/items")

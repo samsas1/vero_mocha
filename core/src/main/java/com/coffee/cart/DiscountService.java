@@ -32,7 +32,7 @@ public class DiscountService {
         this.discountHandlers = discountHandlers;
     }
 
-    public ExternalDiscountResponse checkCartDiscount(UUID userUid) {
+    public ExternalDiscountResponse getCartDiscount(UUID userUid) {
         CartItemList cartItemList = cartItemService.getCartItemList(userUid);
         BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
 

@@ -1,8 +1,10 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
+import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItemRecord;
+import com.coffee.cart.entity.CartItem;
 import com.coffee.cart.entity.CartItemList;
+import com.coffee.cart.entity.CartToppingItem;
 import com.coffee.cart.entity.database.CartProductItemEntity;
 import com.coffee.cart.entity.database.CartToppingItemEntity;
 import com.coffee.publicapi.ExternalCartItemRequest;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+import static com.coffee.cart.entity.CartItemList.fromCartItemEntities;
 
 @Service
 @Transactional
@@ -39,6 +43,8 @@ public class CartItemService {
 
     public UUID addItemToCart(UUID userUid, ExternalCartItemRequest cartItemRequest) {
         // TODO validate product and toppings exist for cart item request
+        // Ideally would be done with a call to ItemBrowsingService
+        // This would allow a flow that would return a more informative response more easily
         log.debug("Adding item request: {} to cart for user {}", cartItemRequest, userUid);
         UUID cartProductItemUid = UUID.randomUUID();
         Instant createdAt = Instant.now();
@@ -57,9 +63,9 @@ public class CartItemService {
 
         // TODO validate cart toppings are not repeated per cart item
         // I.E. [{topping1,quantity=2}, {topping1, quantity=3}]
-        List<CartToppingItem> cartToppingItems = cartItemRequest.toppings()
+        List<CartToppingItemRecord> cartToppingItems = cartItemRequest.toppings()
                 .stream().map(
-                        o -> new CartToppingItem(
+                        o -> new CartToppingItemRecord(
                                 UUID.randomUUID(),
                                 cartProductItemUid,
                                 o.toppingUid(),
@@ -83,7 +89,7 @@ public class CartItemService {
         List<CartToppingItemEntity> cartToppingItemEntities = cartToppingItemRepository
                 .getCartToppingItemEntitiesByCartProductItemIn(cartProductEntityItems);
 
-        return CartItemList.fromCartItemEntities(cartProductEntityItems, cartToppingItemEntities);
+        return fromCartItemEntities(cartProductEntityItems, cartToppingItemEntities);
     }
 
     public ExternalCartItemResponse getCartItems(UUID userUid) {
@@ -99,20 +105,27 @@ public class CartItemService {
         return new ExternalCartItemResponse(
                 cartItemList.cartItems()
                         .stream()
-                        .map(cartItem ->
-                                new ExternalCartProductItemResponse(
-                                        cartItem.cartProductItem().productItemUid(),
-                                        cartItem.cartProductItem().productUid(),
-                                        cartItem.cartProductItem().price(),
-                                        cartItem.cartProductItem().quantity(),
-                                        cartItem.cartToppingItemList().stream()
-                                                .map(cartToppingItem -> new ExternalCartToppingItemResponse(
-                                                        cartToppingItem.toppingItemUid(),
-                                                        cartToppingItem.toppingUid(),
-                                                        cartToppingItem.price(),
-                                                        cartToppingItem.quantity()
-                                                )).toList()
-                                )).toList()
+                        .map(this::map).toList()
+        );
+    }
+
+    private ExternalCartProductItemResponse map(CartItem cartItem) {
+        return new ExternalCartProductItemResponse(
+                cartItem.cartProductItem().productItemUid(),
+                cartItem.cartProductItem().productUid(),
+                cartItem.cartProductItem().price(),
+                cartItem.cartProductItem().quantity(),
+                cartItem.cartToppingItemList().stream()
+                        .map(this::map).toList()
+        );
+    }
+
+    private ExternalCartToppingItemResponse map(CartToppingItem cartToppingItem) {
+        return new ExternalCartToppingItemResponse(
+                cartToppingItem.toppingItemUid(),
+                cartToppingItem.toppingUid(),
+                cartToppingItem.price(),
+                cartToppingItem.quantity()
         );
     }
 }

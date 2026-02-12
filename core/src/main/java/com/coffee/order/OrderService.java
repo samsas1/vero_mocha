@@ -59,7 +59,7 @@ public class OrderService {
         }
         UUID orderUid = UUID.randomUUID();
         Instant now = Instant.now();
-        ExternalDiscountResponse discountResponse = discountService.checkCartDiscount(userUid);
+        ExternalDiscountResponse discountResponse = discountService.getCartDiscount(userUid);
 
         CustomerOrderEntity orderEntity = new CustomerOrderEntity();
         orderEntity.setUid(orderUid);

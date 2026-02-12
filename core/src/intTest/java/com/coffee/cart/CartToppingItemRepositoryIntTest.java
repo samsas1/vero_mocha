@@ -1,7 +1,7 @@
 package com.coffee.cart;
 
 
-import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItem;
+import com.coffee.cart.custom.query.batch.CartToppingItemBatchRepository.CartToppingItemRecord;
 import com.coffee.cart.entity.database.CartEntity;
 import com.coffee.cart.entity.database.CartToppingItemEntity;
 import com.coffee.item.ProductRepository;
@@ -57,7 +57,7 @@ public class CartToppingItemRepositoryIntTest {
     private UUID cartToppingItemUid;
     private int quantityOfCartToppingItem;
     private int quantityOfAnotherCartToppingItem;
-    private CartToppingItem cartToppingItem;
+    private CartToppingItemRecord cartToppingItem;
 
     @BeforeEach
     void setUp() {
@@ -106,7 +106,7 @@ public class CartToppingItemRepositoryIntTest {
         cartToppingItemUid = UUID.randomUUID();
         quantityOfCartToppingItem = Instancio.create(int.class);
         quantityOfAnotherCartToppingItem = Instancio.create(int.class);
-        cartToppingItem = new CartToppingItem(
+        cartToppingItem = new CartToppingItemRecord(
                 cartToppingItemUid,
                 cartProductItemUid,
                 topping.getUid(),
@@ -143,7 +143,7 @@ public class CartToppingItemRepositoryIntTest {
 
     @Test
     void whenMultipleCartToppingItemsWithTheSameProductItemButDifferentToppings_thenAllCanBePersistedAndRetrieved() {
-        CartToppingItem anotherCartToppingItem = new CartToppingItem(
+        CartToppingItemRecord anotherCartToppingItem = new CartToppingItemRecord(
                 UUID.randomUUID(),
                 cartProductItemUid,
                 anotherTopping.getUid(),

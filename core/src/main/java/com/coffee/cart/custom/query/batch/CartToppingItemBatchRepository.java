@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public interface CartToppingItemBatchRepository {
 
-    void saveCartProduct(List<CartToppingItem> cartToppingItems);
+    void saveCartProduct(List<CartToppingItemRecord> cartToppingItems);
 
-    record CartToppingItem(
+    record CartToppingItemRecord(
             UUID uid,
             UUID cartProductItemUid,
             UUID toppingUid,

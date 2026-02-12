@@ -3,6 +3,7 @@ package com.coffee.cart;
 import com.coffee.item.ItemManagementController;
 import com.coffee.publicapi.ExternalCartItemRequest;
 import com.coffee.publicapi.ExternalCartItemResponse;
+import com.coffee.publicapi.ExternalDiscountResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,18 @@ public class CartItemController {
     @Autowired
     private final CartItemService cartItemService;
 
-    public CartItemController(CartItemService cartItemService) {
+    @Autowired
+    private final DiscountService discountService;
+
+    public CartItemController(CartItemService cartItemService,
+                              DiscountService discountService) {
         this.cartItemService = cartItemService;
+        this.discountService = discountService;
+    }
+
+    @GetMapping("/discount")
+    public ResponseEntity<ExternalDiscountResponse> getCartDiscount(@RequestHeader("user") UUID userUid) {
+        return ResponseEntity.ok(discountService.getCartDiscount(userUid));
     }
 
     @PostMapping("/items")

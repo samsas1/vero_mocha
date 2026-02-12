@@ -45,7 +45,7 @@ public class DiscountServiceTest {
         when(manyProductDiscountHandler.handle(cartItemList))
                 .thenReturn(Optional.empty());
 
-        assertThat(underTest.checkCartDiscount(userUid))
+        assertThat(underTest.getCartDiscount(userUid))
                 .extracting(
                         ExternalDiscountResponse::discountType,
                         ExternalDiscountResponse::originalPrice,
@@ -78,7 +78,7 @@ public class DiscountServiceTest {
         when(manyProductDiscountHandler.handle(cartItemList))
                 .thenReturn(Optional.empty());
 
-        assertThat(underTest.checkCartDiscount(userUid))
+        assertThat(underTest.getCartDiscount(userUid))
                 .extracting(
                         ExternalDiscountResponse::discountType,
                         ExternalDiscountResponse::originalPrice,
@@ -117,7 +117,7 @@ public class DiscountServiceTest {
         when(manyProductDiscountHandler.handle(cartItemList))
                 .thenReturn(Optional.of(discountResponse2));
 
-        assertThat(underTest.checkCartDiscount(userUid))
+        assertThat(underTest.getCartDiscount(userUid))
                 .extracting(
                         ExternalDiscountResponse::discountType,
                         ExternalDiscountResponse::originalPrice,
