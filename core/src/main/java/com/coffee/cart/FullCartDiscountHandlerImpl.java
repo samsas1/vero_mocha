@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
 
+import static com.coffee.cart.CartPriceCalculationService.getTotalCartPrice;
 import static com.coffee.publicapi.ExternalDiscountType.FULL_CART;
 
 @Component
@@ -27,7 +28,7 @@ public class FullCartDiscountHandlerImpl implements DiscountHandler {
             return Optional.empty();
         }
         // TODO extract original price into call to not recompute
-        BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
+        BigDecimal originalPrice = getTotalCartPrice(cartItemList);
 
         if (originalPrice.compareTo(discountThreshold) < 0) {
             log.debug("Discount threshold not met in FullCartDiscountHandlerImpl");

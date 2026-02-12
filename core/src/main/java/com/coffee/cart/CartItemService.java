@@ -7,10 +7,7 @@ import com.coffee.cart.entity.CartItemList;
 import com.coffee.cart.entity.CartToppingItem;
 import com.coffee.cart.entity.database.CartProductItemEntity;
 import com.coffee.cart.entity.database.CartToppingItemEntity;
-import com.coffee.publicapi.ExternalCartItemRequest;
-import com.coffee.publicapi.ExternalCartItemResponse;
-import com.coffee.publicapi.ExternalCartProductItemResponse;
-import com.coffee.publicapi.ExternalCartToppingItemResponse;
+import com.coffee.publicapi.*;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.coffee.cart.entity.CartItemList.fromCartItemEntities;
@@ -56,14 +54,17 @@ public class CartItemService {
                 createdAt
         );
 
-        if (cartItemRequest.toppings().isEmpty()) {
+        List<ExternalToppingItemRequest> toppings = Optional.of(cartItemRequest.toppings()).orElse(List.of());
+
+
+        if (toppings.isEmpty()) {
             log.debug("No toppings present in request for user: {}", userUid);
             return cartProductItemUid;
         }
 
         // TODO validate cart toppings are not repeated per cart item
         // I.E. [{topping1,quantity=2}, {topping1, quantity=3}]
-        List<CartToppingItemRecord> cartToppingItems = cartItemRequest.toppings()
+        List<CartToppingItemRecord> cartToppingItems = toppings
                 .stream().map(
                         o -> new CartToppingItemRecord(
                                 UUID.randomUUID(),

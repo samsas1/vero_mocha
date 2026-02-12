@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.coffee.cart.CartPriceCalculationService.getTotalCartPrice;
+
 @Component
 public class FreeItemLargeOrderDiscountHandlerImpl implements DiscountHandler {
 
@@ -37,7 +39,7 @@ public class FreeItemLargeOrderDiscountHandlerImpl implements DiscountHandler {
         log.debug("Cheapest product item in FreeItemLargeOrderDiscountHandlerImpl: {}", cheapestProductItem);
 
         // TODO extract original price into call to not recompute
-        BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
+        BigDecimal originalPrice = getTotalCartPrice(cartItemList);
         BigDecimal finalPrice = originalPrice.subtract(cheapestProductItem.priceIncludingToppings());
 
         return Optional.of(new ExternalDiscountResponse(

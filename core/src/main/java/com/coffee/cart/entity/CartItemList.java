@@ -3,7 +3,6 @@ package com.coffee.cart.entity;
 import com.coffee.cart.entity.database.CartProductItemEntity;
 import com.coffee.cart.entity.database.CartToppingItemEntity;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -52,31 +51,5 @@ public record CartItemList(
                 )
                 .toList();
         return new CartItemList(cartItems);
-    }
-
-    public BigDecimal getTotalOriginalPrice() {
-        return this.getTotalProductsPrice().add(this.getTotalToppingsPrice());
-    }
-
-    public BigDecimal getTotalProductsPrice() {
-        return this.cartItems()
-                .stream()
-                // Get products
-                .map(CartItem::cartProductItem)
-                // Get price for the quantity of products
-                .map(CartProductItem::getPriceForQuantity)
-                // Sum for all products
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getTotalToppingsPrice() {
-        return this.cartItems()
-                .stream()
-                // Flatten map into list of toppings
-                .flatMap(cartItem -> cartItem.cartToppingItemList().stream()
-                        // Get price for the quantity of topping
-                        .map(CartToppingItem::getPriceForQuantity))
-                // Sum for all toppings
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

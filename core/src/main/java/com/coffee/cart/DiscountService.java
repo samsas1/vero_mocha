@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.coffee.cart.CartPriceCalculationService.getTotalCartPrice;
+
 @Service
 @Transactional
 public class DiscountService {
@@ -36,7 +38,7 @@ public class DiscountService {
 
     public ExternalDiscountResponse getCartDiscount(UUID userUid) {
         CartItemList cartItemList = cartItemService.getCartItemList(userUid);
-        BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
+        BigDecimal originalPrice = getTotalCartPrice(cartItemList);
 
         // Get all applicable discounts
         List<ExternalDiscountResponse> applicableDiscounts = discountHandlers.stream()
