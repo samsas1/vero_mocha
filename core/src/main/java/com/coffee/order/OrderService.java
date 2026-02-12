@@ -7,6 +7,7 @@ import com.coffee.order.entity.database.CustomerOrderEntity;
 import com.coffee.order.entity.database.CustomerOrderProductItemEntity;
 import com.coffee.order.entity.database.CustomerOrderToppingItemEntity;
 import com.coffee.publicapi.*;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +21,14 @@ import java.util.stream.Collectors;
 
 import static com.coffee.order.entity.InternalOrderStatus.PLACED;
 import static java.util.stream.Collectors.groupingBy;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 @Transactional
 public class OrderService {
 
+    private static final Logger log = getLogger(OrderService.class);
     private static final String SUCCESSFUL_ORDER_PLACEMENT_MESSAGE = "Order placed successfully!";
-    private static final String EMPTY_CART_MESSAGE = "No order created. Cart is empty.";
 
     @Autowired
     private final OrderRepository orderRepository;
@@ -55,6 +57,7 @@ public class OrderService {
 
     public ExternalOrderPlacementResponse placeOrder(UUID userUid) {
         if (cartItemService.isCartEmpty(userUid)) {
+            log.debug("Cart is empty for user: {}. No order will be created.", userUid);
             return ExternalOrderPlacementResponse.empty();
         }
         UUID orderUid = UUID.randomUUID();

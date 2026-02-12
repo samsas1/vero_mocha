@@ -26,15 +26,15 @@ public class FreeItemLargeOrderDiscountHandlerImpl implements DiscountHandler {
 
     public Optional<ExternalDiscountResponse> handle(CartItemList cartItemList) {
         if (!discountApplies(cartItemList)) {
-            log.debug("Discount does not apply to cart");
+            log.debug("Discount does not apply to cart in FreeItemLargeOrderDiscountHandlerImpl");
             return Optional.empty();
         }
 
         List<ProductAndToppingItemTotal> productAndToppingItemTotals = getProductItemPriceIncludingToppings(cartItemList);
-        log.debug("ProductAndToppingTotals: {}", productAndToppingItemTotals);
+        log.debug("ProductAndToppingTotals in FreeItemLargeOrderDiscountHandlerImpl: {}", productAndToppingItemTotals);
 
         ProductAndToppingItemTotal cheapestProductItem = findCheapestItem(productAndToppingItemTotals);
-        log.debug("Cheapest product item total object: {}", cheapestProductItem);
+        log.debug("Cheapest product item in FreeItemLargeOrderDiscountHandlerImpl: {}", cheapestProductItem);
 
         // TODO extract original price into call to not recompute
         BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();

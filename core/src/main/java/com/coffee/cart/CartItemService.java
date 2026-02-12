@@ -88,7 +88,6 @@ public class CartItemService {
                 .getCartProductItemEntitiesByCart_UserUid(userUid);
         List<CartToppingItemEntity> cartToppingItemEntities = cartToppingItemRepository
                 .getCartToppingItemEntitiesByCartProductItemIn(cartProductEntityItems);
-
         return fromCartItemEntities(cartProductEntityItems, cartToppingItemEntities);
     }
 

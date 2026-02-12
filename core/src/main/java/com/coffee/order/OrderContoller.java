@@ -2,6 +2,8 @@ package com.coffee.order;
 
 import com.coffee.publicapi.ExternalOrderPlacementResponse;
 import com.coffee.publicapi.ExternalOrderResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @Validated
 public class OrderContoller {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderContoller.class);
+
     @Autowired
     private final OrderService orderService;
 
@@ -35,6 +39,7 @@ public class OrderContoller {
      */
     @PostMapping
     public ResponseEntity<ExternalOrderPlacementResponse> placeOrder(@RequestHeader("user") UUID userUid) {
+        log.info("Placing order for user: {}", userUid);
         return ResponseEntity.ok(orderService.placeOrder(userUid));
     }
 
@@ -46,6 +51,7 @@ public class OrderContoller {
      */
     @GetMapping
     public ResponseEntity<ExternalOrderResponse> listOrders(@RequestHeader("user") UUID userUid) {
+        log.info("Listing orders for user: {}", userUid);
         return ResponseEntity.ok(orderService.listOrders(userUid));
     }
 

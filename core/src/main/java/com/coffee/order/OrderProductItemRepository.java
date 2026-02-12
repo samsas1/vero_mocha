@@ -12,6 +12,15 @@ import java.util.UUID;
 
 public interface OrderProductItemRepository extends JpaRepository<CustomerOrderProductItemEntity, Integer> {
 
+    /**
+     * This query copies the product items in cart into ordered product items and links them to an already created order.
+     * As the query does not delete the cart product items, this needs to be done downstream.
+     *
+     * @param userUid
+     * @param orderUid
+     * @param createdAt
+     * @param updatedAt
+     */
     @Modifying
     @Query(nativeQuery = true, value = """
             WITH cart_product_item_fields AS (

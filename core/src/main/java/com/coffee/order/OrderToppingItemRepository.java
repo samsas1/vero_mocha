@@ -12,6 +12,14 @@ import java.util.UUID;
 
 public interface OrderToppingItemRepository extends JpaRepository<CustomerOrderToppingItemEntity, Integer> {
 
+    /**
+     * This query copies the topping items in cart into ordered topping items and links them to an already created order.
+     * As the query does not delete the cart topping items, this needs to be done downstream.
+     *
+     * @param userUid
+     * @param createdAt
+     * @param updatedAt
+     */
     @Modifying
     @Query(nativeQuery = true, value = """
             WITH cart_topping_item_fields AS (
@@ -27,7 +35,7 @@ public interface OrderToppingItemRepository extends JpaRepository<CustomerOrderT
                                     WHERE c.user_uid = :userUid
                                 )
                                 INSERT INTO customer_order_topping_item (
-                                                                         uid, 
+                                                                         uid,
                                                                          customer_order_product_item_sid,
                                                                          topping_sid, 
                                                                          original_price_per_topping, 

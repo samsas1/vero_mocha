@@ -3,6 +3,8 @@ package com.coffee.cart;
 import com.coffee.cart.entity.CartItemList;
 import com.coffee.publicapi.ExternalDiscountResponse;
 import com.coffee.publicapi.ExternalDiscountType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +14,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
 public class DiscountService {
 
+    private static final Logger log = LoggerFactory.getLogger(DiscountService.class);
     @Autowired
     private final CartItemService cartItemService;
 
@@ -37,12 +39,14 @@ public class DiscountService {
         BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
 
         // Get all applicable discounts
-        Stream<ExternalDiscountResponse> applicableDiscounts = discountHandlers.stream()
+        List<ExternalDiscountResponse> applicableDiscounts = discountHandlers.stream()
                 .map(o -> o.handle(cartItemList))
-                .flatMap(Optional::stream);
+                .flatMap(Optional::stream).toList();
+
+        log.debug("Found applicable discounts: {} for user: {}", applicableDiscounts, userUid);
 
         // Return smallest discount or return NO_DISCOUNT response
-        return applicableDiscounts
+        return applicableDiscounts.stream()
                 .min(Comparator.comparing(ExternalDiscountResponse::finalPrice))
                 .orElse(new ExternalDiscountResponse(
                         ExternalDiscountType.NO_DISCOUNT,

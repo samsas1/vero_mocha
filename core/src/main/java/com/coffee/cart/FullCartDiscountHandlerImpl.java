@@ -23,14 +23,14 @@ public class FullCartDiscountHandlerImpl implements DiscountHandler {
 
     public Optional<ExternalDiscountResponse> handle(CartItemList cartItemList) {
         if (cartItemList.cartItems().isEmpty()) {
-            log.debug("No product items found in cart");
+            log.debug("No product items found in cart in FullCartDiscountHandlerImpl");
             return Optional.empty();
         }
         // TODO extract original price into call to not recompute
         BigDecimal originalPrice = cartItemList.getTotalOriginalPrice();
 
         if (originalPrice.compareTo(discountThreshold) < 0) {
-            log.debug("Discount threshold not met");
+            log.debug("Discount threshold not met in FullCartDiscountHandlerImpl");
             return Optional.empty();
         }
         // Floor final price to avoid customer dissatisfaction from rounding fractional cents up

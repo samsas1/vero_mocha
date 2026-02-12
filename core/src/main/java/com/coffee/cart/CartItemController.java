@@ -45,6 +45,7 @@ public class CartItemController {
      */
     @GetMapping("/discount")
     public ResponseEntity<ExternalDiscountResponse> getCartDiscount(@RequestHeader("user") UUID userUid) {
+        log.info("Fetching cart discount for user: {}", userUid);
         return ResponseEntity.ok(discountService.getCartDiscount(userUid));
     }
 
@@ -57,6 +58,7 @@ public class CartItemController {
      */
     @PostMapping("/items")
     public ResponseEntity<UUID> addToCart(@RequestHeader("user") UUID userUid, @RequestBody ExternalCartItemRequest cartItemRequest) {
+        log.info("Adding item to cart: {} for user: {}", cartItemRequest, userUid);
         return ResponseEntity.ok(cartItemService.addItemToCart(userUid, cartItemRequest));
     }
 
@@ -68,6 +70,7 @@ public class CartItemController {
      */
     @GetMapping("/items")
     public ResponseEntity<ExternalCartItemResponse> getCartItems(@RequestHeader("user") UUID userUid) {
+        log.info("Getting cart items for user: {}", userUid);
         return ResponseEntity.ok(cartItemService.getCartItems(userUid));
     }
 

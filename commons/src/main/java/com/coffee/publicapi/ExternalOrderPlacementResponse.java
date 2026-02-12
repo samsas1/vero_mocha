@@ -17,8 +17,11 @@ public record ExternalOrderPlacementResponse(
         @JsonProperty("message")
         String message
 ) {
+
+    private static final String EMPTY_CART_MESSAGE = "No order created. Cart is empty.";
+
     public static ExternalOrderPlacementResponse empty() {
-        return new ExternalOrderPlacementResponse(null, null, null, null, null);
+        return new ExternalOrderPlacementResponse(null, null, null, false, EMPTY_CART_MESSAGE);
     }
 
 }
