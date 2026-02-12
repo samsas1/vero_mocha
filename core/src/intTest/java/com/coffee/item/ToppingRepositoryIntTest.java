@@ -66,6 +66,11 @@ public class ToppingRepositoryIntTest {
     }
 
     @Test
+    void whenAttemptingToPersistProductWithZeroQuantity_thenFails() {
+        //TODO
+    }
+
+    @Test
     void whenToppingIsUpdated_thenUpdateIsPersisted() {
         //TODO
     }

@@ -2,10 +2,10 @@ package com.coffee.reporting.entity;
 
 import java.util.UUID;
 
-public record MostUsedToppingPerDrink(
+public record ToppingOrderCountPerProduct(
         UUID productUid,
-        String productName,
         UUID toppingUid,
         String toppingName,
-        int totalToppingQuantity) {
+        Integer totalToppingOrderPerProductQuantity
+) {
 }

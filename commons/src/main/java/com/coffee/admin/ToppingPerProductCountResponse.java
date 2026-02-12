@@ -2,18 +2,17 @@ package com.coffee.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
-public record MostUsedToppingProductResponse(
-        @JsonProperty("productUid")
-        UUID productUid,
-        @JsonProperty("productName")
-        String productName,
+public record ToppingPerProductCountResponse(
         @JsonProperty("toppingUid")
         UUID toppingUid,
         @JsonProperty("toppingName")
         String toppingName,
         @JsonProperty("totalOrderedForProduct")
-        int totalOrderedForProduct
+        Integer totalOrderedForProduct,
+        @JsonProperty("averageOrderedForProduct")
+        BigDecimal averageOrderedForProduct
 ) {
 }

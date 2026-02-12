@@ -1,6 +1,6 @@
 package com.coffee;
 
-import com.coffee.admin.MostUsedProductToppingResponse;
+import com.coffee.admin.ProductToppingCountsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ public class ReportingController {
     }
 
     @GetMapping("/toppings/most-used")
-    public ResponseEntity<MostUsedProductToppingResponse> listMostUsedToppings() {
+    public ResponseEntity<ProductToppingCountsResponse> listMostUsedToppings() {
         log.info("Received request to list most used product toppings");
         return coreClient.get()
                 .uri("/reports/toppings/most-used")
                 .retrieve()
-                .toEntity(MostUsedProductToppingResponse.class);
+                .toEntity(ProductToppingCountsResponse.class);
     }
 }

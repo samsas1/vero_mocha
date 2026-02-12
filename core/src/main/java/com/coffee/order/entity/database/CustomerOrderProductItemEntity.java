@@ -32,27 +32,55 @@ public class CustomerOrderProductItemEntity {
         return uid;
     }
 
+    public void setUid(UUID uid) {
+        this.uid = uid;
+    }
+
     public CustomerOrderEntity getCustomerOrder() {
         return customerOrder;
+    }
+
+    public void setCustomerOrder(CustomerOrderEntity customerOrder) {
+        this.customerOrder = customerOrder;
     }
 
     public ProductEntity getProduct() {
         return product;
     }
 
+    public void setProduct(ProductEntity product) {
+        this.product = product;
+    }
+
     public BigDecimal getOriginalPricePerProduct() {
         return originalPricePerProduct;
+    }
+
+    public void setOriginalPricePerProduct(BigDecimal originalPricePerProduct) {
+        this.originalPricePerProduct = originalPricePerProduct;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

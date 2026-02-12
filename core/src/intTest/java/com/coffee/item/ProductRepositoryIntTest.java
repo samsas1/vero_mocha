@@ -67,6 +67,11 @@ public class ProductRepositoryIntTest {
     }
 
     @Test
+    void whenAttemptingToPersistProductWithZeroQuantity_thenFails() {
+        //TODO
+    }
+
+    @Test
     void whenProductIsUpdated_thenUpdateIsPersisted() {
         //TODO
     }

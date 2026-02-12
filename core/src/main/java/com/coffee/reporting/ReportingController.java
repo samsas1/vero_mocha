@@ -1,6 +1,6 @@
 package com.coffee.reporting;
 
-import com.coffee.admin.MostUsedProductToppingResponse;
+import com.coffee.admin.ProductToppingCountsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,9 @@ public class ReportingController {
     }
 
     @GetMapping("/toppings/most-used")
-    public ResponseEntity<MostUsedProductToppingResponse> listMostUsedProductToppings() {
+    public ResponseEntity<ProductToppingCountsResponse> listMostUsedProductToppings() {
         log.info("Received request to list most used product toppings");
-        return ResponseEntity.ok(reportingService.generateMostUsedToppingPerDrinkReport());
+        return ResponseEntity.ok(reportingService.generateMostUsedToppingPerProductReport());
     }
 
 }

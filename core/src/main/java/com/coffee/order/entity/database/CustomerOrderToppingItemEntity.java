@@ -33,8 +33,16 @@ public class CustomerOrderToppingItemEntity {
         return uid;
     }
 
+    public void setUid(UUID uid) {
+        this.uid = uid;
+    }
+
     public CustomerOrderProductItemEntity getCustomerOrderProductItem() {
         return customerOrderProductItem;
+    }
+
+    public void setCustomerOrderProductItem(CustomerOrderProductItemEntity customerOrderProductItem) {
+        this.customerOrderProductItem = customerOrderProductItem;
     }
 
     public UUID getProductItemUid() {
@@ -45,19 +53,39 @@ public class CustomerOrderToppingItemEntity {
         return topping;
     }
 
+    public void setTopping(ToppingEntity topping) {
+        this.topping = topping;
+    }
+
     public BigDecimal getOriginalPricePerTopping() {
         return originalPricePerTopping;
+    }
+
+    public void setOriginalPricePerTopping(BigDecimal originalPricePerTopping) {
+        this.originalPricePerTopping = originalPricePerTopping;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
