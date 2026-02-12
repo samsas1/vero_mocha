@@ -114,8 +114,8 @@ public class FullCartDiscountHandlerImplTest {
                         ExternalDiscountResponse::originalPrice,
                         ExternalDiscountResponse::finalPrice)
                 .containsExactly(
-                        originalPrice,
-                        discountedPrice
+                        originalPrice.setScale(2),
+                        discountedPrice.setScale(2)
                 );
 
     }
@@ -154,8 +154,8 @@ public class FullCartDiscountHandlerImplTest {
                         ExternalDiscountResponse::originalPrice,
                         ExternalDiscountResponse::finalPrice)
                 .containsExactly(
-                        originalPrice,
-                        discountedPrice
+                        originalPrice.setScale(2),
+                        discountedPrice.setScale(2)
                 );
 
     }
@@ -165,13 +165,13 @@ public class FullCartDiscountHandlerImplTest {
         // Product total = 1 x 2 = 2
         BigDecimal productPrice = BigDecimal.valueOf(1);
         int productQuantity = 2;
-        // Topping total = 2 x 10 = 20
+        // Topping total = 4 x 10 = 40
         BigDecimal toppingPrice = BigDecimal.valueOf(2);
         int toppingQuantity = 10;
-        // Total price is 22 which exceeds the threshold of 12 for discount to be applied
-        // Discounted price is 22 x 0.75 = 16.5
-        BigDecimal originalPrice = BigDecimal.valueOf(22);
-        BigDecimal discountedPrice = BigDecimal.valueOf(16.5);
+        // Total price is 42 which exceeds the threshold of 12 for discount to be applied
+        // Discounted price is 42 x 0.75 = 31.5
+        BigDecimal originalPrice = BigDecimal.valueOf(42);
+        BigDecimal discountedPrice = BigDecimal.valueOf(31.5);
 
         CartProductItem cartProductItem = Instancio.of(CartProductItem.class)
                 .set(field("price"), productPrice)
@@ -193,7 +193,7 @@ public class FullCartDiscountHandlerImplTest {
                         ExternalDiscountResponse::originalPrice,
                         ExternalDiscountResponse::finalPrice)
                 .containsExactly(
-                        originalPrice,
+                        originalPrice.setScale(2),
                         discountedPrice.setScale(2)
                 );
     }

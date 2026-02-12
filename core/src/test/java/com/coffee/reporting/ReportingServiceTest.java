@@ -30,7 +30,7 @@ public class ReportingServiceTest {
     }
 
     @Test
-    void whenProductQuantityIsZero_thenAverageToppingCountShouldBeZero() {
+    void whenNoProductOrderCounts_thenReturnEmptyResponse() {
         when(reportingRepository.listProductOrderCounts())
                 .thenReturn(List.of());
         when(reportingRepository.listToppingOrderCountsPerProducts())
@@ -38,11 +38,7 @@ public class ReportingServiceTest {
 
         ProductToppingCountsResponse response = underTest.generateMostUsedToppingPerProductReport();
         assertThat(response.productToppingCounts())
-                .hasSize(1)
-                .extracting(
-                        ProductToppingCountResponse::totalOrdered
-                )
-                .containsExactly(0);
+                .isEmpty();
     }
 
     @Test

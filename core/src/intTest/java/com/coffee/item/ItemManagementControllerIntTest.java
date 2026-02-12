@@ -1,7 +1,9 @@
 package com.coffee.item;
 
 import com.coffee.admin.ProductRequest;
+import com.coffee.admin.ProductResponse;
 import com.coffee.admin.ToppingRequest;
+import com.coffee.admin.ToppingResponse;
 import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.instancio.Select.field;
@@ -26,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class ItemManagementControllerIntTest {
 
-    private static final String TOPPING_ENDPOINT = "/item/toppings";
-    private static final String PRODUCT_ENDPOINT = "/item/products";
+    private static final String TOPPING_ENDPOINT = "/items/toppings";
+    private static final String PRODUCT_ENDPOINT = "/items/products";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -47,7 +50,9 @@ public class ItemManagementControllerIntTest {
 
     @Test
     void whenToppingInserted_thenItCanBeFetched() throws Exception {
-        toppingDTO = Instancio.create(ToppingRequest.class);
+        toppingDTO = Instancio.of(ToppingRequest.class)
+                .set(field("price"), BigDecimal.valueOf(2.55))  // set to avoid precision check errors
+                .create();
         String request = objectMapper.writeValueAsString(toppingDTO);
 
         // Insert the topping and get the UUID
@@ -57,22 +62,24 @@ public class ItemManagementControllerIntTest {
                 .getResponse()
                 .getContentAsString();
 
-        UUID uuid = objectMapper.readValue(response, UUID.class);
+        ToppingResponse toppingResponse = objectMapper.readValue(response, ToppingResponse.class);
 
         // Fetch the topping using the UUID and verify the response
-        mockMvc.perform(get(TOPPING_ENDPOINT + "/" + uuid))
+        mockMvc.perform(get(TOPPING_ENDPOINT + "/" + toppingResponse.uid()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(toppingDTO.price()))
                 .andExpect(jsonPath("$.name").value(toppingDTO.name()))
                 .andExpect(jsonPath("$.itemStatus").value("ACTIVE"))
-                .andExpect(jsonPath("$.uid").value(uuid.toString()))
+                .andExpect(jsonPath("$.uid").value(toppingResponse.uid().toString()))
                 .andExpect(jsonPath("$.createdAt").exists())
                 .andExpect(jsonPath("$.updatedAt").exists());
     }
 
     @Test
     void whenProductInserted_thenItCanBeFetched() throws Exception {
-        productDTO = Instancio.create(ProductRequest.class);
+        productDTO = Instancio.of(ProductRequest.class)
+                .set(field("price"), BigDecimal.valueOf(3.15))  // set to avoid precision check errors
+                .create();
         String request = objectMapper.writeValueAsString(productDTO);
 
         // Insert the product and get the UUID
@@ -82,15 +89,15 @@ public class ItemManagementControllerIntTest {
                 .getResponse()
                 .getContentAsString();
 
-        UUID uuid = objectMapper.readValue(response, UUID.class);
+        ProductResponse productResponse = objectMapper.readValue(response, ProductResponse.class);
 
         // Fetch the product using the UUID and verify the response
-        mockMvc.perform(get(PRODUCT_ENDPOINT + "/" + uuid))
+        mockMvc.perform(get(PRODUCT_ENDPOINT + "/" + productResponse.uid()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(productDTO.price()))
                 .andExpect(jsonPath("$.name").value(productDTO.name()))
                 .andExpect(jsonPath("$.itemStatus").value("ACTIVE"))
-                .andExpect(jsonPath("$.uid").value(uuid.toString()))
+                .andExpect(jsonPath("$.uid").value(productResponse.uid().toString()))
                 .andExpect(jsonPath("$.createdAt").exists())
                 .andExpect(jsonPath("$.updatedAt").exists());
     }

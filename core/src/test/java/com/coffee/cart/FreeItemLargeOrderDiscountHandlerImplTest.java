@@ -149,8 +149,8 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
                 .isEqualTo(
                         new ExternalDiscountResponse(
                                 FREE_ITEM_FOR_LARGE_ORDER,
-                                originalPrice,
-                                finalPrice
+                                originalPrice.setScale(2),
+                                finalPrice.setScale(2)
                         )
                 );
 
@@ -181,8 +181,8 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         assertThat(underTest.handle(cartItemList).get())
                 .isEqualTo(new ExternalDiscountResponse(
                                 FREE_ITEM_FOR_LARGE_ORDER,
-                                originalPrice,
-                                finalPrice
+                                originalPrice.setScale(2),
+                                finalPrice.setScale(2)
                         )
                 );
     }
