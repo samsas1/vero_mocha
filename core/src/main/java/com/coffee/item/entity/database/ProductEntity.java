@@ -14,7 +14,7 @@ import java.util.UUID;
 import static com.coffee.item.entity.InternalItemStatus.ACTIVE;
 
 /**
- * Product represents a product, currently a drink, that can be ordered by customers.
+ * Product represents a product that can be ordered by customers.
  */
 @Entity
 @Table(name = "product")
