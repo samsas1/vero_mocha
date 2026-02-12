@@ -26,7 +26,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
     private BigDecimal totalProductItemCheapestPrice;
 
     // Product item with free topping
-    private CartProductItem productItemFreeTopping;
+    private CartProductItem productItemQty2FreeTopping;
     private CartToppingItem toppingItemFreeTopping;
     private BigDecimal totalProductItemFreeToppingPrice;
 
@@ -37,7 +37,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
     private BigDecimal totalProductItemFreeProductPrice;
 
     // Product item with no toppings
-    private CartProductItem productItemNoTopping;
+    private CartProductItem productItemQtySevenNoTopping;
     private BigDecimal totalProductItemNoToppingPrice;
 
     private List<CartItem> cartItems;
@@ -75,7 +75,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         // Total product price = 2 x 3.3 = 6.6
         // Total topping price = 1 x 0 = 0
         // Total price = 6.6 + 0 = 6.6
-        productItemFreeTopping = Instancio.of(CartProductItem.class)
+        productItemQty2FreeTopping = Instancio.of(CartProductItem.class)
                 .set(field("price"), BigDecimal.valueOf(3.3))
                 .set(field("quantity"), 2)
                 .create();
@@ -103,7 +103,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         // Total product price = 7 x 1 = 7
         // Total topping price = 0 x 0 = 0
         // Total price = 0 + 7 = 7
-        productItemNoTopping = Instancio.of(CartProductItem.class)
+        productItemQtySevenNoTopping = Instancio.of(CartProductItem.class)
                 .set(field("price"), BigDecimal.ONE)
                 .set(field("quantity"), 7)
                 .create();
@@ -132,7 +132,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         cartItems = List.of(
                 new CartItem(productItemCheapest,
                         List.of(toppingItemCheapest1, toppingItemCheapest2, toppingItemCheapest3)),
-                new CartItem(productItemFreeTopping, List.of(toppingItemFreeTopping)),
+                new CartItem(productItemQty2FreeTopping, List.of(toppingItemFreeTopping)),
                 new CartItem(productItemFreeProduct, List.of(toppingItemFreeProduct)));
         // Original price is total price for all three entries
         BigDecimal originalPrice = totalProductItemCheapestPrice
@@ -162,9 +162,10 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         cartItems = List.of(
                 new CartItem(productItemCheapest,
                         List.of(toppingItemCheapest1, toppingItemCheapest2, toppingItemCheapest3)),
-                new CartItem(productItemFreeTopping, List.of(toppingItemFreeTopping)),
+                new CartItem(productItemQty2FreeTopping, List.of(toppingItemFreeTopping)),
                 new CartItem(productItemFreeProduct, List.of(toppingItemFreeProduct)),
-                new CartItem(productItemNoTopping, List.of()));
+                new CartItem(productItemQtySevenNoTopping, List.of())
+        );
         // Original price is total price for all three entries
         BigDecimal originalPrice = totalProductItemCheapestPrice
                 .add(totalProductItemFreeToppingPrice)
@@ -183,6 +184,65 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
                                 FREE_ITEM_FOR_LARGE_ORDER,
                                 originalPrice.setScale(2),
                                 finalPrice.setScale(2)
+                        )
+                );
+    }
+
+    @Test
+    void whenProductItemThresholdExceededFromProductItemsOfTheSameProduct_thenReducePriceByItsPrice() {
+        BigDecimal productPrice = BigDecimal.valueOf(1.1);
+        Integer productQuantity = 10;
+        // Total price is 11
+        BigDecimal originalPrice = BigDecimal.valueOf(11).setScale(2);
+        // Reduce price by one product price: 11 - 1.1 = 9.9
+        BigDecimal finalPrice = BigDecimal.valueOf(9.9).setScale(2);
+        CartProductItem cartProductItem = Instancio.of(CartProductItem.class)
+                .set(field("price"), BigDecimal.valueOf(1.1))
+                .set(field("quantity"), 10)
+                .create();
+
+        cartItems = List.of(new CartItem(cartProductItem, List.of()));
+
+        assertThat(underTest.handle(new CartItemList(cartItems)).get())
+                .isEqualTo(new ExternalDiscountResponse(
+                                FREE_ITEM_FOR_LARGE_ORDER,
+                                BigDecimal.valueOf(11),
+                                finalPrice
+                        )
+                );
+    }
+
+    @Test
+    void whenProductItemThresholdExceededFromProductItemsOfTheSameProduct_thenReducePriceByProductAndToppingPrice() {
+        BigDecimal productPrice = BigDecimal.valueOf(1.1);
+        Integer productQuantity = 10;
+
+        BigDecimal toppingPrice = BigDecimal.valueOf(0.5);
+        Integer toppingPerProductQuantity = 1;
+
+        // Total price for 10 products with 1 topping each is
+        // 10 x (1.1 + 1 x 0,5) = 16
+        BigDecimal originalPrice = BigDecimal.valueOf(16).setScale(2);
+        // Reduce price by one product price and one topping price: 16 - (1.1 + 0.5) = 14.4
+        BigDecimal finalPrice = BigDecimal.valueOf(14.4).setScale(2);
+
+        CartProductItem cartProductItem = Instancio.of(CartProductItem.class)
+                .set(field("price"), productPrice)
+                .set(field("quantity"), productQuantity)
+                .create();
+
+        CartToppingItem cartToppingItem = Instancio.of(CartToppingItem.class)
+                .set(field("price"), toppingPrice)
+                .set(field("quantity"), toppingPerProductQuantity)
+                .create();
+
+        cartItems = List.of(new CartItem(cartProductItem, List.of(cartToppingItem)));
+
+        assertThat(underTest.handle(new CartItemList(cartItems)).get())
+                .isEqualTo(new ExternalDiscountResponse(
+                                FREE_ITEM_FOR_LARGE_ORDER,
+                                originalPrice,
+                                finalPrice
                         )
                 );
     }

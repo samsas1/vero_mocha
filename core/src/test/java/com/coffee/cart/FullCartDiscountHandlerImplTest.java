@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.instancio.Select.field;
@@ -200,12 +199,10 @@ public class FullCartDiscountHandlerImplTest {
 
     @Test
     void whenFinalPriceHasFractionalCents_thenItIsFloored() {
-        CartProductItem cartProductItem = new CartProductItem(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                BigDecimal.valueOf(13.14),
-                1
-        );
+        CartProductItem cartProductItem = Instancio.of(CartProductItem.class)
+                .set(field("price"), BigDecimal.valueOf(13.14))
+                .set(field("quantity"), 1)
+                .create();
         CartItemList cartItemList = new CartItemList(
                 List.of(
                         new CartItem(cartProductItem, List.of())

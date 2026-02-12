@@ -6,6 +6,7 @@ import java.util.UUID;
 public record CartToppingItem(
         UUID toppingItemUid,
         UUID toppingUid,
+        String toppingName,
         BigDecimal price,
         Integer quantity) {
 

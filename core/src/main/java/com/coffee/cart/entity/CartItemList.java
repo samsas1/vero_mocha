@@ -26,6 +26,7 @@ public record CartItemList(
                                 topping -> new CartToppingItem(
                                         topping.getUid(),
                                         topping.getTopping().getUid(),
+                                        topping.getTopping().getName(),
                                         topping.getTopping().getPrice(),
                                         topping.getQuantity()
                                 ),
@@ -40,6 +41,7 @@ public record CartItemList(
                 .map(o -> new CartProductItem(
                         o.getUid(),
                         o.getProduct().getUid(),
+                        o.getProduct().getName(),
                         o.getProduct().getPrice(),
                         o.getQuantity()
                 ))

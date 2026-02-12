@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.coffee.cart.CartPriceCalculationService.getTotalCartPrice;
 import static com.coffee.cart.entity.CartItemList.fromCartItemEntities;
 
 @Service
@@ -54,7 +55,7 @@ public class CartItemService {
                 createdAt
         );
 
-        List<ExternalToppingItemRequest> toppings = Optional.of(cartItemRequest.toppings()).orElse(List.of());
+        List<ExternalToppingItemRequest> toppings = Optional.ofNullable(cartItemRequest.toppings()).orElse(List.of());
 
 
         if (toppings.isEmpty()) {
@@ -103,6 +104,7 @@ public class CartItemService {
 
     private ExternalCartItemResponse map(CartItemList cartItemList) {
         return new ExternalCartItemResponse(
+                getTotalCartPrice(cartItemList),
                 cartItemList.cartItems()
                         .stream()
                         .map(this::map).toList()
@@ -113,6 +115,7 @@ public class CartItemService {
         return new ExternalCartProductItemResponse(
                 cartItem.cartProductItem().productItemUid(),
                 cartItem.cartProductItem().productUid(),
+                cartItem.cartProductItem().productName(),
                 cartItem.cartProductItem().price(),
                 cartItem.cartProductItem().quantity(),
                 cartItem.cartToppingItemList().stream()
@@ -124,6 +127,7 @@ public class CartItemService {
         return new ExternalCartToppingItemResponse(
                 cartToppingItem.toppingItemUid(),
                 cartToppingItem.toppingUid(),
+                cartToppingItem.toppingName(),
                 cartToppingItem.price(),
                 cartToppingItem.quantity()
         );

@@ -11,6 +11,8 @@ public record ExternalCartProductItemResponse(
         UUID cartProductItemUid,
         @JsonProperty("productUid")
         UUID productUid,
+        @JsonProperty("productName")
+        String productName,
         @JsonProperty("price")
         BigDecimal price,
         @JsonProperty("quantity")

@@ -58,7 +58,9 @@ public class FreeItemLargeOrderDiscountHandlerImpl implements DiscountHandler {
 
     private boolean discountApplies(CartItemList cartItemList) {
         return !cartItemList.cartItems().isEmpty() &&
-                cartItemList.cartItems().size() >= largeOrderProductCountThreshold;
+                cartItemList.cartItems().stream()
+                        .map(o -> o.cartProductItem().quantity())
+                        .reduce(0, Integer::sum) >= largeOrderProductCountThreshold;
     }
 
     private List<ProductAndToppingItemTotal> getProductItemPriceIncludingToppings(CartItemList cartItemList) {
@@ -69,7 +71,7 @@ public class FreeItemLargeOrderDiscountHandlerImpl implements DiscountHandler {
                     // Get product item object
                     CartProductItem cartProductItem = cartItem.cartProductItem();
                     // Calculate total price for the quantity of product
-                    BigDecimal totalPriceForProduct = cartProductItem.getPriceForQuantity();
+                    BigDecimal totalPriceForProduct = cartProductItem.price();
                     // Get topping item objects associated with product
                     List<CartToppingItem> cartToppingItemsWithQuantity = cartItem.cartToppingItemList();
                     //Calculate total price for the quantity of topping
