@@ -100,14 +100,14 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         totalProductItemFreeProductPrice = BigDecimal.valueOf(12);
 
         // Components for no topping product item
-        // Total product price = 1 x 7 = 7
+        // Total product price = 2 x 7 = 14
         // Total topping price = 0 x 0 = 0
-        // Total price = 0 + 7 = 7
+        // Total price = 0 + 14 = 14
         productItemNoTopping = Instancio.of(CartProductItem.class)
                 .set(field("price"), BigDecimal.valueOf(7))
-                .set(field("quantity"), 1)
+                .set(field("quantity"), 2)
                 .create();
-        totalProductItemNoToppingPrice = BigDecimal.valueOf(7);
+        totalProductItemNoToppingPrice = BigDecimal.valueOf(14);
     }
 
     @Test
