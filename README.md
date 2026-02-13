@@ -56,10 +56,8 @@ vero_mocha/
 - **e2e**: Integration and end-to-end tests.
 - **public-api**: Request forwarding service for public operations.
 
-API's are separated from core for network isolation purposes. Ideally, the admin-api would not be accessible without a
-VPN connection to the company VPC. Only public-api should accept requests from the public internet.
-
----
+API's are separated from core for network isolation purposes. Ideally, the Admin-api would not be accessible without a
+VPN connection to the company VPC. Only Public-api should accept requests from the public internet.
 
 ## Assumptions
 
@@ -67,8 +65,6 @@ VPN connection to the company VPC. Only public-api should accept requests from t
 - All toppings available for all items (we will allow lemons on cappuccinos)
 - User management is excluded
 - One cart per user (no guest users)
-
----
 
 ## Tech Stack
 
@@ -80,8 +76,6 @@ VPN connection to the company VPC. Only public-api should accept requests from t
 - **Database Migrations**: Flyway
 - **JSON Processing**: Jackson
 - **Testing**: JUnit 5, Spring Boot Test, Cucumber
-
----
 
 ## Getting Started
 
@@ -103,7 +97,7 @@ docker-compose up --build
 
 ```
 
-### Running Tests
+### Running Tests (requires gradlew)
 
 ```bash
 # Run all unit tests
@@ -117,7 +111,10 @@ docker-compose up --build
 ./gradlew :e2e:test
 ```
 
----
+### Postman
+
+Postman collection to aid local manual tests:
+https://www.postman.com/adomas-1333/workspace/public/collection/16262468-c21b9ded-7433-4bab-92de-67a63a099b18?action=share&creator=16262468
 
 ## User Journeys
 
@@ -127,15 +124,15 @@ docker-compose up --build
 
 1. **Manage Products**
     - Admin creates new products (name, price, status)
-    - Admin can update product details (price, name, mark as inactive)
+    - Admin can update product details (name, price, status)
     - Admin can view all products (including inactive ones)
-    - Admin can delete products if they have no orders or are not in any cart
+    - Admin can delete products (if they have no orders or are not in any cart)
 
 2. **Manage Toppings**
     - Admin creates new toppings (name, price, status)
-    - Admin can update topping details (price, name, mark as inactive)
+    - Admin can update topping details (name, price, status)
     - Admin can view all toppings
-    - Admin can delete toppings if they have no orders or cart items
+    - Admin can delete toppings (if they have no orders or cart items)
 
 3. **View Business Metrics**
     - Admin generates reports on most-used toppings per product
@@ -151,7 +148,7 @@ docker-compose up --build
     - API returns all toppings currently available for purchase
 
 2. **Build Cart**
-    - Customer adds a product (with optional toppings) with quantity to cart
+    - Customer adds a product (with optional toppings) with quantities to cart
     - Customer requests cart items to review
     - (Optional) Customer clears cart if they want to start over
 
@@ -212,8 +209,6 @@ skipped. There is one hardcoded user available for testing:
 ```
 user: 7ad5bc4e-0de9-41dc-a5b6-745c1debba23
 ```
-
----
 
 ### Menu Browsing API
 
@@ -319,7 +314,7 @@ including topping and product details).
 **Notes**:
 
 - Toppings are optional; omit the `toppings` array if no toppings are needed
-- Quantity must be greater than 0
+- Quantity must be greater than 0 (for both product and topping if adding any)
 - The same topping cannot be added multiple times to the same item (enforced during order placement)
 - The product quantity controls the count of the product itself, while the topping quantity controls how many times that
   topping is added to the product item
@@ -494,7 +489,8 @@ Remove all items from the user's cart.
 
 **Headers**: `user`
 
-**Response**: Empty body with 200 OK
+**Response**:
+Empty body with 200 OK
 ---
 
 ## Order API
@@ -588,8 +584,10 @@ Administrative endpoints for managing products, toppings, and generating busines
 
 ## Authentication
 
-No authentication method is implemented for the Admin API. In reality, all users would have a JWT token that would
-validate the authorization to perform actions. These actions would be stored in history tables.
+No authentication method is implemented for the Admin API. In a prod applications, all users would send a JWT token that
+would
+be used to validate the authorization to perform actions. These actions would be stored in history tables with links to
+users.
 
 ### Item Management API
 
@@ -651,14 +649,6 @@ Retrieve all toppings, including inactive ones.
       "itemStatus": "ACTIVE",
       "createdAt": "2026-02-13T10:30:00Z",
       "updatedAt": "2026-02-13T10:30:00Z"
-    },
-    {
-      "uid": "660e8400-e29b-41d4-a716-446655440001",
-      "name": "Whipped Cream",
-      "price": "0.50",
-      "itemStatus": "INACTIVE",
-      "createdAt": "2026-02-12T08:15:00Z",
-      "updatedAt": "2026-02-13T09:00:00Z"
     }
   ]
 }
@@ -811,14 +801,6 @@ Retrieve all products, including inactive ones.
       "itemStatus": "ACTIVE",
       "createdAt": "2026-02-13T10:30:00Z",
       "updatedAt": "2026-02-13T10:30:00Z"
-    },
-    {
-      "uid": "550e8400-e29b-41d4-a716-446655440001",
-      "name": "Cappuccino",
-      "price": "4.50",
-      "itemStatus": "INACTIVE",
-      "createdAt": "2026-02-12T08:15:00Z",
-      "updatedAt": "2026-02-13T09:00:00Z"
     }
   ]
 }
