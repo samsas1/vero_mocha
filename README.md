@@ -474,8 +474,10 @@ Or with discount:
 **Discount Types**:
 
 - `NO_DISCOUNT`: No discount applicable
-- `FULL_CART_DISCOUNT`: Percentage discount on entire cart
-- `LARGE_ORDER_DISCOUNT`: Free item for large orders
+- `FULL_CART_DISCOUNT`: Percentage discount on entire cart (25% off if cart value exceeds €12)
+- `LARGE_ORDER_DISCOUNT`: Free item for orders that contain 3 or more product items, the cheapest item being free
+
+Multiple discount types are not returned, the one that results in the lowest final price is applied.
 
 ---
 
