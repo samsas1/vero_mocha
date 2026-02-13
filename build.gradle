@@ -7,7 +7,15 @@ plugins {
 
 group = 'com.coffee'
 
+def javaVersion = JavaLanguageVersion.of(25)
+
 allprojects {
+    java {
+        toolchain {
+            languageVersion = javaVersion
+        }
+    }
+
     repositories {
         mavenCentral()
     }
