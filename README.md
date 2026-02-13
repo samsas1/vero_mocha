@@ -974,7 +974,7 @@ Here I list these TODOs which would be done had this been a production applicati
 - [ ] Add typed uuids to improve type safety
 - [ ] Make floating point scales in API and db consistent between entities
 - [ ] Update discount handlers to use thresholds that come from application properties
-- [ ] Add test for existing order/order item prices not changing due to product/topping edits
+- [ ] Add test for existing order and order item prices not changing due to product/topping edits
 - [ ] Other todo's listed in the code
 - [ ] Add tests as part of the build job on pull requests to validate changes are not breaking
 
