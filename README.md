@@ -490,6 +490,7 @@ Remove all items from the user's cart.
 **Headers**: `user`
 
 **Response**: `Empty body with 200 OK`
+
 ---
 
 ## Order API
