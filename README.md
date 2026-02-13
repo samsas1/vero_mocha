@@ -139,6 +139,12 @@ Admin endpoints will work out of the box.
 For public endpoints, add a USER environment variable with the value `7ad5bc4e-0de9-41dc-a5b6-745c1debba23` to
 authenticate as the hardcoded user.
 
+Default local API addresses:
+
+- Core: `http://localhost:5000`
+- Admin API: `http://localhost:5001`
+- Public API: `http://localhost:5002`
+
 ## User Journeys
 
 ### Admin Management
