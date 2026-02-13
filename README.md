@@ -399,7 +399,26 @@ If you want 1 cappuccino with 1 extra shot and 1 cappuccino with 2 extra shots, 
 }
 ```
 
-      2
+Adding the same topping twice for a product item through repetition instead of quantity is not supported, so the
+following
+will fail:
+
+```json
+{
+  "productUid": "CAPPUCCINO_UUID",
+  "quantity": 1,
+  "toppings": [
+    {
+      "toppingUid": "EXTRA_SHOT_UUID",
+      "quantity": 1
+    },
+    {
+      "toppingUid": "EXTRA_SHOT_UUID",
+      "quantity": 1
+    }
+  ]
+}
+```
 
 ---
 
@@ -609,6 +628,11 @@ Create a new topping in the catalog.
 }
 ```
 
+**Notes**:
+
+- The itemStatus is optional, can be set to ACTIVE or INACTIVE
+- Two toppings with the same name are not allowed
+
 **Response**:
 
 ```json
@@ -723,6 +747,7 @@ without deleting the record.
 **Notes**:
 
 - Use this endpoint to mark toppings as INACTIVE instead of deleting them if they are linked to orders or carts
+- Two toppings with the same name are not allowed
 
 ---
 
@@ -762,6 +787,11 @@ Create a new product in the catalog.
   "itemStatus": "ACTIVE"
 }
 ```
+
+**Notes**:
+
+- The itemStatus is optional, can be set to ACTIVE or INACTIVE
+- Two products with the same name are not allowed
 
 **Response**:
 
@@ -877,6 +907,7 @@ without deleting the record.
 **Notes**:
 
 - Use this endpoint to mark products as INACTIVE instead of deleting them if they are linked to orders or carts
+- Two products with the same name are not allowed
 
 ---
 
@@ -1001,6 +1032,7 @@ Here I list these TODOs which would be done had this been a production applicati
 - [ ] Add typed uuids to improve type safety
 - [ ] Make floating point scales in API and db consistent between entities
 - [ ] Update discount handlers to use thresholds that come from application properties
+- [ ] Add test for existing order/order item prices not changing due to product/topping edits
 - [ ] Other todo's listed in the code
 
 ### Data & Analytics
@@ -1010,7 +1042,7 @@ Here I list these TODOs which would be done had this been a production applicati
 
 ### Robustness
 
-- [ ]  for timestamp logic
+- [ ] Use time provider for timestamp logic
 
 ### Documentation
 
@@ -1026,6 +1058,7 @@ Here I list these TODOs which would be done had this been a production applicati
 # Roadmap
 
 - [ ] Improve discount logic to show which product was discounted for the large order discount
+- [ ] Warn users when the price of an item changes while it is in their cart
 - [ ] Add get endpoint for cart product item
 - [ ] Add update for cart product item (to change quantity and toppings)
 - [ ] Add delete for cart product item
