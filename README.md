@@ -17,8 +17,7 @@ Admins:
 
 ## Table of Contents
 
-- [Project Overview](#project-overview)
-- [Architecture](#architecture)
+- [Structure](#structure)
 - [Tech Stack](#tech-stack)
 - [Assumptions](#assumptions)
 - [Getting Started](#getting-started)
@@ -31,12 +30,14 @@ Admins:
     - [Admin API](#admin-api)
         - [Item Management API](#item-management-api)
         - [Reporting API](#reporting-api)
+- [Testing Implementation](#testing-implementation)
+- [TODO](#todo)
 
 ---
 
-## Architecture
+## Structure
 
-The project follows a **multi-module microservices architecture** using Gradle as the build system:
+The project follows a **package-by-feature multi-module microservices structure**:
 
 ```
 vero_mocha/
@@ -60,6 +61,15 @@ VPN connection to the company VPC. Only public-api should accept requests from t
 
 ---
 
+## Assumptions
+
+- The same toppings can be added to the same product item multiple times (i.e. 2 extra shots on the same espresso)
+- All toppings available for all items (we will allow lemons on cappuccinos)
+- User management is excluded
+- One cart per user (no guest users)
+
+---
+
 ## Tech Stack
 
 - **Framework**: Spring Boot 4.0.2
@@ -73,63 +83,38 @@ VPN connection to the company VPC. Only public-api should accept requests from t
 
 ---
 
-## Assumptions
-
----
-
 ## Getting Started
 
 ### Prerequisites
 
 - Docker
 
-### Setup and Running
+### Setup and Run Locally
 
 #### Using Docker Compose (Recommended)
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/samsas1/vero_mocha.git
 cd vero_mocha
 
-# Start all services (PostgreSQL + Core application)
+# Start all services 
 docker-compose up --build
 
-# The application will be available at: http://localhost:5000
-# Health check endpoint: http://localhost:5000/actuator/health
 ```
-
-#### Local Development Setup
-
-### Database Configuration
-
-Default configuration (can be overridden via environment variables):
-
-- **Host**: localhost (docker: postgres)
-- **Port**: 5432
-- **Database**: core
-- **Username**: myuser
-- **Password**: mypassword
-
-Environment variables:
-
-- `CORE_DB_URL`: Full JDBC URL for the database
-- `CORE_PORT`: Port for the core application (default: 5000)
 
 ### Running Tests
 
 ```bash
 # Run all unit tests
-./gradlew test
+./gradlew :core:test
 
 # Run integration tests (core module)
 ./gradlew :core:intTest
 
 # Run end-to-end tests
+# Hits the database and services so make sure you run them via docker as above or manually
 ./gradlew :e2e:test
-
-# Run all tests with coverage report
-./gradlew test jacocoTestReport
 ```
 
 ---
@@ -1002,7 +987,7 @@ Generate a report showing the most frequently used toppings for each product.
 
 ---
 
-## Testing implementation
+## Testing Implementation
 
 The tests in this project mainly revolve around testing core module logic. As the bulk of the logic is basic CRUD, with
 pass-through service method calls, a large portion of tests are database interaction tests + integration tests for
@@ -1034,6 +1019,7 @@ Here I list these TODOs which would be done had this been a production applicati
 - [ ] Update discount handlers to use thresholds that come from application properties
 - [ ] Add test for existing order/order item prices not changing due to product/topping edits
 - [ ] Other todo's listed in the code
+- [ ] Add jobs to run builds on pull requests to validate changes are not breaking
 
 ### Data & Analytics
 

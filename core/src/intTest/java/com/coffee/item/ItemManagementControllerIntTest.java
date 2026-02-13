@@ -18,6 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static com.coffee.enumerators.ExternalItemStatus.ACTIVE;
 import static org.instancio.Select.field;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -51,6 +52,7 @@ public class ItemManagementControllerIntTest {
     @Test
     void whenToppingInserted_thenItCanBeFetched() throws Exception {
         toppingDTO = Instancio.of(ToppingRequest.class)
+                .set(field("itemStatus"), ACTIVE)
                 .set(field("price"), BigDecimal.valueOf(2.55))  // set to avoid precision check errors
                 .create();
         String request = objectMapper.writeValueAsString(toppingDTO);
@@ -78,6 +80,7 @@ public class ItemManagementControllerIntTest {
     @Test
     void whenProductInserted_thenItCanBeFetched() throws Exception {
         productDTO = Instancio.of(ProductRequest.class)
+                .set(field("itemStatus"), ACTIVE)
                 .set(field("price"), BigDecimal.valueOf(3.15))  // set to avoid precision check errors
                 .create();
         String request = objectMapper.writeValueAsString(productDTO);

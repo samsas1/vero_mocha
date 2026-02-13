@@ -14,6 +14,6 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "html:build/reports/cucumber/cucumber-report.html")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "json:build/reports/cucumber/cucumber.json")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.coffee.cucumber")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.coffee.steps,com.coffee.config")
 public class CucumberTestRunner {
 }
