@@ -3,6 +3,22 @@
 A microservices-based online coffee shop built with Spring Boot. Comes with basic functionality required by any online
 coffee shop.
 
+## Concepts
+
+- Customer - a public user of the online coffee shop
+- Admin - a privileged user who can manage offerings (products, items) and view reports
+- Product - an item available for purchase (e.g. espresso, cappuccino, etc.)
+- Topping - an optional add-on for products (e.g. extra shot, whipped cream, etc.)
+- Cart - a collection of products and toppings that a customer intends to purchase
+- Cart product item - an instance of a product in a customer's cart, has a quantity
+- Cart topping item - an instance of a topping added to a product in a customer's cart, has a quantity (per product
+  item, such that total flattened quantity of a topping in a cart is product item quantity x topping item quantity)
+- Order - a finalized purchase containing product items and toppings, with applied discounts
+- Order product item - same as cart product item but linked to an order instead of a cart
+- Order topping item - same as cart topping item but linked to an order instead of a cart
+
+## Features
+
 Customers:
 
 - Browse products and toppings
