@@ -37,7 +37,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
     private BigDecimal totalProductItemFreeProductPrice;
 
     // Product item with no toppings
-    private CartProductItem productItemQtySevenNoTopping;
+    private CartProductItem productItemNoTopping;
     private BigDecimal totalProductItemNoToppingPrice;
 
     private List<CartItem> cartItems;
@@ -72,40 +72,40 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         totalProductItemCheapestPrice = BigDecimal.valueOf(5);
 
         // Components for free topping product item
-        // Total product price = 2 x 3.3 = 6.6
+        // Total product price = 2 x 5.3 = 10.6
         // Total topping price = 1 x 0 = 0
-        // Total price = 6.6 + 0 = 6.6
+        // Total price = 10.6 + 0 = 10.6
         productItemQty2FreeTopping = Instancio.of(CartProductItem.class)
-                .set(field("price"), BigDecimal.valueOf(3.3))
+                .set(field("price"), BigDecimal.valueOf(5.3))
                 .set(field("quantity"), 2)
                 .create();
         toppingItemFreeTopping = Instancio.of(CartToppingItem.class)
                 .set(field("price"), BigDecimal.ZERO)
                 .set(field("quantity"), 1)
                 .create();
-        totalProductItemFreeToppingPrice = BigDecimal.valueOf(6.6);
+        totalProductItemFreeToppingPrice = BigDecimal.valueOf(10.6);
 
         // Components for free product product item
         // Total product price = 1 x 0 = 0
-        // Total topping price = 2 x 4 = 8
-        // Total price = 0 + 8 = 8
+        // Total topping price = 2 x 6 = 12
+        // Total price = 0 + 12 = 12
         productItemFreeProduct = Instancio.of(CartProductItem.class)
                 .set(field("price"), BigDecimal.ZERO)
                 .set(field("quantity"), 1)
                 .create();
         toppingItemFreeProduct = Instancio.of(CartToppingItem.class)
-                .set(field("price"), BigDecimal.valueOf(4))
+                .set(field("price"), BigDecimal.valueOf(6))
                 .set(field("quantity"), 2)
                 .create();
-        totalProductItemFreeProductPrice = BigDecimal.valueOf(8);
+        totalProductItemFreeProductPrice = BigDecimal.valueOf(12);
 
         // Components for no topping product item
-        // Total product price = 7 x 1 = 7
+        // Total product price = 1 x 7 = 7
         // Total topping price = 0 x 0 = 0
         // Total price = 0 + 7 = 7
-        productItemQtySevenNoTopping = Instancio.of(CartProductItem.class)
-                .set(field("price"), BigDecimal.ONE)
-                .set(field("quantity"), 7)
+        productItemNoTopping = Instancio.of(CartProductItem.class)
+                .set(field("price"), BigDecimal.valueOf(7))
+                .set(field("quantity"), 1)
                 .create();
         totalProductItemNoToppingPrice = BigDecimal.valueOf(7);
     }
@@ -164,7 +164,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
                         List.of(toppingItemCheapest1, toppingItemCheapest2, toppingItemCheapest3)),
                 new CartItem(productItemQty2FreeTopping, List.of(toppingItemFreeTopping)),
                 new CartItem(productItemFreeProduct, List.of(toppingItemFreeProduct)),
-                new CartItem(productItemQtySevenNoTopping, List.of())
+                new CartItem(productItemNoTopping, List.of())
         );
         // Original price is total price for all three entries
         BigDecimal originalPrice = totalProductItemCheapestPrice
@@ -197,8 +197,8 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         // Reduce price by one product price: 11 - 1.1 = 9.9
         BigDecimal finalPrice = BigDecimal.valueOf(9.9).setScale(2);
         CartProductItem cartProductItem = Instancio.of(CartProductItem.class)
-                .set(field("price"), BigDecimal.valueOf(1.1))
-                .set(field("quantity"), 10)
+                .set(field("price"), productPrice)
+                .set(field("quantity"), productQuantity)
                 .create();
 
         cartItems = List.of(new CartItem(cartProductItem, List.of()));
@@ -206,7 +206,7 @@ public class FreeItemLargeOrderDiscountHandlerImplTest {
         assertThat(underTest.handle(new CartItemList(cartItems)).get())
                 .isEqualTo(new ExternalDiscountResponse(
                                 FREE_ITEM_FOR_LARGE_ORDER,
-                                BigDecimal.valueOf(11),
+                                originalPrice,
                                 finalPrice
                         )
                 );
