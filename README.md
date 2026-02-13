@@ -14,8 +14,9 @@ coffee shop.
 - Cart topping item - an instance of a topping added to a product in a customer's cart, has a quantity (per product
   item, such that total flattened quantity of a topping in a cart is product item quantity x topping item quantity)
 - Order - a finalized purchase containing product items and toppings, with applied discounts
-- Order product item - same as cart product item but linked to an order instead of a cart
-- Order topping item - same as cart topping item but linked to an order instead of a cart
+- Order product item - a product item purchased by a customer, structurally similar to cart product item
+- Order topping item - a topping item purchased by a customer for a product item, structurally similar to cart topping
+  item
 
 ## Features
 
