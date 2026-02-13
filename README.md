@@ -97,7 +97,7 @@ docker-compose up --build
 
 ```
 
-### Running Tests (requires gradlew)
+### Running Tests locally (requires gradlew)
 
 ```bash
 # Run all unit tests
@@ -115,6 +115,10 @@ docker-compose up --build
 
 Postman collection to aid local manual tests:
 https://www.postman.com/adomas-1333/workspace/public/collection/16262468-c21b9ded-7433-4bab-92de-67a63a099b18?action=share&creator=16262468
+
+Admin endpoints will work out of the box.
+For public endpoints, add a USER environment variable with the value `7ad5bc4e-0de9-41dc-a5b6-745c1debba23` to
+authenticate as the hardcoded user.
 
 ## User Journeys
 
@@ -1001,7 +1005,7 @@ Here I list these TODOs which would be done had this been a production applicati
 - [ ] Update discount handlers to use thresholds that come from application properties
 - [ ] Add test for existing order/order item prices not changing due to product/topping edits
 - [ ] Other todo's listed in the code
-- [ ] Add jobs to run builds on pull requests to validate changes are not breaking
+- [ ] Add tests as part of the build job on pull requests to validate changes are not breaking
 
 ### Data & Analytics
 
