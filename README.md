@@ -1013,4 +1013,5 @@ Here I list these TODOs which would be done had this been a production applicati
 - [ ] Add get endpoint for cart product item
 - [ ] Add update for cart product item (to change quantity and toppings)
 - [ ] Add delete for cart product item
+- [ ] Implement order placement and cart addition prevention for inactive products and toppings
 
