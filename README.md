@@ -1027,7 +1027,9 @@ Here I list these TODOs which would be done had this been a production applicati
 - [ ] Test database enums match java enums
 - [ ] Use timeProvider (also improves configurability and reliability)
 
-### Roadmap
+---
+
+## Roadmap
 
 - [ ] Improve discount logic to show which product was discounted for the large order discount
 - [ ] Warn users when the price of an item changes while it is in their cart
