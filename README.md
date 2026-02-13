@@ -321,7 +321,6 @@ topping and product details).
 
 - Toppings are optional; omit the `toppings` array if no toppings are needed
 - Quantity must be greater than 0 (for both product and topping if adding any)
-- The same topping cannot be added multiple times to the same item (enforced during order placement)
 - The product quantity controls the count of the product itself, while the topping quantity controls how many times that
   topping is added to the product item
 - The total number of toppings in the cart item is the multiplication of topping quantity and product quantity
