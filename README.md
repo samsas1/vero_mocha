@@ -114,7 +114,7 @@ docker-compose up --build
 
 ```
 
-### Running Tests locally (requires gradlew)
+### Running Tests locally (requires java-25)
 
 ```bash
 # Run all unit tests
