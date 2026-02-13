@@ -70,11 +70,11 @@ vero_mocha/
 - **admin-api**: Request forwarding service for administrative operations.
 - **core**: Contains all business services, repositories, and REST controllers. Uses PostgreSQL for persistence.
 - **commons**: Shared data transfer objects (DTOs) and common utilities used across all modules.
-- **e2e**: Integration and end-to-end tests.
+- **e2e**: End-to-end tests.
 - **public-api**: Request forwarding service for public operations.
 
-API's are separated from core for network isolation purposes. Ideally, the Admin-api would not be accessible without a
-VPN connection to the company VPC. Only Public-api should accept requests from the public internet.
+API's are separated from core for network isolation purposes. Ideally, the admin-api would not be accessible without a
+VPN connection to the company VPC. Only public-api should accept requests from the public internet.
 
 ## Assumptions
 
@@ -99,6 +99,7 @@ VPN connection to the company VPC. Only Public-api should accept requests from t
 ### Prerequisites
 
 - Docker
+- Java 25 (for running tests locally without Docker)
 
 ### Setup and Run Locally
 
@@ -114,7 +115,7 @@ docker-compose up --build
 
 ```
 
-### Running Tests locally (requires java-25)
+#### Running Tests Locally
 
 ```bash
 # Run all unit tests
@@ -128,7 +129,7 @@ docker-compose up --build
 ./gradlew :e2e:test
 ```
 
-### Postman
+#### Postman
 
 Postman collection to aid local manual tests:
 https://www.postman.com/adomas-1333/workspace/public/collection/16262468-c21b9ded-7433-4bab-92de-67a63a099b18?action=share&creator=16262468
@@ -186,8 +187,6 @@ authenticate as the hardcoded user.
 5. **View Order History**
     - Customer can view all their previous orders
     - Each order shows products, toppings, prices, and order status
-
--
 
 ## API Documentation
 
@@ -249,16 +248,11 @@ Browse all products currently available for purchase.
 {
   "products": [
     {
-      "uid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
+      "uid": "d5c47de2-41a7-495f-b2cf-eb86aac65cd3",
       "name": "Espresso",
-      "price": "3.50",
-      "itemStatus": "ACTIVE"
-    },
-    {
-      "uid": "550e8400-e29b-41d4-a716-446655440001",
-      "name": "Cappuccino",
-      "price": "4.50",
-      "itemStatus": "ACTIVE"
+      "price": 4.0,
+      "createdAt": "2026-02-13T12:52:45.148802Z",
+      "updatedAt": "2026-02-13T12:52:45.148802Z"
     }
   ]
 }
@@ -280,16 +274,11 @@ Browse all toppings available to add to products.
 {
   "toppings": [
     {
-      "uid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
-      "name": "Extra Shot",
-      "price": "0.75",
-      "itemStatus": "ACTIVE"
-    },
-    {
-      "uid": "660e8400-e29b-41d4-a716-446655440001",
-      "name": "Whipped Cream",
-      "price": "0.50",
-      "itemStatus": "ACTIVE"
+      "uid": "4eb011c2-a12c-4f6a-946e-6a795d78c63b",
+      "name": "Chocolate",
+      "price": 1.5,
+      "createdAt": "2026-02-13T12:52:45.170885Z",
+      "updatedAt": "2026-02-13T12:52:45.170885Z"
     }
   ]
 }
@@ -311,16 +300,12 @@ Add a product (with optional toppings) to the user's cart.
 
 ```json
 {
-  "productUid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
-  "quantity": 2,
+  "productUid": "d5c47de2-41a7-495f-b2cf-eb86aac65cd3",
+  "quantity": 1,
   "toppings": [
     {
-      "toppingUid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
+      "toppingUid": "4eb011c2-a12c-4f6a-946e-6a795d78c63b",
       "quantity": 1
-    },
-    {
-      "toppingUid": "660e8400-e29b-41d4-a716-446655440001",
-      "quantity": 2
     }
   ]
 }
@@ -435,28 +420,21 @@ Retrieve all items currently in the user's cart with pricing.
 
 ```json
 {
-  "totalPrice": "15.50",
-  "cartItems": [
+  "totalPrice": 5.50,
+  "items": [
     {
-      "cartProductItemUid": "550e8400-e29b-41d4-a716-446655440005",
-      "productUid": "550e8400-e29b-41d4-a716-446655440001",
-      "productName": "Cappuccino",
-      "price": "4.50",
-      "quantity": 2,
+      "cartProductItemUid": "b4969b91-7b15-4039-92c8-570ea4933338",
+      "productUid": "d5c47de2-41a7-495f-b2cf-eb86aac65cd3",
+      "productName": "Espresso",
+      "price": 4.0,
+      "quantity": 1,
       "toppings": [
         {
-          "cartToppingItemUid": "770e8400-e29b-41d4-a716-446655440000",
-          "toppingUid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
-          "toppingName": "Extra Shot",
-          "price": "0.75",
+          "cartToppingItemUid": "855e91d0-fdf7-4116-be5d-e65c3ec43f78",
+          "toppingUid": "4eb011c2-a12c-4f6a-946e-6a795d78c63b",
+          "toppingName": "Chocolate",
+          "price": 1.5,
           "quantity": 1
-        },
-        {
-          "cartToppingItemUid": "770e8400-e29b-41d4-a716-446655440001",
-          "toppingUid": "660e8400-e29b-41d4-a716-446655440001",
-          "toppingName": "Whipped Cream",
-          "price": "0.50",
-          "quantity": 2
         }
       ]
     }
@@ -532,9 +510,9 @@ Convert the current cart into an order with applicable discounts.
 
 ```json
 {
-  "orderUid": "1cfa90cf-f4b7-4579-bc2f-ead97b5c0e64",
-  "originalPrice": 12.50,
-  "finalPrice": 9.50,
+  "orderUid": "afbd1f65-22f5-4eda-bab0-f5164c904502",
+  "originalPrice": 5.50,
+  "finalPrice": 5.50,
   "placed": true,
   "message": "Order placed successfully!"
 }
@@ -570,28 +548,28 @@ Retrieve all orders placed by the user, including order details, items, toppings
 {
   "orders": [
     {
-      "orderUid": "8eb76e33-4548-43b8-b7e1-c1e063d04349",
+      "orderUid": "afbd1f65-22f5-4eda-bab0-f5164c904502",
       "items": [
         {
-          "orderProductItemUid": "27b98fce-5e3a-4aa5-a17f-49dd252917a7",
-          "productUid": "8fd44970-da95-4a7f-b89c-29d480307cd5",
+          "orderProductItemUid": "b4969b91-7b15-4039-92c8-570ea4933338",
+          "productUid": "d5c47de2-41a7-495f-b2cf-eb86aac65cd3",
           "productName": "Espresso",
           "price": 4.0,
           "quantity": 1,
-          "createdAt": "2026-02-11T22:45:23.521330Z",
+          "createdAt": "2026-02-13T13:41:38.246804Z",
           "toppings": [
             {
-              "orderToppingItemUid": "aacc2d0f-219c-4892-959b-b09459673e71",
-              "toppingUid": "9206935b-3ecf-4d44-84a9-95aef0fad689",
+              "orderToppingItemUid": "855e91d0-fdf7-4116-be5d-e65c3ec43f78",
+              "toppingUid": "4eb011c2-a12c-4f6a-946e-6a795d78c63b",
               "toppingName": "Chocolate",
               "price": 1.5,
-              "quantity": 2
+              "quantity": 1
             }
           ]
         }
       ],
-      "originalPrice": 7.0,
-      "finalPrice": 7.0
+      "originalPrice": 5.50,
+      "finalPrice": 5.50
     }
   ]
 }
@@ -641,12 +619,12 @@ Create a new topping in the catalog.
 
 ```json
 {
-  "uid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
+  "uid": "146b5f22-7721-4573-8a4d-65437318e0d7",
   "name": "Extra Shot",
-  "price": "0.75",
+  "price": 0.75,
   "itemStatus": "ACTIVE",
-  "createdAt": "2026-02-13T10:30:00Z",
-  "updatedAt": "2026-02-13T10:30:00Z"
+  "createdAt": "2026-02-13T13:42:45.056189236Z",
+  "updatedAt": "2026-02-13T13:42:45.056190097Z"
 }
 ```
 
@@ -664,12 +642,12 @@ Retrieve all toppings, including inactive ones.
 {
   "toppings": [
     {
-      "uid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
+      "uid": "146b5f22-7721-4573-8a4d-65437318e0d7",
       "name": "Extra Shot",
-      "price": "0.75",
+      "price": 0.75,
       "itemStatus": "ACTIVE",
-      "createdAt": "2026-02-13T10:30:00Z",
-      "updatedAt": "2026-02-13T10:30:00Z"
+      "createdAt": "2026-02-13T13:42:45.056189Z",
+      "updatedAt": "2026-02-13T13:42:45.056190Z"
     }
   ]
 }
@@ -695,12 +673,12 @@ Retrieve a specific topping by its unique identifier.
 
 ```json
 {
-  "uid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
+  "uid": "146b5f22-7721-4573-8a4d-65437318e0d7",
   "name": "Extra Shot",
-  "price": "0.75",
+  "price": 0.75,
   "itemStatus": "ACTIVE",
-  "createdAt": "2026-02-13T10:30:00Z",
-  "updatedAt": "2026-02-13T10:30:00Z"
+  "createdAt": "2026-02-13T13:42:45.056189Z",
+  "updatedAt": "2026-02-13T13:42:45.056190Z"
 }
 ```
 
@@ -731,12 +709,12 @@ without deleting the record.
 
 ```json
 {
-  "uid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
+  "uid": "146b5f22-7721-4573-8a4d-65437318e0d7",
   "name": "Extra Shot",
-  "price": "0.85",
+  "price": 0.85,
   "itemStatus": "ACTIVE",
-  "createdAt": "2026-02-13T10:30:00Z",
-  "updatedAt": "2026-02-13T14:20:00Z"
+  "createdAt": "2026-02-13T13:42:45.056189Z",
+  "updatedAt": "2026-02-13T13:43:48.335633344Z"
 }
 ```
 
@@ -793,12 +771,12 @@ Create a new product in the catalog.
 
 ```json
 {
-  "uid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
+  "uid": "9e20af1d-e712-44dc-ad5e-103a82479298",
   "name": "Latte",
-  "price": "5.00",
+  "price": 5.00,
   "itemStatus": "ACTIVE",
-  "createdAt": "2026-02-13T10:30:00Z",
-  "updatedAt": "2026-02-13T10:30:00Z"
+  "createdAt": "2026-02-13T13:44:12.696519618Z",
+  "updatedAt": "2026-02-13T13:44:12.696520481Z"
 }
 ```
 
@@ -816,12 +794,12 @@ Retrieve all products, including inactive ones.
 {
   "products": [
     {
-      "uid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
-      "name": "Espresso",
-      "price": "3.50",
+      "uid": "9e20af1d-e712-44dc-ad5e-103a82479298",
+      "name": "Latte",
+      "price": 5.00,
       "itemStatus": "ACTIVE",
-      "createdAt": "2026-02-13T10:30:00Z",
-      "updatedAt": "2026-02-13T10:30:00Z"
+      "createdAt": "2026-02-13T13:44:12.696520Z",
+      "updatedAt": "2026-02-13T13:44:12.696520Z"
     }
   ]
 }
@@ -847,12 +825,12 @@ Retrieve a specific product by its unique identifier.
 
 ```json
 {
-  "uid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
-  "name": "Espresso",
-  "price": "3.50",
+  "uid": "9e20af1d-e712-44dc-ad5e-103a82479298",
+  "name": "Latte",
+  "price": 5.00,
   "itemStatus": "ACTIVE",
-  "createdAt": "2026-02-13T10:30:00Z",
-  "updatedAt": "2026-02-13T10:30:00Z"
+  "createdAt": "2026-02-13T13:44:12.696520Z",
+  "updatedAt": "2026-02-13T13:44:12.696520Z"
 }
 ```
 
@@ -873,8 +851,8 @@ without deleting the record.
 
 ```json
 {
-  "name": "Espresso",
-  "price": "3.75",
+  "name": "Latte",
+  "price": "5.5",
   "itemStatus": "ACTIVE"
 }
 ```
@@ -883,12 +861,12 @@ without deleting the record.
 
 ```json
 {
-  "uid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
-  "name": "Espresso",
-  "price": "3.75",
+  "uid": "9e20af1d-e712-44dc-ad5e-103a82479298",
+  "name": "Latte",
+  "price": 5.5,
   "itemStatus": "ACTIVE",
-  "createdAt": "2026-02-13T10:30:00Z",
-  "updatedAt": "2026-02-13T15:45:00Z"
+  "createdAt": "2026-02-13T13:44:12.696520Z",
+  "updatedAt": "2026-02-13T13:45:38.371848937Z"
 }
 ```
 
@@ -934,40 +912,15 @@ Generate a report showing the most frequently used toppings for each product.
 {
   "productToppingCounts": [
     {
-      "productUid": "824345c4-6ef5-410d-87d3-2ec7d4a5278b",
-      "productName": "Espresso",
-      "totalOrdered": 150,
+      "productUid": "9e20af1d-e712-44dc-ad5e-103a82479298",
+      "productName": "Latte",
+      "totalOrdered": 1,
       "toppingCounts": [
         {
-          "toppingUid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
+          "toppingUid": "146b5f22-7721-4573-8a4d-65437318e0d7",
           "toppingName": "Extra Shot",
-          "totalOrderedForProduct": 120,
-          "averageOrderedForProduct": 0.8
-        },
-        {
-          "toppingUid": "660e8400-e29b-41d4-a716-446655440001",
-          "toppingName": "Whipped Cream",
-          "totalOrderedForProduct": 45,
-          "averageOrderedForProduct": 0.3
-        }
-      ]
-    },
-    {
-      "productUid": "550e8400-e29b-41d4-a716-446655440001",
-      "productName": "Cappuccino",
-      "totalOrdered": 200,
-      "toppingCounts": [
-        {
-          "toppingUid": "660e8400-e29b-41d4-a716-446655440001",
-          "toppingName": "Whipped Cream",
-          "totalOrderedForProduct": 180,
-          "averageOrderedForProduct": 0.9
-        },
-        {
-          "toppingUid": "c05d573d-9bc1-4915-be90-6fe6416bef99",
-          "toppingName": "Extra Shot",
-          "totalOrderedForProduct": 60,
-          "averageOrderedForProduct": 0.3
+          "totalOrderedForProduct": 2,
+          "averageOrderedForProduct": 2.00
         }
       ]
     }
