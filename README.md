@@ -899,7 +899,7 @@ Delete a product from the catalog.
 
 ### Reporting API
 
-Generate business intelligence reports. All endpoints are prefixed with `/reports`.
+Generate business intelligence reports.
 
 ##### 1. Most Used Toppings Per Product
 
@@ -946,7 +946,7 @@ Generate a report showing the most frequently used toppings for each product.
 
 ## Testing Implementation
 
-The tests in this project mainly revolve around testing core module logic. As the bulk of the logic is basic CRUD, with
+The tests in this project mainly revolve around testing core module logic. As the bulk of the logic is basic CRUD with
 pass-through service method calls, a large portion of tests are database interaction tests + integration tests for
 controllers.
 Service unit tests are used when more complex logic is involved, such as in the discount calculation.
