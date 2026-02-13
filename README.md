@@ -314,7 +314,8 @@ Add a product (with optional toppings) to the user's cart.
 
 **Response**:
 
-Currently, a UUID representing the item placed into cart. To be updated to return a full item information (including
+Currently, a UUID representing the item placed into cart. Needs to be updated to return a full item information (
+including
 topping and product details).
 including topping and product details).
 
